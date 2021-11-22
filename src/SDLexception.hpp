@@ -7,22 +7,22 @@
 class SDLexception {
   public:
   // constructor
-  SDLexception(
-      const char* firstPart, const char* errorCodePart, const char* file, int line);
+  SDLexception(const char* firstPart, const char* errorCodePart,
+      const char* file, int line);
 
   // returns exception description
   std::string Description() const;
 
   private:
   // description part provided by programer
-  const std::string firstPart;
+  const std::string _firstPart;
   // description part provided by SDL-related library
-  const std::string errorCodePart;
+  const std::string _errorCodePart;
   // source code file in which error occured
-  const std::string file;
+  const std::string _file;
   // line number of the source code file
-  const int line;
+  const int _line;
   // separator used for output formating
-  const std::string separator = "\n";
+  const std::string _separator = "\n";
 };
 #endif // !SDLexception_HPP

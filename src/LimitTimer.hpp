@@ -8,19 +8,22 @@ class LimitTimer {
   // takes time to measure in milliseconds
   explicit LimitTimer(const Uint32 timeToMeasure);
 
-  // long TimeSinceStart() const;//REVIEW:
-
+  // stops execution until desired time interval since start will pass
   void waitTillExpire() const;
 
+  // checks if desired time interval since start has passed
   bool hasExpired() const;
 
   // restarts the timer
   void restart();
 
   private:
-  Uint32 start_time_point;
-  Uint32 time_to_measure;
-  Uint32 expiry_time_point;
+  // start point time in SDL ticks
+  Uint32 _start_time_point;
+  // time to measure in SDL ticks
+  Uint32 _time_to_measure;
+  // end point time in SDL ticks
+  Uint32 _expiry_time_point;
 };
 
 #endif // !LimitTimer_HPP

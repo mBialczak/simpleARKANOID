@@ -18,14 +18,13 @@ class Game {
 
   private:
   // window size properties
-  const std::size_t screen_height;
-  const std::size_t screen_width;
-
+  const std::size_t _screen_height;
+  const std::size_t _screen_width;
   // target frame rate of the display
-  const Uint32 frame_rate;
-
-  Controller controller;
+  const Uint32 _frame_rate;
+  // controller for handling keyboard output
+  Controller _controller;
   // owned pointers
-  Renderer* renderer;
+  Renderer* _renderer;
 };
 #endif // !GAME_HPP

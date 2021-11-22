@@ -9,14 +9,14 @@
 int main(int argc, char const* argv[])
 {
   // constants for game settings
-  constexpr std::size_t cScreenHeight { 600 };
-  constexpr std::size_t cScreenWidth { 800 };
-  constexpr std::size_t cFramesPerSecond { 60 };
+  constexpr std::size_t c_screen_height { 600 };
+  constexpr std::size_t c_screen_width { 800 };
+  constexpr std::size_t c_frames_per_second { 60 };
 
   try {
 
-    Game simpleArkanoid(cScreenHeight, cScreenWidth, cFramesPerSecond);
-    simpleArkanoid.Run();
+    Game simple_arkanoid(c_screen_height, c_screen_width, c_frames_per_second);
+    simple_arkanoid.Run();
 
     std::cout << "program terminated normally" << std::endl;
     return 0;
@@ -24,7 +24,7 @@ int main(int argc, char const* argv[])
   // handle SDL-related exceptions
   catch (const SDLexception& e) {
     std::cerr << e.Description();
-    // NOTE: probably remove in the final version
+    return -3;
   }
   // handle standard exceptions
   catch (const std::exception& e) {
