@@ -1,4 +1,4 @@
-#include "controller.hpp"
+#include "Controller.hpp"
 #include "SDL.h"
 
 void Controller::HandleInput(bool& running) const

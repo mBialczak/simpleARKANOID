@@ -2,8 +2,8 @@
 #include <string>
 
 // constructor
-SDLexception::SDLexception(const char* firstPart, const char* errorCodePart,
-    const char* file, int line)
+SDLexception::SDLexception(const std::string& firstPart,
+    const char* errorCodePart, const char* file, int line)
     : _firstPart(firstPart)
     , _errorCodePart(errorCodePart)
     , _file(file)

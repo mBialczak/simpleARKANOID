@@ -1,6 +1,7 @@
-#include "game.hpp"
+#include "Game.hpp"
 #include "LimitTimer.hpp"
 #include "SDL.h"
+#include "SDL_image.h"
 #include "SDLexception.hpp"
 
 // constructor
@@ -18,6 +19,15 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   }
   // create graphics renderer here, only after SDL is initialized
   _renderer = new Renderer(_screen_height, _screen_width);
+
+  // initialize SDL_Image support
+  int to_init_flags = IMG_INIT_PNG;
+  int initialized_flags = IMG_Init(to_init_flags);
+  // check if SDL_Image support was initialized correctly
+  if ((to_init_flags & initialized_flags) != to_init_flags) {
+    throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
+        __FILE__, __LINE__);
+  }
 }
 
 // destructor
@@ -25,7 +35,10 @@ Game::~Game()
 {
   // delete graphics renderer
   delete (_renderer);
-  // close SDL
+  _renderer = nullptr;
+
+  // close SDL subsystems
+  IMG_Quit();
   SDL_Quit();
 }
 
@@ -44,19 +57,27 @@ void Game::Run()
   // main game loop
   while (running) {
 
-    // TODO:handle input
+    // handle input
     _controller.HandleInput(running);
-    // TODO: update game state
 
-    // TODO: update display
-    _renderer->Display();
-
-    // TODO: update sounds
+    UpdateGame();
+    GenerateOutput();
 
     // execute frame FPS limiting policy by waiting untill
     // each frame time completes
     frame_timer.waitTillExpire();
-    // restart frameTimer for time measure in the next frame
+    // restart frameTimer for the next frame
     frame_timer.restart();
   }
+}
+
+// updates the state of the game
+void Game::UpdateGame() { }
+
+// generates all game output
+void Game::GenerateOutput() const
+{ // udpate display
+  _renderer->Display();
+
+  // TODO: update sounds
 }

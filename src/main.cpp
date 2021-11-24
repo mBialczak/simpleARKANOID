@@ -1,8 +1,7 @@
+#include "Game.hpp"
+#include "IntervalTimer.hpp" //NOTE: remove if no longer needed
+#include "SDL.h" //NOTE: remove if no longer needed
 #include "SDLexception.hpp"
-#include "game.hpp"
-#include "timer.hpp" //NOTE: remove if no longer needed
-#include <chrono> //NOTE: remove if no longer needed
-#include <ctime> //NOTE: remove if no longer needed
 #include <exception>
 #include <iostream>
 
@@ -16,6 +15,7 @@ int main(int argc, char const* argv[])
   try {
 
     Game simple_arkanoid(c_screen_height, c_screen_width, c_frames_per_second);
+
     simple_arkanoid.Run();
 
     std::cout << "program terminated normally" << std::endl;

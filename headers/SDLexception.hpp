@@ -7,7 +7,7 @@
 class SDLexception {
   public:
   // constructor
-  SDLexception(const char* firstPart, const char* errorCodePart,
+  SDLexception(const std::string& firstPart, const char* errorCodePart,
       const char* file, int line);
 
   // returns exception description

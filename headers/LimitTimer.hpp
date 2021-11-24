@@ -8,6 +8,11 @@ class LimitTimer {
   // takes time to measure in milliseconds
   explicit LimitTimer(const Uint32 timeToMeasure);
 
+  // copying of class object should be unnecassary, so copy operations are
+  // disabled
+  LimitTimer(const LimitTimer&) = delete;
+  LimitTimer& operator=(const LimitTimer&) = delete;
+
   // stops execution until desired time interval since start will pass
   void waitTillExpire() const;
 

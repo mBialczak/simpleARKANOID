@@ -1,4 +1,4 @@
-#include "renderer.hpp"
+#include "Renderer.hpp"
 #include "LimitTimer.hpp"
 #include "SDLexception.hpp"
 
@@ -35,8 +35,10 @@ Renderer::~Renderer()
 {
   // Deestroy graphics renderer
   SDL_DestroyRenderer(_sdl_renderer);
+  _sdl_renderer = nullptr;
   // Destroy main game window
   SDL_DestroyWindow(_sdl_window);
+  _sdl_window = nullptr;
 }
 
 // displays (renders) game graphics
@@ -66,10 +68,10 @@ void Renderer::UpdateTitleBar() const
 
   // update frame count for FPS calculation
   frames++;
-  // update window title bar
+  // if 1s has passed, update window title bar
   if (title_update_timer.hasExpired()) {
     // create and display title to be updated every second
-    std::string title { "Simple Akranoid game! FPS: " };
+    std::string title { "Simple Akranoid game! Have fun!\t\t\tFPS: " };
     title += std::to_string(frames);
     SDL_SetWindowTitle(_sdl_window, title.c_str());
 

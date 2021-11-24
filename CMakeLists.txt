@@ -11,7 +11,7 @@ if (MSVC)
     # warning level 4 
     add_compile_options(/W4)
 else()
-    # lots of warnings -pedantic
+    # lots of warnings 
     add_compile_options(-Wall)
 endif()
 
@@ -21,15 +21,21 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED) #REVIEW: check if needed
 
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} src)
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS}  headers)
 
 add_executable(simpleArkanoid 
 src/main.cpp
-src/game.cpp
-src/renderer.cpp
+src/Game.cpp
+src/Renderer.cpp
 src/LimitTimer.cpp
-src/controller.cpp
+src/Controller.cpp
 src/SDLexception.cpp
+src/IntervalTimer.cpp
+src/Wall.cpp
+src/Ball.cpp
+src/Vector2d.cpp
+src/Texture.cpp
+src/LoadedSDLsurface.cpp
 )
 if (MSVC)
   target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})

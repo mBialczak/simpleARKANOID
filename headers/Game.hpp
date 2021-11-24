@@ -1,7 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
-#include "controller.hpp"
-#include "renderer.hpp"
+#include "Controller.hpp"
+#include "Renderer.hpp"
 #include <cstddef>
 
 class Game {
@@ -13,10 +13,19 @@ class Game {
   // destructor
   ~Game();
 
+  // deleted copy operations for copy prevention
+  Game(const Game&) = delete;
+  Game& operator=(const Game&) = delete;
+
   // implements main game loop
   void Run();
 
   private:
+  // updates game state
+  void UpdateGame();
+  // generates game output
+  void GenerateOutput() const; // NOTE: const might not be good
+
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;

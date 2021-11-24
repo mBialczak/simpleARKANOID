@@ -1,0 +1,13 @@
+TODO:
+disable copying and moving for classes not predicted for copying or moving if owning resources
+
+TODO:
+consider creating wrappers for managed resources in case of exeption in during construction
+
+TODO:
+consider using unique_ptr with custom deleter instead of LoadedSDLsurface wrapper
+or simply freeing surface before throwing exeption
+
+TODO:
+try to change pointer arguments to reference arguments where possible
+
