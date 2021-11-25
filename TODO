@@ -11,3 +11,5 @@ or simply freeing surface before throwing exeption
 TODO:
 try to change pointer arguments to reference arguments where possible
 
+TODO:
+consider replacing most of the pointers with shared::ptr and weak_ptr where applicable

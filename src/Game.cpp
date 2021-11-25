@@ -3,6 +3,8 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDLexception.hpp"
+#include <algorithm>
+#include <exception>
 
 // constructor
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
@@ -28,6 +30,15 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
         __FILE__, __LINE__);
   }
+
+  // load textures used in the game
+  LoadTextures();
+  // create the ball; it has to be done here, after SDL stuff is initilized and
+  // textures are created
+  _ball = std::make_unique<Ball>(
+      _screen_width / 2, _screen_height / 2, GetTexture("ball"));
+  // set the _renderer pointer to the ball for rendering operations
+  _renderer->SetBall(_ball.get());
 }
 
 // destructor
@@ -80,4 +91,29 @@ void Game::GenerateOutput() const
   _renderer->Display();
 
   // TODO: update sounds
+}
+
+// / load all textures used in the game //NOTE: verify
+void Game::LoadTextures()
+{
+  // load textue representing the ball
+  _textures["ball"] = std::make_unique<Texture>(
+      "../assets/ball.png", _renderer->GetSDLrenderer());
+}
+
+// gets a single texture from the stored textures
+const Texture& Game::GetTexture(const std::string& TextureName) const
+{
+  // try to find a stored texture of the given name
+  auto search = _textures.find(TextureName);
+  // if texture wasn't found, throw exception
+  // by this point the project design assumes that all requried textures were
+  // created during game initialization
+  if (search == _textures.end()) {
+    std::string error { "Unable to get texture: \"" };
+    error += TextureName + "\"";
+    throw std::logic_error(error);
+  }
+  // return found texture
+  return *(search->second);
 }

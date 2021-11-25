@@ -12,7 +12,7 @@ Texture::Texture(const std::string& Path, SDL_Renderer* GameRenderer)
     , _height(0)
 {
   // load image at specified path into a surface
-  // surface will be automatically freed by LoadedSDLsurface
+  // surface will be automatically freed by LoadedSDLsurface wrapper
   LoadedSDLsufrace image_surface(Path);
 
   // create surface from image surface
@@ -25,6 +25,9 @@ Texture::Texture(const std::string& Path, SDL_Renderer* GameRenderer)
     error += Path;
     throw SDLexception(error, IMG_GetError(), __FILE__, __LINE__);
   }
+  // set texture dimensions basing on louded image size
+  _width = image_surface.GetSurfacePtr()->w;
+  _height = image_surface.GetSurfacePtr()->h;
 }
 // destructor
 Texture::~Texture()

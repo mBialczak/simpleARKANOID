@@ -7,7 +7,9 @@ Renderer::Renderer(
     const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
-
+    // the acutal ball pointer will be set long after renderer creation, after
+    // the ball is created in Game constructor
+    , _ball(nullptr)
 {
   // create main game window
   _sdl_window = SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
@@ -51,6 +53,9 @@ void Renderer::Display() const
   SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
   // clear screen
   SDL_RenderClear(_sdl_renderer);
+
+  // display the ball
+  _ball->Render();
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);

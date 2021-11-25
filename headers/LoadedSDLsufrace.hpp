@@ -23,6 +23,10 @@ class LoadedSDLsufrace {
   LoadedSDLsufrace(const LoadedSDLsufrace&) = delete;
   LoadedSDLsufrace& operator=(const LoadedSDLsufrace&) = delete;
 
+  // class is not predicted for moving so moving operations are disabled
+  LoadedSDLsufrace(LoadedSDLsufrace&&) = delete;
+  LoadedSDLsufrace& operator=(LoadedSDLsufrace&&) = delete;
+
   // returns pointer to managed SDL surface pointer
   // user of the class should not explicitly free the surface
   SDL_Surface* GetSurfacePtr() const { return _loaded_surface; }

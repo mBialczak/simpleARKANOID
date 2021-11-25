@@ -32,11 +32,10 @@ class Texture {
   void Render(int x, int y) const; // NOTE: const might not work
 
   private:
-  // owned pointer to SDL texture
+  // OWNED pointer to SDL texture
   SDL_Texture* _sdl_texture;
 
-  // pointer to SDL renderer for texture creation and future rendering
-  // NOT OWNED
+  // NOT OWNED pointer to SDL renderer for texture creation and future rendering
   // REVIEW: check if Renderer* or Renderer& would be better
   SDL_Renderer* _sdl_renderer;
 
