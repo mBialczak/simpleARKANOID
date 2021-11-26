@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "IntervalTimer.hpp"
 #include "LimitTimer.hpp"
 #include "SDL.h"
 #include "SDL_image.h"
@@ -35,8 +36,9 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   LoadTextures();
   // create the ball; it has to be done here, after SDL stuff is initilized and
   // textures are created
-  _ball = std::make_unique<Ball>(
-      _screen_width / 2, _screen_height / 2, GetTexture("ball"));
+  // NOTE: randomize starting ball data: angle and speed perhaps
+  _ball = std::make_unique<Ball>(_screen_width / 2, _screen_height / 2, 360.0f,
+      _ball_speed, GetTexture("ball"));
   // set the _renderer pointer to the ball for rendering operations
   _renderer->SetBall(_ball.get());
 }
@@ -83,7 +85,19 @@ void Game::Run()
 }
 
 // updates the state of the game
-void Game::UpdateGame() { }
+void Game::UpdateGame()
+{
+  // create timer measuring time difference for update calculations
+  static IntervalTimer timer;
+  // calculate delta time and udpate timer
+  auto delta_time = timer.UpdateAndGetInterval();
+  // REVIEW: for debuggin purposes
+  if (delta_time >= 0.5f) {
+    // cap delta_time while debugging if time difference is to big
+    delta_time = 0.5f;
+  }
+  _ball->UpdateBall(delta_time);
+}
 
 // generates all game output
 void Game::GenerateOutput() const

@@ -48,5 +48,7 @@ class Game {
   Renderer* _renderer;
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
+  // ball starting scalar speed (pixels per second)
+  float _ball_speed = 50.0f;
 };
 #endif // !GAME_HPP

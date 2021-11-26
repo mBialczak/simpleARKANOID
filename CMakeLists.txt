@@ -33,10 +33,15 @@ src/SDLexception.cpp
 src/IntervalTimer.cpp
 src/Wall.cpp
 src/Ball.cpp
-src/Vector2d.cpp
+src/gMath.cpp
 src/Texture.cpp
 src/LoadedSDLsurface.cpp
 )
+
+#REVIEW: remove tests before submitting
+add_executable(tests 
+tests/VectorTests.cpp
+src/gMath.cpp)
 if (MSVC)
   target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 else()

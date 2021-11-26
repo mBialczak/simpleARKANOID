@@ -52,6 +52,7 @@
     "ios": "cpp",
     "queue": "cpp",
     "thread": "cpp",
-    "cinttypes": "cpp"
+    "cinttypes": "cpp",
+    "iomanip": "cpp"
   }
 }
