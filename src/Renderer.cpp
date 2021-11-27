@@ -1,15 +1,18 @@
 #include "Renderer.hpp"
 #include "LimitTimer.hpp"
 #include "SDLexception.hpp"
-
+#include <iostream> // remove after testing
 // constructor
 Renderer::Renderer(
     const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
-    // the acutal ball pointer will be set long after renderer creation, after
+    // the real ball pointer will be set long after renderer creation, after
     // the ball is created in Game constructor
     , _ball(nullptr)
+    // the real paddle pointer will be set long after renderer creation, after
+    // the paddle is created in Game constructor
+    , _paddle(nullptr)
 {
   // create main game window
   _sdl_window = SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
@@ -55,7 +58,10 @@ void Renderer::Display() const
   SDL_RenderClear(_sdl_renderer);
 
   // display the ball
-  _ball->Render();
+  _ball->Draw();
+
+  // display the paddle
+  _paddle->Draw();
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);

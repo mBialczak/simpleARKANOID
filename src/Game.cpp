@@ -34,13 +34,10 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
 
   // load textures used in the game
   LoadTextures();
-  // create the ball; it has to be done here, after SDL stuff is initilized and
-  // textures are created
-  // NOTE: randomize starting ball data: angle and speed perhaps
-  _ball = std::make_unique<Ball>(_screen_width / 2, _screen_height / 2, 360.0f,
-      _ball_speed, GetTexture("ball"));
-  // set the _renderer pointer to the ball for rendering operations
-  _renderer->SetBall(_ball.get());
+  // Only after SDL stuff is initialized and textures are created, other
+  // components can be created
+  CreateBall();
+  CreatePaddle();
 }
 
 // destructor
@@ -110,9 +107,12 @@ void Game::GenerateOutput() const
 // / load all textures used in the game //NOTE: verify
 void Game::LoadTextures()
 {
-  // load textue representing the ball
+  // load texture representing the ball
   _textures["ball"] = std::make_unique<Texture>(
       "../assets/ball.png", _renderer->GetSDLrenderer());
+  // load texture respresenting the paddle
+  _textures["paddle"] = std::make_unique<Texture>(
+      "../assets/paddle.png", _renderer->GetSDLrenderer());
 }
 
 // gets a single texture from the stored textures
@@ -130,4 +130,34 @@ const Texture& Game::GetTexture(const std::string& TextureName) const
   }
   // return found texture
   return *(search->second);
+}
+
+// creates the ball
+void Game::CreateBall()
+{ // NOTE: randomize starting ball data: angle and speed perhaps
+  _ball = std::make_unique<Ball>(_screen_width / 2, _screen_height / 2, 360.0f,
+      _ball_speed, GetTexture("ball"));
+  // verify if ball created successfully. If not throw exception
+  if (!_ball) {
+    throw std::logic_error("Unable to create the ball");
+  }
+  // set the _renderer pointer to the ball for rendering operations
+  _renderer->SetBall(_ball.get());
+}
+
+// creates the paddle
+void Game::CreatePaddle()
+{
+  // get paddle texture and calculate vertical position
+  auto& paddle_texture { GetTexture("paddle") };
+  int paddle_y = _screen_height - paddle_texture.Height() / 2;
+  // create the actuall paddle and set unique pointer
+  _paddle = std::make_unique<Paddle>(
+      _screen_width / 2, paddle_y, _paddle_speed, paddle_texture);
+  // verify if paddle created successfully. If not throw exception
+  if (!_paddle) {
+    throw std::logic_error("Unable to create the paddle");
+  }
+  // set the _renderer pointer to the ball for rendering operations
+  _renderer->SetPaddle(_paddle.get());
 }

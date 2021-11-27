@@ -8,8 +8,8 @@
 int main(int argc, char const* argv[])
 {
   // constants for game settings
-  constexpr std::size_t c_screen_height { 600 };
-  constexpr std::size_t c_screen_width { 800 };
+  constexpr std::size_t c_screen_width { 1000 };
+  constexpr std::size_t c_screen_height { 800 };
   constexpr std::size_t c_frames_per_second { 60 };
 
   try {

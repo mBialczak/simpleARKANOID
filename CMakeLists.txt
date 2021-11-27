@@ -36,6 +36,7 @@ src/Ball.cpp
 src/gMath.cpp
 src/Texture.cpp
 src/LoadedSDLsurface.cpp
+src/Paddle.cpp
 )
 
 #REVIEW: remove tests before submitting

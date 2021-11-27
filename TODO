@@ -28,3 +28,21 @@ consider making Vector2d a class isntead of struct and make \_x and \_y private
 
 TODO:
 try to inline possible operations
+
+TODO:
+make conditionaly compilied debugging code
+
+TODO:
+make movable object base class and derive ball, paddle and block
+
+TODO:
+simplify game constructor
+
+TODO:
+consider creating conversion operators for Renderer and others
+
+TODO:
+consider shortening get functions
+
+TODO:
+try to replace Renderer::SetBall, Renderer::SetPaddle and similar to one setting all objects to display

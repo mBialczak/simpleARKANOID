@@ -20,7 +20,7 @@ void Ball::UpdateBall(float DeltaTime)
 }
 
 // render the ball
-void Ball::Render() const
+void Ball::Draw() const
 {
   _texture.Render(
       static_cast<int>(_position._x), static_cast<float>(_position._y));

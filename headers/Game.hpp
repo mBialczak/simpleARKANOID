@@ -2,6 +2,7 @@
 #define GAME_HPP
 #include "Ball.hpp"
 #include "Controller.hpp"
+#include "Paddle.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
 #include <cstddef>
@@ -33,6 +34,10 @@ class Game {
   void LoadTextures();
   // gets a single texture from the stored textures
   const Texture& GetTexture(const std::string& TextureName) const;
+  // creates the ball
+  void CreateBall();
+  // creates the paddle
+  void CreatePaddle();
 
   // window size properties
   const std::size_t _screen_height;
@@ -50,5 +55,9 @@ class Game {
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)
   float _ball_speed = 50.0f;
+  // pointer to the paddle
+  std::unique_ptr<Paddle> _paddle;
+  // paddle scalar moving speed
+  const float _paddle_speed = 50.0f;
 };
 #endif // !GAME_HPP

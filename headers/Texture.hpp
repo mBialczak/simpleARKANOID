@@ -24,6 +24,13 @@ class Texture {
   // destructor destroys the owned SDL surface
   ~Texture();
 
+  // gets texture width
+  // NOTE: may be not used - consider removing
+  int Width() const { return _width; }
+
+  // gets texture height
+  int Height() const { return _height; }
+
   // returns pointer to owned SDL_Texture
   // user of the class should not explicitly destroy the texture
   SDL_Texture* GetSDLtexture() const { return _sdl_texture; }

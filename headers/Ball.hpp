@@ -14,7 +14,7 @@ class Ball {
   // update ball state with given time difference from last update
   void UpdateBall(float DeltaTime);
   // render the ball
-  void Render() const;
+  void Draw() const;
 
   private:
   // ball position

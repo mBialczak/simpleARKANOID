@@ -2,10 +2,12 @@
 #define RENDERER_HPP
 
 #include "Ball.hpp"
+#include "Paddle.hpp"
 #include "SDL.h"
 
-// Ball forward declaration
+// class forward declarations
 class Ball;
+class Paddle;
 
 // class for rendering graphics
 class Renderer {
@@ -21,6 +23,8 @@ class Renderer {
   ~Renderer();
   // sets member ball pointer to be rendered
   void SetBall(const Ball* const Ball) { _ball = Ball; }
+  // sets member ball pointer to be rendered
+  void SetPaddle(const Paddle* const Paddle) { _paddle = Paddle; }
 
   void Display() const;
 
@@ -43,5 +47,8 @@ class Renderer {
 
   // NOT owned pointer to the ball being displayed
   const Ball* _ball;
+
+  // NOT owned pointer to the paddle being displayed
+  const Paddle* _paddle;
 };
 #endif // !RENDERER_HPP

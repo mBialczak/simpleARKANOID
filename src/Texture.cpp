@@ -68,9 +68,13 @@ Texture& Texture::operator=(Texture&& Moved)
 // renders texture in position x, y
 void Texture::Render(int x, int y) const
 {
-  // create destination rendering rectangle
-  SDL_Rect render_rect { x, y, _width, _height };
-
+  // create destination rendering rectangle and set sizes
+  SDL_Rect render_rect; // { x, y, _width, _height };
+  render_rect.w = _width;
+  render_rect.h = _height;
+  // center the position of the rectangle around texture center
+  render_rect.x = x - render_rect.w / 2;
+  render_rect.y = y - render_rect.h / 2;
   // Render to screen; NULL for entire texture
   SDL_RenderCopy(_sdl_renderer, _sdl_texture, NULL, &render_rect);
 }
