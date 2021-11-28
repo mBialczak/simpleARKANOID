@@ -4,3 +4,10 @@ BasedOnStyle: WebKit
 IndentWidth: 2
 ColumnLimit: 80
 AlwaysBreakTemplateDeclarations: Yes
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterEnum: true
+  BeforeCatch: true
+  BeforeElse: true
+  AfterFunction: true

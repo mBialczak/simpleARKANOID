@@ -13,7 +13,7 @@ Ball::Ball(
 }
 
 // update ball state with given time difference from last update
-void Ball::UpdateBall(float DeltaTime)
+void Ball::Update(float DeltaTime)
 {
   // update position
   _position += _velocity * DeltaTime;

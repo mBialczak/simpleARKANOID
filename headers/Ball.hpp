@@ -12,7 +12,7 @@ class Ball {
   Ball(float X, float Y, float DirectionAngle, float Speed,
       const Texture& texture);
   // update ball state with given time difference from last update
-  void UpdateBall(float DeltaTime);
+  void Update(float DeltaTime);
   // render the ball
   void Draw() const;
 

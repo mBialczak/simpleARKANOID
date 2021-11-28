@@ -46,3 +46,7 @@ consider shortening get functions
 
 TODO:
 try to replace Renderer::SetBall, Renderer::SetPaddle and similar to one setting all objects to display
+
+TODO: change all parammeters to cammelCase
+
+TODO: consider making pointer to paddle a member of class game

@@ -68,7 +68,7 @@ void Game::Run()
   while (running) {
 
     // handle input
-    _controller.HandleInput(running);
+    _controller.HandleInput(running, *_paddle);
 
     UpdateGame();
     GenerateOutput();
@@ -88,12 +88,15 @@ void Game::UpdateGame()
   static IntervalTimer timer;
   // calculate delta time and udpate timer
   auto delta_time = timer.UpdateAndGetInterval();
-  // REVIEW: for debuggin purposes
+  // REVIEW: for debugging purposes
   if (delta_time >= 0.5f) {
     // cap delta_time while debugging if time difference is to big
     delta_time = 0.5f;
   }
-  _ball->UpdateBall(delta_time);
+  // update ball state
+  _ball->Update(delta_time);
+  // upate paddle state
+  _paddle->Update(delta_time);
 }
 
 // generates all game output
