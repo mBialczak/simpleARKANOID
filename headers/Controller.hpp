@@ -12,7 +12,7 @@ class Controller {
   private:
   // helper function for  handling keypresses
   void HandleKeyPresses(
-      SDL_Event& evt, const Uint8* KeysArray, Paddle& paddle) const;
+      SDL_Event& evt, const Uint8* keysArray, Paddle& paddle) const;
 
   // key scancodes used for game control
   // paddle up

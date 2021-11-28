@@ -119,16 +119,16 @@ void Game::LoadTextures()
 }
 
 // gets a single texture from the stored textures
-const Texture& Game::GetTexture(const std::string& TextureName) const
+const Texture& Game::GetTexture(const std::string& textureName) const
 {
   // try to find a stored texture of the given name
-  auto search = _textures.find(TextureName);
+  auto search = _textures.find(textureName);
   // if texture wasn't found, throw exception
   // by this point the project design assumes that all requried textures were
   // created during game initialization
   if (search == _textures.end()) {
     std::string error { "Unable to get texture: \"" };
-    error += TextureName + "\"";
+    error += textureName + "\"";
     throw std::logic_error(error);
   }
   // return found texture

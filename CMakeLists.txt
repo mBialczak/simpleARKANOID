@@ -31,12 +31,12 @@ src/LimitTimer.cpp
 src/Controller.cpp
 src/SDLexception.cpp
 src/IntervalTimer.cpp
-src/Wall.cpp
 src/Ball.cpp
 src/gMath.cpp
 src/Texture.cpp
 src/LoadedSDLsurface.cpp
 src/Paddle.cpp
+src/StaticObject.cpp
 )
 
 #REVIEW: remove tests before submitting

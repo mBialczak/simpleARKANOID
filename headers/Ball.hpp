@@ -9,10 +9,10 @@ class Texture;
 class Ball {
   public:
   // constructor
-  Ball(float X, float Y, float DirectionAngle, float Speed,
+  Ball(float X, float Y, float directionAngle, float speed,
       const Texture& texture);
   // update ball state with given time difference from last update
-  void Update(float DeltaTime);
+  void Update(float deltaTime);
   // render the ball
   void Draw() const;
 

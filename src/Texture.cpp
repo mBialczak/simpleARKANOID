@@ -5,24 +5,24 @@
 
 // constructor
 // takes path of the image file and renderer for texture creation and rendering
-Texture::Texture(const std::string& Path, SDL_Renderer* GameRenderer)
+Texture::Texture(const std::string& path, SDL_Renderer* gameRenderer)
     : _sdl_texture(nullptr)
-    , _sdl_renderer(GameRenderer)
+    , _sdl_renderer(gameRenderer)
     , _width(0)
     , _height(0)
 {
   // load image at specified path into a surface
   // surface will be automatically freed by LoadedSDLsurface wrapper
-  LoadedSDLsufrace image_surface(Path);
+  LoadedSDLsufrace image_surface(path);
 
   // create surface from image surface
   _sdl_texture = SDL_CreateTextureFromSurface(
-      GameRenderer, image_surface.GetSurfacePtr());
+      gameRenderer, image_surface.GetSurfacePtr());
 
   // check if texture created succesfully and throw if not
   if (!_sdl_texture) {
     std::string error { "Failed to create texture from path: " };
-    error += Path;
+    error += path;
     throw SDLexception(error, IMG_GetError(), __FILE__, __LINE__);
   }
   // set texture dimensions basing on louded image size
@@ -37,31 +37,31 @@ Texture::~Texture()
 }
 
 // move constructor
-Texture::Texture(Texture&& Other)
-    : _sdl_texture(Other._sdl_texture)
-    , _width(Other._width)
-    , _height(Other._height)
+Texture::Texture(Texture&& other)
+    : _sdl_texture(other._sdl_texture)
+    , _width(other._width)
+    , _height(other._height)
 {
-  Other._sdl_texture = nullptr;
-  Other._width = 0;
-  Other._height = 0;
+  other._sdl_texture = nullptr;
+  other._width = 0;
+  other._height = 0;
 }
 
 // move assignment operator
-Texture& Texture::operator=(Texture&& Moved)
+Texture& Texture::operator=(Texture&& moved)
 {
   // destroy owned SDL texture
   if (_sdl_texture) {
     SDL_DestroyTexture(_sdl_texture);
   }
   // copy properties from moved object
-  _sdl_texture = Moved._sdl_texture;
-  _width = Moved._width;
-  _height = Moved._height;
+  _sdl_texture = moved._sdl_texture;
+  _width = moved._width;
+  _height = moved._height;
   // invalidate moved object
-  Moved._sdl_texture = nullptr;
-  Moved._width = 0;
-  Moved._height = 0;
+  moved._sdl_texture = nullptr;
+  moved._width = 0;
+  moved._height = 0;
   return *this;
 }
 

@@ -15,11 +15,11 @@ struct Vector2d {
   // constructor taking X and Y coordinates
   Vector2d(float X, float Y);
   // constructs unit vector from the direction angle
-  explicit Vector2d(float Angle);
+  explicit Vector2d(float angle);
   // returns current vector multiplied by scalar
-  Vector2d operator*(float Scalar);
+  Vector2d operator*(float scalar);
   // add inplace other vector2d
-  Vector2d& operator+=(const Vector2d& Other);
+  Vector2d& operator+=(const Vector2d& other);
 
   // axis components
   float _x;
@@ -27,10 +27,10 @@ struct Vector2d {
 };
 
 // converts angle in degrees to angle in radians
-inline float ToRadians(float Degrees)
+inline float ToRadians(float degrees)
 {
   {
-    return Degrees * c_Pi / 180.0f;
+    return degrees * c_Pi / 180.0f;
   };
 }
 

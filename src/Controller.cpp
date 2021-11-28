@@ -19,19 +19,19 @@ void Controller::HandleInput(bool& running, Paddle& paddle) const
 
 // helper function for  handling keypresses
 void Controller::HandleKeyPresses(
-    SDL_Event& evt, const Uint8* KeysArray, Paddle& paddle) const
+    SDL_Event& evt, const Uint8* keysArray, Paddle& paddle) const
 {
   // move the paddle accordingly to pressed keys
-  if (KeysArray[_up]) {
+  if (keysArray[_up]) {
     paddle.MoveUp();
   }
-  else if (KeysArray[_down]) {
+  else if (keysArray[_down]) {
     paddle.MoveDown();
   }
-  else if (KeysArray[_left]) {
+  else if (keysArray[_left]) {
     paddle.MoveLeft();
   }
-  else if (KeysArray[_right]) {
+  else if (keysArray[_right]) {
     paddle.MoveRight();
   }
   else {

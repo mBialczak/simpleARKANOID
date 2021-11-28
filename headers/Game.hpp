@@ -33,7 +33,7 @@ class Game {
   // load all textures used in the game //NOTE: verify
   void LoadTextures();
   // gets a single texture from the stored textures
-  const Texture& GetTexture(const std::string& TextureName) const;
+  const Texture& GetTexture(const std::string& textureName) const;
   // creates the ball
   void CreateBall();
   // creates the paddle

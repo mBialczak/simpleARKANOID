@@ -10,9 +10,9 @@ Paddle::Paddle(float X, float Y, float Speed, const Texture& texture)
 }
 
 // update paddle state
-void Paddle::Update(float DeltaTime)
+void Paddle::Update(float deltaTime)
 { // update position
-  _position += _velocity * DeltaTime;
+  _position += _velocity * deltaTime;
 };
 
 // render the paddle

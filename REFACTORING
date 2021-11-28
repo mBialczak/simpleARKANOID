@@ -50,3 +50,5 @@ try to replace Renderer::SetBall, Renderer::SetPaddle and similar to one setting
 TODO: change all parammeters to cammelCase
 
 TODO: consider making pointer to paddle a member of class game
+
+TODO: remove StaticObject if not needed
