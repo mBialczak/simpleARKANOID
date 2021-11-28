@@ -207,7 +207,8 @@ void Game::CreateRightWall()
 
 // creates the ball
 void Game::CreateBall()
-{ // NOTE: randomize starting ball data: angle and speed perhaps
+{
+  // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
       360.0f, _ball_speed, GetTexture("ball"));
   // verify if ball created successfully. If not throw exception
@@ -224,9 +225,19 @@ void Game::CreatePaddle()
   // get paddle texture and calculate vertical position
   auto& paddle_texture { GetTexture("paddle") };
   int paddle_y = _screen_height - paddle_texture.Height() / 2;
+  // calculate and create rectangle limiting the paddle move range
+  SDL_Rect limits;
+  // set top-left coordinates of the limiting rectangle
+  limits.x = _wall_tickness;
+  limits.y = _screen_height * 3 / 4;
+  // set width of the limiting rectangle
+  limits.w = _screen_width - 2 * _wall_tickness;
+  // set height of the limiting rectangle
+  limits.h = _screen_height - limits.y;
+
   // create the actuall paddle and set unique pointer
   _paddle = std::make_unique<Paddle>(
-      _screen_width / 2, paddle_y, _paddle_speed, paddle_texture);
+      _screen_width / 2, paddle_y, _paddle_speed, limits, paddle_texture);
   // verify if paddle created successfully. If not throw exception
   if (!_paddle) {
     throw std::logic_error("Unable to create the paddle");

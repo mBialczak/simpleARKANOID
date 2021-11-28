@@ -64,6 +64,8 @@ class Game
   Renderer* _renderer;
   // container for walls
   std::vector<std::unique_ptr<SideWall>> _walls;
+  // tickness of the walls in pixels
+  const int _wall_tickness = 10;
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)

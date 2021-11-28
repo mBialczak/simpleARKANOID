@@ -1,18 +1,27 @@
 #include "Paddle.hpp"
 
-// constructor
-Paddle::Paddle(float X, float Y, float Speed, const Texture& texture)
+// constructor:
+// X, Y - paddle centre coordinates
+// speed - ball sclar speed in pixels / second
+// moveLimits - rectangle within the paddle can move
+// texture - texture used for displaying the ball
+Paddle::Paddle(
+    float X, float Y, float speed, SDL_Rect moveLimits, const Texture& texture)
     : _position(gMath::Vector2d(X, Y))
-    , _speed(Speed)
+    , _speed(speed)
     , _velocity(gMath::Vector2d())
+    , _move_limits(moveLimits)
     , _texture(texture)
 {
 }
 
 // update paddle state
 void Paddle::Update(float deltaTime)
-{ // update position
+{
+  // update position
   _position += _velocity * deltaTime;
+  // correct if position went out of the allowed moving range
+  KeepInMovingLimits();
 };
 
 // render the paddle
@@ -55,4 +64,32 @@ void Paddle::MoveRight()
 {
   _velocity._x = _speed;
   _velocity._y = 0;
+}
+
+// corrects position if paddle tries to escape allowed moving area
+void Paddle::KeepInMovingLimits()
+{
+  int half_width = _texture.Width() / 2;
+  int half_height = _texture.Height() / 2;
+
+  // move right if reached the left limit
+  if (_position._x - half_width < _move_limits.x) {
+    _position._x = _move_limits.x + half_width + 1;
+    return;
+  }
+  // move left if reached the right limit
+  if (_position._x + half_width > _move_limits.x + _move_limits.w) {
+    _position._x = _move_limits.x + _move_limits.w - half_width - 1;
+    return;
+  }
+  //  move down if reached the the top limit
+  if (_position._y - half_height < _move_limits.y) {
+    _position._y = _move_limits.y + half_height + 1;
+    return;
+  }
+  // move up if reached the bottom limit
+  if (_position._y + half_height > _move_limits.y + _move_limits.h) {
+    _position._y = _move_limits.y + _move_limits.h - half_height - 1;
+    return;
+  }
 }

@@ -6,9 +6,14 @@
 // Texture forward declaration
 class Texture;
 
-class Ball {
+class Ball
+{
   public:
-  // constructor
+  // constructor:
+  // X, Y - ball centre coordinates
+  // directionAngle - direction in degrees in which the ball starts moving
+  // speed - ball sclar speed in pixels / second
+  // texture - texture used for displaying the ball
   Ball(float X, float Y, float directionAngle, float speed,
       const Texture& texture);
   // update ball state with given time difference from last update
