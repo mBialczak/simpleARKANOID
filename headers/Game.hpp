@@ -4,12 +4,15 @@
 #include "Controller.hpp"
 #include "Paddle.hpp"
 #include "Renderer.hpp"
+#include "SideWall.hpp"
 #include "Texture.hpp"
 #include <cstddef>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
-class Game {
+class Game
+{
 
   public:
   // constructor
@@ -34,6 +37,14 @@ class Game {
   void LoadTextures();
   // gets a single texture from the stored textures
   const Texture& GetTexture(const std::string& textureName) const;
+  // creates the wall limiting the game area
+  void CreateWalls();
+  // creates the top wall
+  void CreateTopWall();
+  // creates the left wall
+  void CreateLeftWall();
+  // creates the right wall
+  void CreateRightWall();
   // creates the ball
   void CreateBall();
   // creates the paddle
@@ -51,6 +62,8 @@ class Game {
   Controller _controller;
   // owned pointers
   Renderer* _renderer;
+  // container for walls
+  std::vector<std::unique_ptr<SideWall>> _walls;
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)

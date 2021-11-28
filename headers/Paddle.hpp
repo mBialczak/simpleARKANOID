@@ -6,12 +6,13 @@
 class Texture;
 
 // the movable paddle
-class Paddle {
+class Paddle
+{
   public:
   // constructor
   Paddle(float X, float Y, float Speed, const Texture& texture);
   // update paddle state
-  void Update(float DeltaTime);
+  void Update(float deltaTime);
   // render the paddle
   void Draw() const;
 

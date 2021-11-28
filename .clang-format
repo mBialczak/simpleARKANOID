@@ -6,8 +6,10 @@ ColumnLimit: 80
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterClass: true
+  AfterFunction: true
   AfterCaseLabel: true
   AfterEnum: true
+  AfterStruct: true
   BeforeCatch: true
   BeforeElse: true
-  AfterFunction: true

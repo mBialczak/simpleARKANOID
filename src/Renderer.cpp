@@ -7,10 +7,13 @@ Renderer::Renderer(
     const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
-    // the real ball pointer will be set long after renderer creation, after
+    // the real walls pointer will be set after
+    // the walls are constructed inGame Constructor
+    , _walls_ptr(nullptr)
+    // the real ball pointer will be set after
     // the ball is created in Game constructor
     , _ball(nullptr)
-    // the real paddle pointer will be set long after renderer creation, after
+    // the real paddle pointer will be set  after renderer creation, after
     // the paddle is created in Game constructor
     , _paddle(nullptr)
 {
@@ -46,6 +49,52 @@ Renderer::~Renderer()
   _sdl_window = nullptr;
 }
 
+// sets pointer to walls container to be rendered
+void Renderer::SetWalls(
+    const std::vector<std::unique_ptr<SideWall>>* const wallsPtr)
+{
+  // if wallsPTr is a nullptr the class invariant will not be ok so throw
+  if (!wallsPtr) {
+    // create error message
+    std::string error { "The walls pointer cannot be set to nullptr" };
+    // add source file name and line info to the message
+    error += __FILE__;
+    error += std::to_string(__LINE__);
+    throw std::logic_error(error);
+  }
+  _walls_ptr = wallsPtr;
+};
+
+// sets member ball pointer to be rendered
+void Renderer::SetBall(const Ball* const ball)
+{
+  // if Ball is a nullptr the class invariant will not be ok so throw
+  if (!ball) {
+    // create error message
+    std::string error { "The ball pointer cannot be set to nullptr" };
+    // add source file name and line info to the message
+    error += __FILE__;
+    error += std::to_string(__LINE__);
+    throw std::logic_error(error);
+  }
+  _ball = ball;
+}
+
+// sets member paddle pointer to be rendered
+void Renderer::SetPaddle(const Paddle* const paddle)
+{
+  // if paddle is a nullptr the class invariant will not be ok so throw
+  if (!paddle) {
+    // create error message
+    std::string error { "The paddle pointer cannot be set to nullptr" };
+    // add source file name and line info to the message
+    error += __FILE__;
+    error += std::to_string(__LINE__);
+    throw std::logic_error(error);
+  }
+  _paddle = paddle;
+}
+
 // displays (renders) game graphics
 // NOTE: helper color #00aa00
 void Renderer::Display() const
@@ -57,6 +106,10 @@ void Renderer::Display() const
   // clear screen
   SDL_RenderClear(_sdl_renderer);
 
+  // display the walls
+  for (auto& wall_ptr : *_walls_ptr) {
+    wall_ptr->Draw();
+  }
   // display the ball
   _ball->Draw();
 

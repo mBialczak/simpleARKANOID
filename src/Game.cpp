@@ -36,6 +36,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   LoadTextures();
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
+  CreateWalls();
   CreateBall();
   CreatePaddle();
 }
@@ -116,6 +117,11 @@ void Game::LoadTextures()
   // load texture respresenting the paddle
   _textures["paddle"] = std::make_unique<Texture>(
       "../assets/paddle.png", _renderer->GetSDLrenderer());
+  // load texture representing the side_wall
+  _textures["horizontal_wall"] = std::make_unique<Texture>(
+      "../assets/horizontal_wall.png", _renderer->GetSDLrenderer());
+  _textures["vertical_wall"] = std::make_unique<Texture>(
+      "../assets/vertical_wall.png", _renderer->GetSDLrenderer());
 }
 
 // gets a single texture from the stored textures
@@ -135,11 +141,75 @@ const Texture& Game::GetTexture(const std::string& textureName) const
   return *(search->second);
 }
 
+// creates the wall limiting the game area
+void Game::CreateWalls()
+{
+  CreateTopWall();
+  CreateLeftWall();
+  CreateRightWall();
+
+  // let the rernderer know which walls to render
+  _renderer->SetWalls(&_walls);
+}
+
+// creates the top wall
+void Game::CreateTopWall()
+{
+  // get texture for top wall
+  const Texture& texture { GetTexture("horizontal_wall") };
+  // calculate positon of the top wall
+  float top_x { _screen_width / 2.0f };
+  float top_y { texture.Height() / 2.0f };
+  // create top Wall
+  auto wall_ptr = std::make_unique<SideWall>(top_x, top_y, texture);
+  // check if the wall has been created successfully and throw if not
+  if (!wall_ptr) {
+    throw std::logic_error("Unable to create the top wall properly");
+  }
+  // emplace the pointer in the _walls container
+  _walls.emplace_back(std::move(wall_ptr));
+}
+
+// creates the left wall
+void Game::CreateLeftWall()
+{
+  //  get texture for the left wall
+  const Texture& texture { GetTexture("vertical_wall") };
+  // calculate positon of the left wall
+  float left_x { texture.Width() / 2.0f };
+  float left_y { _screen_height / 2.0f };
+  // create left Wall
+  auto wall_ptr = std::make_unique<SideWall>(left_x, left_y, texture);
+  // check if the wall has been created successfully and throw if not
+  if (!wall_ptr) {
+    throw std::logic_error("Unable to create the left wall properly");
+  }
+  // emplace the pointer in the _walls container
+  _walls.emplace_back(std::move(wall_ptr));
+}
+
+// creates the right wall
+void Game::CreateRightWall()
+{ //  get texture for the right wall
+  const Texture& texture { GetTexture("vertical_wall") };
+  // calculate positon of the right wall
+  float right_x { _screen_width - texture.Width() / 2.0f };
+  float right_y { _screen_height / 2.0f };
+  // create the right Wall
+  auto wall_ptr = std::make_unique<SideWall>(right_x, right_y, texture);
+  // check if the wall has been created successfully and throw if not
+  if (!wall_ptr) {
+    throw std::logic_error("Unable to create the right wall properly");
+  }
+  // emplace the pointer in the _walls container
+  _walls.emplace_back(std::move(wall_ptr));
+}
+
 // creates the ball
 void Game::CreateBall()
 { // NOTE: randomize starting ball data: angle and speed perhaps
-  _ball = std::make_unique<Ball>(_screen_width / 2, _screen_height / 2, 360.0f,
-      _ball_speed, GetTexture("ball"));
+  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
+      360.0f, _ball_speed, GetTexture("ball"));
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");

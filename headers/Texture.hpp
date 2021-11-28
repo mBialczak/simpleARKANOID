@@ -5,10 +5,11 @@
 #include <string>
 
 // wrapper class for creating SDL_texture
-class Texture {
+class Texture
+{
   public:
   // constructor creating SDL texture from file designated by path
-  explicit Texture(const std::string& Path, SDL_Renderer* gameRenderer);
+  Texture(const std::string& Path, SDL_Renderer* gameRenderer);
 
   // copying of class not predicted and copy operations may cause
   // problems with managed resources, so copy operations are disabled

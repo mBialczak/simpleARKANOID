@@ -37,6 +37,8 @@ src/Texture.cpp
 src/LoadedSDLsurface.cpp
 src/Paddle.cpp
 src/StaticObject.cpp
+src/SideWall.cpp
+src/Sprite.cpp # NOTE: remove if not used
 )
 
 #REVIEW: remove tests before submitting
