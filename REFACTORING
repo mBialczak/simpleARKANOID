@@ -56,3 +56,5 @@ TODO: remove StaticObject if not needed
 TODO: consider setting \_texture in objects to a pointer and allow for validation check in the constructor
 
 TODO: for all Set functions like in SetBall or SetWalls in Renderer consider adding check for invariants
+
+TODO: clean CMakeLists.txt

@@ -1,6 +1,5 @@
 #include "Controller.hpp"
 #include "SDL.h"
-#include "gMath.hpp"
 
 // function for handling all the input events
 void Controller::HandleInput(bool& running, Paddle& paddle) const

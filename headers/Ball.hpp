@@ -1,7 +1,8 @@
 #ifndef Ball_HPP
 #define Ball_HPP
 #include "Texture.hpp"
-#include "gMath.hpp"
+#include "Vector2d.hpp"
+// #include "gMath.hpp" // NOTE: remove INU
 
 // Texture forward declaration
 class Texture;

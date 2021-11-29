@@ -1,5 +1,5 @@
-#ifndef Vector2d_HPP
-#define Vector2d_HPP
+#ifndef Vector2d_hpp
+#define Vector2d_hpp
 #include "SDL_image.h"
 #include <cmath>
 
@@ -9,7 +9,8 @@ namespace gMath {
 // mathematical constants used
 constexpr float c_Pi = M_PI;
 // NOTE: comment
-struct Vector2d {
+struct Vector2d
+{
   // default constructor
   Vector2d();
   // constructor taking X and Y coordinates
@@ -26,6 +27,8 @@ struct Vector2d {
   float _y;
 };
 
+// Helper functions
+
 // converts angle in degrees to angle in radians
 inline float ToRadians(float degrees)
 {
@@ -35,4 +38,4 @@ inline float ToRadians(float degrees)
 }
 
 } // end of gMath namespace
-#endif // !Vector2d_HPP
+#endif // !Vector2d_hpp

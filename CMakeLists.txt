@@ -32,19 +32,23 @@ src/Controller.cpp
 src/SDLexception.cpp
 src/IntervalTimer.cpp
 src/Ball.cpp
-src/gMath.cpp
+# src/gMath.cpp //NOTE: remove if not used
 src/Texture.cpp
 src/LoadedSDLsurface.cpp
 src/Paddle.cpp
 src/StaticObject.cpp
 src/SideWall.cpp
-src/Sprite.cpp # NOTE: remove if not used
+src/RandNum.cpp
+src/Vector2d.cpp
+# src/Sprite.cpp # NOTE: remove if not used
 )
 
 #REVIEW: remove tests before submitting
 add_executable(tests 
-tests/VectorTests.cpp
-src/gMath.cpp)
+# tests/VectorTests.cpp
+# src/gMath.cpp
+src/RandNum.cpp
+tests/RandTests.cpp)
 if (MSVC)
   target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 else()

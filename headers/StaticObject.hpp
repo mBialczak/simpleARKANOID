@@ -1,6 +1,7 @@
 #ifndef StaticObject_hpp
 #define StaticObject_hpp
-#include "gMath.hpp"
+#include "Vector2d.hpp"
+// #include "gMath.hpp" // NOTE: remvoe INU
 
 // pure virtual class for representing static (not moving objects in the game)
 class StaticObject {
