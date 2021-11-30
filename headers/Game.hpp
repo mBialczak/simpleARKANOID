@@ -3,6 +3,7 @@
 #include "Ball.hpp"
 #include "Controller.hpp"
 #include "Paddle.hpp"
+#include "RandNum.hpp"
 #include "Renderer.hpp"
 #include "SideWall.hpp"
 #include "Texture.hpp"
@@ -21,11 +22,14 @@ class Game
   // destructor
   ~Game();
 
-  // deleted copy operations for copy prevention
+  // deleted copy and move operations as the project design predicts only one
+  // game object in the entire program
   Game(const Game&) = delete;
+  Game(Game&&) = delete;
   Game& operator=(const Game&) = delete;
+  Game& operator=(Game&&) = delete;
 
-  // implements main game loop
+  // runs the game ; implements main game loop
   void Run();
 
   private:
@@ -69,10 +73,12 @@ class Game
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)
-  float _ball_speed = 20.0f;
+  float _ball_speed = 160.0f;
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
   // paddle scalar moving speed
-  const float _paddle_speed = 200.0f;
+  const float _paddle_speed = 250.0f;
+  // randomizer used for getting random numbers
+  gMath::RandNum _randomizer;
 };
 #endif // !GAME_HPP

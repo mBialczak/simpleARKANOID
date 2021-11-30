@@ -11,6 +11,9 @@ class RandNum
 {
   public:
   // Gets random integral or floating point number depending of parameter type.
+  // For integral numbers returns number from min to max - both included
+  // For floating-point numbers returns number from min (included)) to max
+  // (excluded).
   // Can be used both on objects of class and as static function
   // works for various integral and floating point types
   template <typename T>

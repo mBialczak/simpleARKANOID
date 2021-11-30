@@ -58,3 +58,10 @@ TODO: consider setting \_texture in objects to a pointer and allow for validatio
 TODO: for all Set functions like in SetBall or SetWalls in Renderer consider adding check for invariants
 
 TODO: clean CMakeLists.txt
+
+TODO: consider moving helper math functions
+
+TODO: check where in paddle stored height and half height allow for sparing calculations.
+Apply the same to other classes if possible
+
+TODO: consider changing angles where reasonable to integers for simplifing calculations

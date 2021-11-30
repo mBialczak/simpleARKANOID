@@ -6,6 +6,9 @@
 
 // TODO: consider if should inherit from static object or move the code
 
+// class forward declarations
+class Texture;
+
 // class representing border walls in the game
 class SideWall : public virtual StaticObject
 {

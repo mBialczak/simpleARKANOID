@@ -30,12 +30,7 @@ struct Vector2d
 // Helper functions
 
 // converts angle in degrees to angle in radians
-inline float ToRadians(float degrees)
-{
-  {
-    return degrees * c_Pi / 180.0f;
-  };
-}
+inline float ToRadians(float degrees) { return degrees * c_Pi / 180.0f; }
 
 } // end of gMath namespace
 #endif // !Vector2d_hpp

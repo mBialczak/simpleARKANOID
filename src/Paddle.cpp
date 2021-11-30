@@ -12,6 +12,9 @@ Paddle::Paddle(
     , _velocity(gMath::Vector2d())
     , _move_limits(moveLimits)
     , _texture(texture)
+    , _height(_texture.Height())
+    , _half_height(_height / 2.0f)
+    , _half_width(_texture.Width() / 2.0f)
 {
 }
 
@@ -69,27 +72,24 @@ void Paddle::MoveRight()
 // corrects position if paddle tries to escape allowed moving area
 void Paddle::KeepInMovingLimits()
 {
-  int half_width = _texture.Width() / 2;
-  int half_height = _texture.Height() / 2;
-
   // move right if reached the left limit
-  if (_position._x - half_width < _move_limits.x) {
-    _position._x = _move_limits.x + half_width + 1;
+  if (_position._x - _half_width < _move_limits.x) {
+    _position._x = _move_limits.x + _half_width + 1;
     return;
   }
   // move left if reached the right limit
-  if (_position._x + half_width > _move_limits.x + _move_limits.w) {
-    _position._x = _move_limits.x + _move_limits.w - half_width - 1;
+  if (_position._x + _half_width > _move_limits.x + _move_limits.w) {
+    _position._x = _move_limits.x + _move_limits.w - _half_width - 1;
     return;
   }
   //  move down if reached the the top limit
-  if (_position._y - half_height < _move_limits.y) {
-    _position._y = _move_limits.y + half_height + 1;
+  if (_position._y - _half_height < _move_limits.y) {
+    _position._y = _move_limits.y + _half_height + 1;
     return;
   }
   // move up if reached the bottom limit
-  if (_position._y + half_height > _move_limits.y + _move_limits.h) {
-    _position._y = _move_limits.y + _move_limits.h - half_height - 1;
+  if (_position._y + _half_height > _move_limits.y + _move_limits.h) {
+    _position._y = _move_limits.y + _move_limits.h - _half_height - 1;
     return;
   }
 }
