@@ -104,10 +104,10 @@ void Game::UpdateGame()
     // cap delta_time while debugging if time difference is to big
     delta_time = 0.5f;
   }
-  // update ball state
-  _ball->Update(delta_time);
   // upate paddle state
   _paddle->Update(delta_time);
+  // update ball state
+  _ball->Update(delta_time);
 }
 
 // generates all game output
@@ -206,7 +206,8 @@ void Game::CreateBall()
 {
   // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-      _randomizer(210.0f, 270.f), _ball_speed, GetTexture("ball"), *_paddle);
+      _randomizer(210.0f, 270.f), _ball_speed, GetTexture("ball"), *_paddle,
+      _screen_height);
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");

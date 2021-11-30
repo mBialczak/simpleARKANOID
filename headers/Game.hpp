@@ -79,7 +79,7 @@ class Game
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
   // paddle scalar moving speed
-  const float _paddle_speed = 250.0f;
+  const float _paddle_speed = 160.0f;
   // randomizer used for getting random numbers
   gMath::RandNum _randomizer;
 };

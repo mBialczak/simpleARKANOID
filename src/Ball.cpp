@@ -7,7 +7,7 @@
 // texture - texture used for displaying the ball
 // paddle - reference to paddle against ball collision will be checked
 Ball::Ball(float X, float Y, float directionAngle, float speed,
-    const Texture& texture, const Paddle& paddle)
+    const Texture& texture, const Paddle& paddle, float screenBottomY)
     : _position(gMath::Vector2d(X, Y))
     , _direction(directionAngle)
     , _speed(speed)
@@ -17,6 +17,7 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
     , _texture(texture)
     , _radius(texture.Width() / 2.0)
     , _paddle(paddle)
+    , _screen_bottom_y(screenBottomY)
 {
 }
 
@@ -27,8 +28,13 @@ void Ball::Update(float deltaTime)
   if (HasHitPaddle()) {
     BouncePaddle();
   }
-  // update position
-  _position += _velocity * deltaTime;
+  else {
+    // update position
+    _position += _velocity * deltaTime;
+  }
+
+  // check if has left the screen
+  if (HasLeftScreen()) { }
 }
 
 // updates ball direction and velocity vector; takes new  direction angle
@@ -69,6 +75,13 @@ bool Ball::HasHitPaddle() const
   // if both condistions are met collision occurs;
   return vertical_condition && horizontal_condition;
 }
+
+// checks if the ball has left the screen
+bool Ball::HasLeftScreen() const
+{
+  return _position._y - _radius > _screen_bottom_y;
+}
+
 // change ball direction after hitting paddle
 // should be called only when the ball hits the paddle
 void Ball::BouncePaddle()

@@ -19,7 +19,7 @@ class Ball
   // texture - texture used for displaying the ball
   // paddle - reference to paddle against ball collision will be checked
   Ball(float X, float Y, float directionAngle, float speed,
-      const Texture& texture, const Paddle& paddle);
+      const Texture& texture, const Paddle& paddle, float screenBottomY);
   // update ball state with given time difference from last update
   void Update(float deltaTime);
   // updates ball direction and velocity vector; takes new  direction angle
@@ -30,6 +30,8 @@ class Ball
   private:
   // checks for collision with the paddle. Returns true if colided, false if not
   bool HasHitPaddle() const;
+  // checks if the ball has left the screen
+  bool HasLeftScreen() const;
   // change the ball direction after hitting paddle
   void BouncePaddle();
   // keeps the ball direction angle in range [0,360)
@@ -49,6 +51,8 @@ class Ball
   const float _radius;
   // reference to paddle for collision detection
   const Paddle& _paddle;
+  // y coordinate of the bottom of the screen
+  const float _screen_bottom_y;
 };
 
 #endif // !Ball_HPP
