@@ -1,4 +1,5 @@
 #include "Ball.hpp"
+#include "Game.hpp"
 #include <iostream> // NOTE: remove after testing
 // constructor:
 // X, Y - ball centre coordinates
@@ -6,8 +7,10 @@
 // speed - ball sclar speed in pixels / second
 // texture - texture used for displaying the ball
 // paddle - reference to paddle against ball collision will be checked
+// game - reference to the main game object
 Ball::Ball(float X, float Y, float directionAngle, float speed,
-    const Texture& texture, const Paddle& paddle, float screenBottomY)
+    const Texture& texture, const Paddle& paddle, float screenBottomY,
+    Game& game)
     : _position(gMath::Vector2d(X, Y))
     , _direction(directionAngle)
     , _speed(speed)
@@ -18,6 +21,7 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
     , _radius(texture.Width() / 2.0)
     , _paddle(paddle)
     , _screen_bottom_y(screenBottomY)
+    , _game(game)
 {
 }
 
@@ -34,7 +38,9 @@ void Ball::Update(float deltaTime)
   }
 
   // check if has left the screen
-  if (HasLeftScreen()) { }
+  if (HasLeftScreen()) {
+    _game.BallEscapeHandler();
+  }
 }
 
 // updates ball direction and velocity vector; takes new  direction angle

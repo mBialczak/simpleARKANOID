@@ -8,6 +8,7 @@
 // class forward declarations
 class Texture;
 class Paddle;
+class Game;
 
 class Ball
 {
@@ -18,8 +19,10 @@ class Ball
   // speed - ball sclar speed in pixels / second
   // texture - texture used for displaying the ball
   // paddle - reference to paddle against ball collision will be checked
+  // game - reference to the main game object
   Ball(float X, float Y, float directionAngle, float speed,
-      const Texture& texture, const Paddle& paddle, float screenBottomY);
+      const Texture& texture, const Paddle& paddle, float screenBottomY,
+      Game& game);
   // update ball state with given time difference from last update
   void Update(float deltaTime);
   // updates ball direction and velocity vector; takes new  direction angle
@@ -53,6 +56,11 @@ class Ball
   const Paddle& _paddle;
   // y coordinate of the bottom of the screen
   const float _screen_bottom_y;
+  // reference to the main game object
+  // NOTE: consider const and if necessary
+  // NOTE: consider pointer to function handling the event,like ball leaving
+  // area
+  Game& _game;
 };
 
 #endif // !Ball_HPP

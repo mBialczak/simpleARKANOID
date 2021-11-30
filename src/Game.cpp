@@ -6,6 +6,7 @@
 #include "SDLexception.hpp"
 #include <algorithm>
 #include <exception>
+#include <iostream> // NOTE: remove AT
 
 // constructor
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
@@ -207,7 +208,7 @@ void Game::CreateBall()
   // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
       _randomizer(210.0f, 270.f), _ball_speed, GetTexture("ball"), *_paddle,
-      _screen_height);
+      _screen_height, *this);
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");
@@ -241,4 +242,9 @@ void Game::CreatePaddle()
   }
   // set the _renderer pointer to the ball for rendering operations
   _renderer->SetPaddle(_paddle.get());
+}
+// TODO: implement if needed
+void Game::BallEscapeHandler()
+{
+  std::cout << "BallEscapeHandler()!" << std::endl;
 }

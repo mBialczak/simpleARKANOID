@@ -32,6 +32,10 @@ class Game
   // runs the game ; implements main game loop
   void Run();
 
+  // handles the ball leaving the allowed screen area
+  // TODO: to implement
+  void BallEscapeHandler();
+
   private:
   // initialize SDL subsystems
   void InitSubsystems();
