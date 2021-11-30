@@ -33,6 +33,8 @@ class Game
   void Run();
 
   private:
+  // initialize SDL subsystems
+  void InitSubsystems();
   // updates game state
   void UpdateGame();
   // generates game output

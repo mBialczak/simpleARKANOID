@@ -16,25 +16,13 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     , _renderer(nullptr)
 {
   // Initialize SDL subsystems
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    throw SDLexception(
-        "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
-  }
+  InitSubsystems();
+
   // design predicts only 3 walls so reserve enough space
   _side_walls.reserve(3);
 
   // create graphics renderer here, only after SDL is initialized
   _renderer = new Renderer(_screen_height, _screen_width, _side_walls);
-
-  // NOTE: most likely move up and put in one function
-  // initialize SDL_Image support
-  int to_init_flags = IMG_INIT_PNG;
-  int initialized_flags = IMG_Init(to_init_flags);
-  // check if SDL_Image support was initialized correctly
-  if ((to_init_flags & initialized_flags) != to_init_flags) {
-    throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
-        __FILE__, __LINE__);
-  }
 
   // load textures used in the game
   LoadTextures();
@@ -43,6 +31,24 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   CreateWalls();
   CreatePaddle();
   CreateBall();
+}
+
+// initialize SDL subsystems
+void Game::InitSubsystems()
+{
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    throw SDLexception(
+        "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
+  }
+
+  // initialize SDL_Image support
+  int to_init_flags = IMG_INIT_PNG;
+  int initialized_flags = IMG_Init(to_init_flags);
+  // check if SDL_Image support was initialized correctly
+  if ((to_init_flags & initialized_flags) != to_init_flags) {
+    throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
+        __FILE__, __LINE__);
+  }
 }
 
 // destructor
