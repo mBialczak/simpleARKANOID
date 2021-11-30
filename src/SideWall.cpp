@@ -1,8 +1,10 @@
 #include "SideWall.hpp"
 
 // constructor creating the Wall
-SideWall::SideWall(float x, float y, const Texture& texture)
+SideWall::SideWall(
+    float x, float y, CollisionBorder border, const Texture& texture)
     : StaticObject(x, y)
+    , _coll_border(border)
     , _texture(texture)
 {
 }

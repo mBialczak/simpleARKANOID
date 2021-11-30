@@ -3,13 +3,11 @@
 #include "SDLexception.hpp"
 #include <iostream> // remove after testing
 // constructor
-Renderer::Renderer(
-    const std::size_t screenHeight, const std::size_t screenWidth)
+Renderer::Renderer(const std::size_t screenHeight,
+    const std::size_t screenWidth, const std::vector<SideWall>& sideWalls)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
-    // the real walls pointer will be set after
-    // the walls are constructed inGame Constructor
-    , _walls_ptr(nullptr)
+    , _side_walls(sideWalls)
     // the real ball pointer will be set after
     // the ball is created in Game constructor
     , _ball(nullptr)
@@ -48,22 +46,6 @@ Renderer::~Renderer()
   SDL_DestroyWindow(_sdl_window);
   _sdl_window = nullptr;
 }
-
-// sets pointer to walls container to be rendered
-void Renderer::SetWalls(
-    const std::vector<std::unique_ptr<SideWall>>* const wallsPtr)
-{
-  // if wallsPTr is a nullptr the class invariant will not be ok so throw
-  if (!wallsPtr) {
-    // create error message
-    std::string error { "The walls pointer cannot be set to nullptr" };
-    // add source file name and line info to the message
-    error += __FILE__;
-    error += std::to_string(__LINE__);
-    throw std::logic_error(error);
-  }
-  _walls_ptr = wallsPtr;
-};
 
 // sets member ball pointer to be rendered
 void Renderer::SetBall(const Ball* const ball)
@@ -106,11 +88,11 @@ void Renderer::Display() const
   // clear screen
   SDL_RenderClear(_sdl_renderer);
 
-  // display the walls
-  for (auto& wall_ptr : *_walls_ptr) {
-    wall_ptr->Draw();
+  // // display the walls
+  for (auto& wall : _side_walls) {
+    wall.Draw();
   }
-  // display the ball
+
   _ball->Draw();
 
   // display the paddle

@@ -66,8 +66,8 @@ class Game
   Controller _controller;
   // owned pointers
   Renderer* _renderer;
-  // container for walls
-  std::vector<std::unique_ptr<SideWall>> _walls;
+  // container for side walls
+  std::vector<SideWall> _side_walls;
   // tickness of the walls in pixels
   const int _wall_tickness = 10;
   // pointer to the ball

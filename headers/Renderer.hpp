@@ -18,7 +18,8 @@ class Renderer
 {
   public:
   // constructor
-  Renderer(const std::size_t screenHeight, const std::size_t screenWidth);
+  Renderer(const std::size_t screenHeight, const std::size_t screenWidth,
+      const std::vector<SideWall>& sideWalls);
 
   // copying of class object doesn't make sense and copy operations may cause
   // problems with managed resources, so copy operations are disabled
@@ -27,9 +28,6 @@ class Renderer
   // destructor
   ~Renderer();
 
-  //  sets pointer to walls container to be rendered
-  void SetWalls(const std::vector<std::unique_ptr<SideWall>>* const wallsPtr);
-  // sets member ball pointer to be rendered
   void SetBall(const Ball* const ball);
   // sets member paddle pointer to be rendered
   void SetPaddle(const Paddle* const paddle);
@@ -53,8 +51,8 @@ class Renderer
   const std::size_t _screen_height;
   const std::size_t _screen_width;
 
-  // NOT owned pointer to the container of walls being displayed
-  const std::vector<std::unique_ptr<SideWall>>* _walls_ptr;
+  // refference to the container of walls being displayed
+  const std::vector<SideWall>& _side_walls;
 
   // NOT owned pointer to the ball being displayed
   const Ball* _ball;

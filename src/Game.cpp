@@ -20,9 +20,13 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     throw SDLexception(
         "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
   }
-  // create graphics renderer here, only after SDL is initialized
-  _renderer = new Renderer(_screen_height, _screen_width);
+  // design predicts only 3 walls so reserve enough space
+  _side_walls.reserve(3);
 
+  // create graphics renderer here, only after SDL is initialized
+  _renderer = new Renderer(_screen_height, _screen_width, _side_walls);
+
+  // NOTE: most likely move up and put in one function
   // initialize SDL_Image support
   int to_init_flags = IMG_INIT_PNG;
   int initialized_flags = IMG_Init(to_init_flags);
@@ -148,8 +152,9 @@ void Game::CreateWalls()
   CreateLeftWall();
   CreateRightWall();
 
+  // NOTE: remove AR if works
   // let the rernderer know which walls to render
-  _renderer->SetWalls(&_walls);
+  // _renderer->SetWalls(&_walls);
 }
 
 // creates the top wall
@@ -161,13 +166,8 @@ void Game::CreateTopWall()
   float top_x { _screen_width / 2.0f };
   float top_y { texture.Height() / 2.0f };
   // create top Wall
-  auto wall_ptr = std::make_unique<SideWall>(top_x, top_y, texture);
-  // check if the wall has been created successfully and throw if not
-  if (!wall_ptr) {
-    throw std::logic_error("Unable to create the top wall properly");
-  }
-  // emplace the pointer in the _walls container
-  _walls.emplace_back(std::move(wall_ptr));
+  _side_walls.emplace_back(
+      top_x, top_y, SideWall::CollisionBorder::Bottom, texture);
 }
 
 // creates the left wall
@@ -179,13 +179,8 @@ void Game::CreateLeftWall()
   float left_x { texture.Width() / 2.0f };
   float left_y { _screen_height / 2.0f };
   // create left Wall
-  auto wall_ptr = std::make_unique<SideWall>(left_x, left_y, texture);
-  // check if the wall has been created successfully and throw if not
-  if (!wall_ptr) {
-    throw std::logic_error("Unable to create the left wall properly");
-  }
-  // emplace the pointer in the _walls container
-  _walls.emplace_back(std::move(wall_ptr));
+  _side_walls.emplace_back(
+      left_x, left_y, SideWall::CollisionBorder::Right, texture);
 }
 
 // creates the right wall
@@ -196,13 +191,8 @@ void Game::CreateRightWall()
   float right_x { _screen_width - texture.Width() / 2.0f };
   float right_y { _screen_height / 2.0f };
   // create the right Wall
-  auto wall_ptr = std::make_unique<SideWall>(right_x, right_y, texture);
-  // check if the wall has been created successfully and throw if not
-  if (!wall_ptr) {
-    throw std::logic_error("Unable to create the right wall properly");
-  }
-  // emplace the pointer in the _walls container
-  _walls.emplace_back(std::move(wall_ptr));
+  _side_walls.emplace_back(
+      right_x, right_y, SideWall::CollisionBorder::Left, texture);
 }
 
 // creates the ball
