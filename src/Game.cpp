@@ -208,7 +208,7 @@ void Game::CreateBall()
   // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
       _randomizer(210.0f, 270.f), _ball_speed, GetTexture("ball"), *_paddle,
-      _screen_height, *this);
+      _screen_height, *this, _side_walls);
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");

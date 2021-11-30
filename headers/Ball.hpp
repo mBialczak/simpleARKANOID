@@ -1,14 +1,17 @@
 #ifndef Ball_HPP
 #define Ball_HPP
 #include "Paddle.hpp"
+#include "SideWall.hpp"
 #include "Texture.hpp"
 #include "Vector2d.hpp"
+#include <vector>
 // #include "gMath.hpp" // NOTE: remove INU
 
 // class forward declarations
 class Texture;
 class Paddle;
 class Game;
+class SideWall;
 
 class Ball
 {
@@ -22,7 +25,7 @@ class Ball
   // game - reference to the main game object
   Ball(float X, float Y, float directionAngle, float speed,
       const Texture& texture, const Paddle& paddle, float screenBottomY,
-      Game& game);
+      Game& game, const std::vector<SideWall>& sideWalls);
   // update ball state with given time difference from last update
   void Update(float deltaTime);
   // updates ball direction and velocity vector; takes new  direction angle
@@ -38,7 +41,7 @@ class Ball
   // change the ball direction after hitting paddle
   void BouncePaddle();
   // keeps the ball direction angle in range [0,360)
-  // NOTE: might not be needed
+  // REVIEW: might not be needed
   void ControlDirection();
   // ball position
   gMath::Vector2d _position;
@@ -58,9 +61,8 @@ class Ball
   const float _screen_bottom_y;
   // reference to the main game object
   // NOTE: consider const and if necessary
-  // NOTE: consider pointer to function handling the event,like ball leaving
-  // area
   Game& _game;
+  const std::vector<SideWall>& _side_walls;
 };
 
 #endif // !Ball_HPP

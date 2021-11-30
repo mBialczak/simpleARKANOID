@@ -8,9 +8,10 @@
 // texture - texture used for displaying the ball
 // paddle - reference to paddle against ball collision will be checked
 // game - reference to the main game object
+// sideWalls - reference to sideWalls for collision detection
 Ball::Ball(float X, float Y, float directionAngle, float speed,
     const Texture& texture, const Paddle& paddle, float screenBottomY,
-    Game& game)
+    Game& game, const std::vector<SideWall>& sideWalls)
     : _position(gMath::Vector2d(X, Y))
     , _direction(directionAngle)
     , _speed(speed)
@@ -22,6 +23,7 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
     , _paddle(paddle)
     , _screen_bottom_y(screenBottomY)
     , _game(game)
+    , _side_walls(sideWalls)
 {
 }
 
