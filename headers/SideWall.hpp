@@ -22,7 +22,8 @@ class SideWall : public virtual StaticObject
 {
   public:
   // constructor creating the Wall
-  SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture);
+  SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture,
+      float halfTickness);
   // sets object position ; overrides StaticObject function
   void SetPosition(float x, float y) override;
   // render the sideWall

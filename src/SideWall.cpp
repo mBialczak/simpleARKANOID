@@ -1,12 +1,12 @@
 #include "SideWall.hpp"
 
 // constructor creating the Wall
-SideWall::SideWall(
-    float x, float y, ScreenSide sideOfScreen, const Texture& texture)
+SideWall::SideWall(float x, float y, ScreenSide sideOfScreen,
+    const Texture& texture, float HalfTickness)
     : StaticObject(x, y)
     , _screen_side(sideOfScreen)
     , _texture(texture)
-    , _half_tickness(texture.Width() / 2.0f)
+    , _half_tickness(HalfTickness)
 {
 }
 // sets object position ; overrides StaticObject function

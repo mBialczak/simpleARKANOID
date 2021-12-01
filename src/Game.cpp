@@ -173,7 +173,8 @@ void Game::CreateTopWall()
   float top_x { _screen_width / 2.0f };
   float top_y { texture.Height() / 2.0f };
   // create top Wall
-  _side_walls.emplace_back(top_x, top_y, ScreenSide::Top, texture);
+  _side_walls.emplace_back(
+      top_x, top_y, ScreenSide::Top, texture, _wall_tickness / 2.0f);
 }
 
 // creates the left wall
@@ -185,7 +186,8 @@ void Game::CreateLeftWall()
   float left_x { texture.Width() / 2.0f };
   float left_y { _screen_height / 2.0f };
   // create left Wall
-  _side_walls.emplace_back(left_x, left_y, ScreenSide::Left, texture);
+  _side_walls.emplace_back(
+      left_x, left_y, ScreenSide::Left, texture, _wall_tickness / 2.0f);
 }
 
 // creates the right wall
@@ -196,7 +198,8 @@ void Game::CreateRightWall()
   float right_x { _screen_width - texture.Width() / 2.0f };
   float right_y { _screen_height / 2.0f };
   // create the right Wall
-  _side_walls.emplace_back(right_x, right_y, ScreenSide::Right, texture);
+  _side_walls.emplace_back(
+      right_x, right_y, ScreenSide::Right, texture, _wall_tickness / 2.0f);
 }
 
 // creates the ball
@@ -204,8 +207,9 @@ void Game::CreateBall()
 {
   // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-      _randomizer(150.0f, 210.0f), _ball_speed, GetTexture("ball"), *_paddle,
-      _screen_height, *this, _side_walls);
+      // _randomizer(110.0f, 120.0f)
+      120.0f, _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
+      _side_walls);
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");

@@ -36,25 +36,16 @@ void Ball::Update(float deltaTime)
     BouncePaddle();
     // TODO: handle sound
   }
-  // else {
-  //   // update position
-  //   _position += _velocity * deltaTime;
-  // }
 
-  // if the ball hits a sidewall
-  if (HandleWallCollisions()) {
-    // TODO: handle sound or something
+  // if the ball hits a sidewall we change direction
+  for (auto& wall : _side_walls) {
+    if (HasHitWall(wall)) {
+      BounceWall(wall);
+      // TODO: handle sound or something
+    }
   }
-  // else {
-  // update position
-  _position += _velocity * deltaTime;
-  // }
 
-  // else
-  // {
-  //   // update position
-  //   _position += _velocity * deltaTime;
-  // }
+  _position += _velocity * deltaTime;
 
   // check if has left the screen
   if (HasLeftScreen()) {
@@ -62,7 +53,6 @@ void Ball::Update(float deltaTime)
   }
 }
 
-// REVIEW: remove if not used
 // updates ball direction and velocity vector; takes new  direction angle
 void Ball::UpdateDirection(float directionAngle)
 {
@@ -108,12 +98,14 @@ bool Ball::HasLeftScreen() const
   return _position._y - _radius > _screen_bottom_y;
 }
 
-// REVIEW: alternative
-// check if the ball has collided with the wall
+// check if the ball has collided with the specific wall
 bool Ball::HasHitWall(const SideWall& wall) const
 {
+  // check what side of screen the wall is placed
   ScreenSide side = wall.GetScreenSide();
-
+  // we check if the distance from the wall is greater than collision distance:
+  // horizontal distance for left and right side wall and the vertical distance
+  // for the top wall
   switch (side) {
     case ScreenSide::Left:
       [[fallthrough]];
@@ -124,48 +116,92 @@ bool Ball::HasHitWall(const SideWall& wall) const
       return gMath::VerticalDistance(_position, wall.Position())
           < _radius + wall.HalfTickness();
     default:
-      return false;
+      throw std::logic_error(
+          "Invalid screen side passed to Ball::HasHitWall()");
   }
 }
 
-// check for collision with the walls // NOTE: consider const
-bool Ball::HandleWallCollisions()
+// updates ball's direction angle and velocity vector depending on the side of
+// the screen the wall is placed
+void Ball::BounceWall(const SideWall& wall)
 {
-  for (auto& wall : _side_walls) {
-    // TODO: for every wall check collisions first
-    if (wall.GetScreenSide() == ScreenSide::Left) {
-      // checks collision with the left wall
-      // if (gMath::HorizontalDistance(_position, wall.Position())
-      //     < _radius + wall.HalfTickness()) {
-      if (HasHitWall(wall)) {
-        BounceLeftWall();
-        return true;
-      }
-    }
+  // check what side of screen the wall is placed
+  ScreenSide side = wall.GetScreenSide();
+  // new direction to be calculated
+  float new_direction {};
+
+  switch (side) {
+    case ScreenSide::Left:
+      new_direction = NewDirectionLeftWallBounced();
+      break;
+    case ScreenSide::Right:
+      new_direction = NewDirectionRightWallBounced();
+      break;
+    case ScreenSide::Top:
+      new_direction = NewDirectionTopWallBounced();
+      break;
+    default:
+      throw std::logic_error(
+          "Invalid screen side passed to Ball::BounceWall()");
   }
-  return false;
-  // wall.)
+  // update ball's direction and velocity vector
+  UpdateDirection(new_direction);
 }
 
-// change the ball direction after hitting left wall
-void Ball::BounceLeftWall()
+// calculates the ball new direction after hitting left wall
+float Ball::NewDirectionLeftWallBounced()
 {
-  // Ball can hit the left wall only when heading left
-
-  // Ball heading left and upwards
+  // Ball could hit the left wall only when heading left (up or down)
+  float new_direction {};
+  // Check if the ball is heading left and upwards
   if (_direction > 90.0f && _direction <= 180.0f) {
-    // newDirection = 180 - oldDirection
-    _direction = 180.0f - _direction;
+    new_direction = 180.0f - _direction;
+    return new_direction;
   }
-  // Ball heading left and downwards
+  // Otherwise the ball is heading left and downwards
   else {
-    // alfaAngle = 270 - oldDirection
-    // newDirection = 270 + alfa
-    float alfaAngle = 270.0f - _direction;
-    _direction = 270.0f + alfaAngle;
+    float deltaAngle = 270.0f - _direction;
+    new_direction = 270.0f + deltaAngle;
+    return new_direction;
   }
-  // ball vellocity vector needs to be updated in both cases
-  _velocity = (gMath::Vector2d(gMath::ToRadians(_direction)) * _speed);
+
+  return new_direction;
+}
+
+// calculates the ball new direction after hitting right wall
+float Ball::NewDirectionRightWallBounced()
+{
+  // Ball could hit the right wall only when heading right (up or down)
+  float new_direction {};
+  // Check if the ball is heading right and upwards
+  if (_direction >= 0.0f && _direction <= 90.0f) {
+    new_direction = 180.0f - _direction;
+  }
+  // Otherwise the ball is heading right and downwards
+  else {
+    float angle = 360.0f - _direction;
+    new_direction = 180.0f + angle;
+  }
+
+  return new_direction;
+}
+
+// calculates the ball new direction after hitting top wall
+float Ball::NewDirectionTopWallBounced()
+{
+  // Ball could hit the top wall only when heading towards top (left or right)
+  float new_direction {};
+  // Check if the ball is heading towards top and to the left
+  if (_direction < 180.0f && _direction >= 90.0f) {
+    float angle = 180.0f - _direction;
+    new_direction = 180.0f + angle;
+  }
+  // Otherwise the ball is heading towards top and to the right
+  else {
+    new_direction = 360.0f - _direction;
+  }
+
+  return new_direction;
 }
 
 // change ball direction after hitting paddle

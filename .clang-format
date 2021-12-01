@@ -3,6 +3,7 @@ BasedOnStyle: WebKit
 
 IndentWidth: 2
 ColumnLimit: 80
+AllowShortCaseLabelsOnASingleLine: false
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Custom
 BraceWrapping:
