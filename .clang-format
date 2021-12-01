@@ -6,6 +6,7 @@ ColumnLimit: 80
 AlwaysBreakTemplateDeclarations: Yes
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterCaseLabel: true
   AfterClass: true
   AfterFunction: true
   AfterCaseLabel: true
@@ -13,3 +14,4 @@ BraceWrapping:
   AfterStruct: true
   BeforeCatch: true
   BeforeElse: true
+IndentCaseLabels: true

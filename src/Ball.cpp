@@ -27,17 +27,34 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
 {
 }
 
+// TODO: make clean
 // update ball state with given time difference from last update
 void Ball::Update(float deltaTime)
 {
   // if the ball hits the paddle we change direction
   if (HasHitPaddle()) {
     BouncePaddle();
+    // TODO: handle sound
   }
-  else {
-    // update position
-    _position += _velocity * deltaTime;
+  // else {
+  //   // update position
+  //   _position += _velocity * deltaTime;
+  // }
+
+  // if the ball hits a sidewall
+  if (HandleWallCollisions()) {
+    // TODO: handle sound or something
   }
+  // else {
+  // update position
+  _position += _velocity * deltaTime;
+  // }
+
+  // else
+  // {
+  //   // update position
+  //   _position += _velocity * deltaTime;
+  // }
 
   // check if has left the screen
   if (HasLeftScreen()) {
@@ -45,10 +62,11 @@ void Ball::Update(float deltaTime)
   }
 }
 
+// REVIEW: remove if not used
 // updates ball direction and velocity vector; takes new  direction angle
 void Ball::UpdateDirection(float directionAngle)
 {
-  // update direction
+  // update direction angle
   _direction = directionAngle;
   // update velocity
   _velocity = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
@@ -90,18 +108,64 @@ bool Ball::HasLeftScreen() const
   return _position._y - _radius > _screen_bottom_y;
 }
 
+// REVIEW: alternative
 // check if the ball has collided with the wall
-bool Ball::HasHitWall(const SideWall& wall) const { }
+bool Ball::HasHitWall(const SideWall& wall) const
+{
+  ScreenSide side = wall.GetScreenSide();
+
+  switch (side) {
+    case ScreenSide::Left:
+      [[fallthrough]];
+    case ScreenSide::Right:
+      return gMath::HorizontalDistance(_position, wall.Position())
+          < _radius + wall.HalfTickness();
+    case ScreenSide::Top:
+      return gMath::VerticalDistance(_position, wall.Position())
+          < _radius + wall.HalfTickness();
+    default:
+      return false;
+  }
+}
 
 // check for collision with the walls // NOTE: consider const
-bool Ball::CheckWallCollision()
+bool Ball::HandleWallCollisions()
 {
   for (auto& wall : _side_walls) {
     // TODO: for every wall check collisions first
     if (wall.GetScreenSide() == ScreenSide::Left) {
-      // if (gMath::HorizontalDistance(wall.Position()))
+      // checks collision with the left wall
+      // if (gMath::HorizontalDistance(_position, wall.Position())
+      //     < _radius + wall.HalfTickness()) {
+      if (HasHitWall(wall)) {
+        BounceLeftWall();
+        return true;
+      }
     }
   }
+  return false;
+  // wall.)
+}
+
+// change the ball direction after hitting left wall
+void Ball::BounceLeftWall()
+{
+  // Ball can hit the left wall only when heading left
+
+  // Ball heading left and upwards
+  if (_direction > 90.0f && _direction <= 180.0f) {
+    // newDirection = 180 - oldDirection
+    _direction = 180.0f - _direction;
+  }
+  // Ball heading left and downwards
+  else {
+    // alfaAngle = 270 - oldDirection
+    // newDirection = 270 + alfa
+    float alfaAngle = 270.0f - _direction;
+    _direction = 270.0f + alfaAngle;
+  }
+  // ball vellocity vector needs to be updated in both cases
+  _velocity = (gMath::Vector2d(gMath::ToRadians(_direction)) * _speed);
 }
 
 // change ball direction after hitting paddle
@@ -113,8 +177,8 @@ void Ball::BouncePaddle()
 
   // if the ball heads downwards and towards the left
   if (_direction > 180.0f && _direction < 270.0f) {
-    // angle between paddle plain and the ball direction: alfa = oldDirection -
-    // 180
+    // angle between paddle plain and the ball direction: alfa = oldDirection
+    // - 180
     float alfa = _direction - 180.0f;
     // new ball direction = 180 - alfa
     _direction = 180.0f - alfa;
@@ -125,7 +189,7 @@ void Ball::BouncePaddle()
     float new_direction = 360.0f - _direction;
     _direction = new_direction;
   }
-  // ball vellocity vector needs to be updated in both directions
+  // ball vellocity vector needs to be updated in both cases
   _velocity = (gMath::Vector2d(gMath::ToRadians(_direction)) * _speed);
 }
 

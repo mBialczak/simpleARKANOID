@@ -8,6 +8,9 @@
 
 // class forward declarations
 class Texture;
+
+// enum class for marking which side of the ball is crucial for collision
+// detection
 enum class ScreenSide
 {
   Top,
@@ -18,17 +21,16 @@ enum class ScreenSide
 class SideWall : public virtual StaticObject
 {
   public:
-  // enum class for marking which side of the ball is crucial for collision
-  // detection
-
   // constructor creating the Wall
   SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture);
   // sets object position ; overrides StaticObject function
   void SetPosition(float x, float y) override;
   // render the sideWall
   void Draw() const;
-  // reuturns collision border
+  // returns collision border
   ScreenSide GetScreenSide() const { return _screen_side; }
+  // returns half of the wall tickness
+  float HalfTickness() const { return _half_tickness; }
 
   private:
   // collision side of the SideWall

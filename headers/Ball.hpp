@@ -39,13 +39,17 @@ class Ball
   // checks if the ball has left the screen
   bool HasLeftScreen() const;
   // check if the ball has collided with the wall
+  // REVIEW: remove INU
   bool HasHitWall(const SideWall& wall) const;
-  // check for collision with the walls
-  bool CheckWallCollision(); // NOTE: consider const
+  // update ball move direction if wall collision detected
+  // returns true if collision occured, false otherwise
+  bool HandleWallCollisions(); // NOTE: consider const
   // change the ball direction after hitting paddle
   void BouncePaddle();
+  // change the ball direction after hitting left wall
+  void BounceLeftWall();
   // keeps the ball direction angle in range [0,360)
-  // REVIEW: might not be needed
+  // REVIEW: REMOVE INU
   void ControlDirection();
   // ball position
   gMath::Vector2d _position;
