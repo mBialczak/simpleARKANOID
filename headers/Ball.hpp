@@ -38,6 +38,10 @@ class Ball
   bool HasHitPaddle() const;
   // checks if the ball has left the screen
   bool HasLeftScreen() const;
+  // check if the ball has collided with the wall
+  bool HasHitWall(const SideWall& wall) const;
+  // check for collision with the walls
+  bool CheckWallCollision(); // NOTE: consider const
   // change the ball direction after hitting paddle
   void BouncePaddle();
   // keeps the ball direction angle in range [0,360)

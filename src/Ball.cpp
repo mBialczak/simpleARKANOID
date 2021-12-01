@@ -90,6 +90,20 @@ bool Ball::HasLeftScreen() const
   return _position._y - _radius > _screen_bottom_y;
 }
 
+// check if the ball has collided with the wall
+bool Ball::HasHitWall(const SideWall& wall) const { }
+
+// check for collision with the walls // NOTE: consider const
+bool Ball::CheckWallCollision()
+{
+  for (auto& wall : _side_walls) {
+    // TODO: for every wall check collisions first
+    if (wall.GetScreenSide() == ScreenSide::Left) {
+      // if (gMath::HorizontalDistance(wall.Position()))
+    }
+  }
+}
+
 // change ball direction after hitting paddle
 // should be called only when the ball hits the paddle
 void Ball::BouncePaddle()

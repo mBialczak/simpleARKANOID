@@ -2,10 +2,11 @@
 
 // constructor creating the Wall
 SideWall::SideWall(
-    float x, float y, CollisionBorder border, const Texture& texture)
+    float x, float y, ScreenSide sideOfScreen, const Texture& texture)
     : StaticObject(x, y)
-    , _coll_border(border)
+    , _screen_side(sideOfScreen)
     , _texture(texture)
+    , _half_tickness(texture.Width() / 2.0f)
 {
 }
 // sets object position ; overrides StaticObject function

@@ -47,8 +47,11 @@ src/Vector2d.cpp
 add_executable(tests 
 # tests/VectorTests.cpp
 # src/gMath.cpp
-src/RandNum.cpp
-tests/RandTests.cpp)
+# src/RandNum.cpp
+# tests/RandTests.cpp
+  src/Vector2d.cpp
+  tests/VectorDistanceTest.cpp
+)
 if (MSVC)
   target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 else()

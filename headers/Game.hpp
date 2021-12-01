@@ -74,7 +74,7 @@ class Game
   Renderer* _renderer;
   // container for side walls
   std::vector<SideWall> _side_walls;
-  // tickness of the walls in pixels
+  // tickness of the walls in pixels // NOTE: CHECK if used
   const int _wall_tickness = 10;
   // pointer to the ball
   std::unique_ptr<Ball> _ball;

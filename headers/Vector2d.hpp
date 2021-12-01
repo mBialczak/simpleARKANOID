@@ -28,6 +28,18 @@ struct Vector2d
 };
 
 // Helper functions
+// NOTE: remove INU
+// calculates vertical distance beetween two vectors
+inline float VerticalDistance(const Vector2d& A, const Vector2d& B)
+{
+  return fabs(B._y - A._y);
+}
+// NOTE: remove INU
+// calculates horizontal distance beetween two vectors
+inline float HorizontalDistance(const Vector2d& A, const Vector2d& B)
+{
+  return fabs(B._x - A._x);
+}
 
 // converts angle in degrees to angle in radians
 inline float ToRadians(float degrees) { return degrees * c_Pi / 180.0f; }

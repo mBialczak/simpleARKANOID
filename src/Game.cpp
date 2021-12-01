@@ -173,8 +173,7 @@ void Game::CreateTopWall()
   float top_x { _screen_width / 2.0f };
   float top_y { texture.Height() / 2.0f };
   // create top Wall
-  _side_walls.emplace_back(
-      top_x, top_y, SideWall::CollisionBorder::Bottom, texture);
+  _side_walls.emplace_back(top_x, top_y, ScreenSide::Top, texture);
 }
 
 // creates the left wall
@@ -186,8 +185,7 @@ void Game::CreateLeftWall()
   float left_x { texture.Width() / 2.0f };
   float left_y { _screen_height / 2.0f };
   // create left Wall
-  _side_walls.emplace_back(
-      left_x, left_y, SideWall::CollisionBorder::Right, texture);
+  _side_walls.emplace_back(left_x, left_y, ScreenSide::Left, texture);
 }
 
 // creates the right wall
@@ -198,8 +196,7 @@ void Game::CreateRightWall()
   float right_x { _screen_width - texture.Width() / 2.0f };
   float right_y { _screen_height / 2.0f };
   // create the right Wall
-  _side_walls.emplace_back(
-      right_x, right_y, SideWall::CollisionBorder::Left, texture);
+  _side_walls.emplace_back(right_x, right_y, ScreenSide::Right, texture);
 }
 
 // creates the ball
