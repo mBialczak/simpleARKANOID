@@ -41,6 +41,7 @@ src/SideWall.cpp
 src/RandNum.cpp
 src/Vector2d.cpp
 src/MovableObject.cpp
+src/Block.cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 

@@ -133,6 +133,8 @@ void Game::LoadTextures()
       "../assets/horizontal_wall.png", _renderer->GetSDLrenderer());
   _textures["vertical_wall"] = std::make_unique<Texture>(
       "../assets/vertical_wall.png", _renderer->GetSDLrenderer());
+  _textures["block_green"] = std::make_unique<Texture>(
+      "../assets/block_green.png", _renderer->GetSDLrenderer());
 }
 
 // gets a single texture from the stored textures
@@ -246,6 +248,14 @@ void Game::CreatePaddle()
   // set the _renderer pointer to the ball for rendering operations
   _renderer->SetPaddle(_paddle.get());
 }
+// TODO: refactor and COMMENTS
+// creates blocks
+void Game::CreateBlocks()
+{
+  auto& block_texture = GetTexture("block_green");
+  _blocks = std::make_unique<Block>(10.0, 10.0, block_texture);
+}
+
 // TODO: implement if needed
 void Game::BallEscapeHandler()
 {

@@ -1,6 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include "Ball.hpp"
+#include "Block.hpp"
 #include "Controller.hpp"
 #include "Paddle.hpp"
 #include "RandNum.hpp"
@@ -59,6 +60,8 @@ class Game
   void CreateBall();
   // creates the paddle
   void CreatePaddle();
+  // creates blocks
+  void CreateBlocks();
 
   // controls main loop run
   bool _is_running = false;
@@ -88,5 +91,7 @@ class Game
   const float _paddle_speed = 300.0f;
   // randomizer used for getting random numbers
   gMath::RandNum _randomizer;
+  // TODO: change into container and create comments
+  std::unique_ptr<Block> _blocks;
 };
 #endif // !GAME_HPP

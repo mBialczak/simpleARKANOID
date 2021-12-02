@@ -20,7 +20,8 @@ class Paddle : public virtual MovableObject
   Paddle(float x, float y, float speed, SDL_Rect moveLimits,
       const Texture& texture);
 
-  ~Paddle() = default;
+  // default virtual destructor
+  ~Paddle() override = default;
   // update paddle state
   void Update(float deltaTime) override;
   // render the paddle

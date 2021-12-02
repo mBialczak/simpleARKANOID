@@ -28,7 +28,8 @@ class Ball : public virtual MovableObject
       const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
       const std::vector<SideWall>& sideWalls);
 
-  ~Ball() = default;
+  // default virtual destructor
+  ~Ball() override = default;
 
   // update ball state with given time difference from last update
   void Update(float deltaTime) override;

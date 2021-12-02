@@ -10,7 +10,7 @@ SideWall::SideWall(float x, float y, ScreenSide sideOfScreen,
 {
 }
 
-// render the sideWall
+// renders the sideWall to the screen
 void SideWall::Draw() const
 {
   _texture.Render(

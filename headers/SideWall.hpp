@@ -24,11 +24,10 @@ class SideWall : public virtual StaticObject
   // constructor creating the Wall
   SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture,
       float halfTickness);
-
-  void Draw() const;
-
-  // gets SideWall position
-  gMath::Vector2d Position() const override { return _position; };
+  // default virtual constructor
+  ~SideWall() override = default;
+  // renders the sideWall to the screen
+  void Draw() const override;
 
   // returns collision border
   ScreenSide GetScreenSide() const { return _screen_side; }

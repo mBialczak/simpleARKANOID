@@ -69,3 +69,6 @@ TODO: consider changing angles where reasonable to integers for simplifing calcu
 TODO: consider resignation from paddle vertical movement
 
 TODO: use inheritance in game::update, draw() and similar if posiible
+
+TODO: in Game create objects functions there are many constructors where perhaps float position arguments
+instead of in might be better
