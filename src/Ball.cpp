@@ -12,9 +12,8 @@
 Ball::Ball(float X, float Y, float directionAngle, float speed,
     const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
     const std::vector<SideWall>& sideWalls)
-    : _position(gMath::Vector2d(X, Y))
+    : MovableObject(X, Y, speed)
     , _direction(directionAngle)
-    , _speed(speed)
     // set velocity vector: create unit velocity vector and multiply by scalar
     // speed
     , _velocity(gMath::Vector2d(gMath::ToRadians(directionAngle)) * speed)

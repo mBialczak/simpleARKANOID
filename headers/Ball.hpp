@@ -1,5 +1,6 @@
 #ifndef Ball_HPP
 #define Ball_HPP
+#include "MovableObject.hpp"
 #include "Paddle.hpp"
 #include "SideWall.hpp"
 #include "Texture.hpp"
@@ -13,7 +14,7 @@ class Paddle;
 class Game;
 class SideWall;
 
-class Ball
+class Ball : public MovableObject
 {
   public:
   // constructor:
@@ -26,12 +27,15 @@ class Ball
   Ball(float X, float Y, float directionAngle, float speed,
       const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
       const std::vector<SideWall>& sideWalls);
+
+  ~Ball() = default;
+
   // update ball state with given time difference from last update
-  void Update(float deltaTime);
+  void Update(float deltaTime) override;
   // updates ball direction and velocity vector; takes new  direction angle
   void UpdateDirectionAndVelocity(float directionAngle);
   // render the ball
-  void Draw() const;
+  void Draw() const override;
 
   private:
   // checks for collision with the paddle. Returns true if colided, false if not
@@ -57,12 +61,8 @@ class Ball
   // angle affecting game experience in a negative way
   float RandomizeAngles(float angle);
 
-  // ball position
-  gMath::Vector2d _position;
   // ball direction (angle in degrees)//  REVIEW: check units
   float _direction;
-  // ball scalar speed
-  float _speed;
   // ball vector of velocity
   gMath::Vector2d _velocity;
   // texture used for displaying the ball

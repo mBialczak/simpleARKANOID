@@ -16,3 +16,4 @@ BraceWrapping:
   BeforeCatch: true
   BeforeElse: true
 IndentCaseLabels: true
+SpaceBeforeCtorInitializerColon: false

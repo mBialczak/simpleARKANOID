@@ -67,3 +67,5 @@ Apply the same to other classes if possible
 TODO: consider changing angles where reasonable to integers for simplifing calculations
 
 TODO: consider resignation from paddle vertical movement
+
+TODO: use inheritance in game::update, draw() and similar if posiible

@@ -14,7 +14,7 @@ class StaticObject
   // virutual destructor for handling inheritence
   virtual ~StaticObject() = default;
   // gets object position
-  virtual gMath::Vector2d Position() const { return _position; };
+  virtual gMath::Vector2d Position() const = 0;
 
   protected:
   // vector representing object's position
