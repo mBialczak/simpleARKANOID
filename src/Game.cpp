@@ -23,7 +23,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   _side_walls.reserve(3);
 
   // create graphics renderer here, only after SDL is initialized
-  _renderer = new Renderer(_screen_height, _screen_width, _side_walls);
+  _renderer = new Renderer(_screen_height, _screen_width);
 
   // load textures used in the game
   LoadTextures();
@@ -161,14 +161,10 @@ void Game::CreateWalls()
   CreateLeftWall();
   CreateRightWall();
 
-  // NOTE: remove INU
   // add walls to the renderers displayed objects
   for (auto& wall : _side_walls) {
     _renderer->AddStaticObject(&wall);
-  }
-  // NOTE: remove AR if works
-  // let the rernderer know which walls to render
-  // _renderer->SetWalls(&_walls);
+  };
 }
 
 // creates the top wall
@@ -223,12 +219,9 @@ void Game::CreateBall()
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");
   }
-  // REVIEW: remove INU
+
   // Add ball to the collection of objects displayed by the renderer
   _renderer->AddMovableObject(_ball.get());
-  // REVIEW: remove INU
-  // // set the _renderer pointer to the ball for rendering operations
-  // _renderer->SetBall(_ball.get());
 }
 
 // creates the paddle
@@ -254,12 +247,8 @@ void Game::CreatePaddle()
   if (!_paddle) {
     throw std::logic_error("Unable to create the paddle");
   }
-  // REVIEW: remove INU
   // add paddle to the collection of objects displayed by the renderer
   _renderer->AddMovableObject(_paddle.get());
-  // REVIEW: remove INU
-  // // set the _renderer pointer to the ball for rendering operations
-  // _renderer->SetPaddle(_paddle.get());
 }
 // TODO: refactor and COMMENTS
 // creates blocks

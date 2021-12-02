@@ -4,17 +4,10 @@
 #include <iostream> //REVIEW: remove after testing
 
 // constructor takes screen size for rendering
-Renderer::Renderer(const std::size_t screenHeight,
-    const std::size_t screenWidth, const std::vector<SideWall>& sideWalls)
+Renderer::Renderer(
+    const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
-    , _side_walls(sideWalls)
-    // the real ball pointer will be set after
-    // the ball is created in Game constructor
-    , _ball(nullptr)
-    // the real paddle pointer will be set  after renderer creation, after
-    // the paddle is created in Game constructor
-    , _paddle(nullptr)
 {
   // create main game window
   _sdl_window = SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
@@ -48,44 +41,15 @@ Renderer::~Renderer()
   _sdl_window = nullptr;
 }
 
-// sets member ball pointer to be rendered
-void Renderer::SetBall(const Ball* const ball)
-{
-  // if Ball is a nullptr the class invariant will not be ok so throw
-  if (!ball) {
-    // create error message
-    std::string error { "The ball pointer cannot be set to nullptr" };
-    // add source file name and line info to the message
-    error += __FILE__;
-    error += std::to_string(__LINE__);
-    throw std::logic_error(error);
-  }
-  _ball = ball;
-}
-
-// sets member paddle pointer to be rendered
-void Renderer::SetPaddle(const Paddle* const paddle)
-{
-  // if paddle is a nullptr the class invariant will not be ok so throw
-  if (!paddle) {
-    // create error message
-    std::string error { "The paddle pointer cannot be set to nullptr" };
-    // add source file name and line info to the message
-    error += __FILE__;
-    error += std::to_string(__LINE__);
-    throw std::logic_error(error);
-  }
-  _paddle = paddle;
-}
-
-// adds StaticObject to be displayed //NOTE: remove INU
+// adds StaticObject to be displayed
 void Renderer::AddStaticObject(const StaticObject* object)
 {
   if (object) {
     _static_objects.emplace_back(object);
   }
 }
-// adds MovableObject to be displayed //NOTE: remove INU
+
+// adds MovableObject to be displayed
 void Renderer::AddMovableObject(const MovableObject* object)
 {
   if (object) {
@@ -103,30 +67,15 @@ void Renderer::Display() const
   // clear screen
   SDL_RenderClear(_sdl_renderer);
 
-  // REVIEW: remove if no longer used
-  // // display the walls
-  // for (auto& wall : _side_walls) {
-  //   wall.Draw();
-  // }
-
-  // REVIEW: remove INU
   // display all static game objects
   for (auto& object : _static_objects) {
     object->Draw();
   }
 
-  // REVIEW: remove INU
   // display all movable game objects
   for (auto& object : _movable_objects) {
     object->Draw();
   }
-
-  // // REVIEW: remove if no longer used
-  // _ball->Draw();
-
-  // REVIEW: remove INU
-  // display the paddle
-  // _paddle->Draw();
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);

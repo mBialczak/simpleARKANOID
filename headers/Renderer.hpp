@@ -8,6 +8,7 @@
 #include <memory>
 #include <vector>
 
+// REVIEW: check what can be deleted
 // class forward declarations
 class Ball;
 class Paddle;
@@ -18,9 +19,7 @@ class Renderer
 {
   public:
   // constructor takes screen size for rendering
-  // TODO: remove sideWalls from the constructor
-  Renderer(const std::size_t screenHeight, const std::size_t screenWidth,
-      const std::vector<SideWall>& sideWalls);
+  Renderer(const std::size_t screenHeight, const std::size_t screenWidth);
 
   // copying of class object doesn't make sense and copy operations may cause
   // problems with managed resources, so copy operations are disabled
@@ -28,14 +27,9 @@ class Renderer
   Renderer& operator=(const Renderer&) = delete;
   // destructor
   ~Renderer();
-  // REVIEW: remove if general containers for objects to display work
-  void SetBall(const Ball* const ball);
-  // sets member paddle pointer to be rendered
-  // REVIEW: remove if general containers for objects to display work
-  void SetPaddle(const Paddle* const paddle);
-  // adds StaticObject to be displayed //NOTE: remove INU
+  // adds StaticObject to be displayed
   void AddStaticObject(const StaticObject* object);
-  // adds MovableObject to be displayed //NOTE: remove INU
+  // adds MovableObject to be displayed
   void AddMovableObject(const MovableObject* object);
   // displays (renders) game graphics
   void Display() const;
@@ -56,20 +50,9 @@ class Renderer
   // game window size
   const std::size_t _screen_height;
   const std::size_t _screen_width;
-  // REVIEW: remove if general containers for objects to display work
-  // refference to the container of walls being displayed
-  const std::vector<SideWall>& _side_walls;
-  // REVIEW: remove if general containers for objects to display work
-  // NOT owned pointer to the ball being displayed
-  const Ball* _ball;
-  // REVIEW: remove if general containers for objects to display work
-  // REVIEW: remove if general containers for objects to display work
-  // NOT owned pointer to the paddle being displayed
-  const Paddle* _paddle;
-  // NOTE: remove INU
-  // vector of NOT OWNED  StaticObjects to display
+
+  // vector of NOT OWNED StaticObjects to display
   std::vector<const StaticObject*> _static_objects;
-  // /NOTE: remove INU
   // vector of NOT OWNED MovableObjects to display
   std::vector<const MovableObject*> _movable_objects;
 };
