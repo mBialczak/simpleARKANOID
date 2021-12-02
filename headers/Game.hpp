@@ -84,7 +84,7 @@ class Game
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)
-  float _ball_speed = 400.0f;
+  float _ball_speed = 100.0f;
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
   // paddle scalar moving speed
@@ -92,6 +92,6 @@ class Game
   // randomizer used for getting random numbers
   gMath::RandNum _randomizer;
   // TODO: change into container and create comments
-  std::unique_ptr<Block> _blocks;
+  std::vector<Block> _blocks;
 };
 #endif // !GAME_HPP

@@ -72,3 +72,5 @@ TODO: use inheritance in game::update, draw() and similar if posiible
 
 TODO: in Game create objects functions there are many constructors where perhaps float position arguments
 instead of in might be better
+
+TODO: find a right place to reserve place for static objects in renderer and game

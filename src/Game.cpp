@@ -30,6 +30,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
   CreateWalls();
+  CreateBlocks();
   CreatePaddle();
   CreateBall();
 }
@@ -254,8 +255,17 @@ void Game::CreatePaddle()
 // creates blocks
 void Game::CreateBlocks()
 {
+  // TODO: reserve place for blocks
+
+  // TODO: revise block creation
   auto& block_texture = GetTexture("block_green");
-  _blocks = std::make_unique<Block>(10.0, 10.0, block_texture);
+  _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
+      _screen_height / 2.0f - 20 / 2.0, block_texture);
+
+  // add blocks to the collection of objects displayed by the renderer
+  for (auto& block : _blocks) {
+    _renderer->AddStaticObject(&block);
+  }
 }
 
 // TODO: implement if needed
