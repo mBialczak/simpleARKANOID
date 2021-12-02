@@ -24,12 +24,12 @@ class Ball
   // paddle - reference to paddle against ball collision will be checked
   // game - reference to the main game object
   Ball(float X, float Y, float directionAngle, float speed,
-      const Texture& texture, const Paddle& paddle, float screenBottomY,
-      Game& game, const std::vector<SideWall>& sideWalls);
+      const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
+      const std::vector<SideWall>& sideWalls);
   // update ball state with given time difference from last update
   void Update(float deltaTime);
   // updates ball direction and velocity vector; takes new  direction angle
-  void UpdateDirection(float directionAngle);
+  void UpdateDirectionAndVelocity(float directionAngle);
   // render the ball
   void Draw() const;
 
@@ -53,6 +53,10 @@ class Ball
   // keeps the ball direction angle in range [0,360)
   // REVIEW: REMOVE INU
   void ControlDirection();
+  // returnes slightly randomized angles, especially when ball hits paddle with
+  // angle affecting game experience in a negative way
+  float RandomizeAngles(float angle);
+
   // ball position
   gMath::Vector2d _position;
   // ball direction (angle in degrees)//  REVIEW: check units
@@ -66,7 +70,7 @@ class Ball
   // ball radius ; mainly for collision detection
   const float _radius;
   // reference to paddle for collision detection
-  const Paddle& _paddle;
+  Paddle& _paddle;
   // y coordinate of the bottom of the screen
   const float _screen_bottom_y;
   // reference to the main game object

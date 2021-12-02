@@ -60,6 +60,8 @@ class Game
   // creates the paddle
   void CreatePaddle();
 
+  // controls main loop run
+  bool _is_running = false;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;
@@ -79,11 +81,11 @@ class Game
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)
-  float _ball_speed = 250.0f;
+  float _ball_speed = 400.0f;
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
   // paddle scalar moving speed
-  const float _paddle_speed = 160.0f;
+  const float _paddle_speed = 300.0f;
   // randomizer used for getting random numbers
   gMath::RandNum _randomizer;
 };

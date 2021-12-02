@@ -22,7 +22,12 @@ class Paddle
   void Update(float deltaTime);
   // render the paddle
   void Draw() const;
-
+  // returns paddle position
+  gMath::Vector2d Position() const { return _position; }
+  // returns half of the paddle height
+  float HalfHeight() const { return _half_height; }
+  // returns half of the paddle width
+  float HalfWidth() const { return _half_width; }
   // stops the paddle by setting velocity vector to {0,0}
   void Stop();
   // enables moving up by proper setting of the paddle velocity vector
@@ -33,14 +38,6 @@ class Paddle
   void MoveRight();
   // enables moving left by proper setting of the paddle velocity vector
   void MoveLeft();
-  // returns tcurrent y coordinate of the top paddle border
-  float TopBorderY() const { return _position._y - _half_height; }
-  // returns current y coordinate of the bottom paddle border
-  float BottomBorderY() const { return _position._y + _half_height; }
-  // returns current x coordinate of the left paddle border
-  float LeftX() const { return _position._x - _half_width; }
-  // returns current y coordinate of the right paddle border
-  float RightX() const { return _position._x + _half_width; }
 
   private:
   // corrects position if paddle tries to escape allowed moving area
@@ -58,7 +55,7 @@ class Paddle
   const Texture& _texture;
   // storing below values spares many repeated calculations while collision
   // detection and keeping paddle within allowed moving limits
-  const float _height;
+  // REVIEW: remove INU
   const float _half_height;
   const float _half_width;
 };

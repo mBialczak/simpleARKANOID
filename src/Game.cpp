@@ -75,12 +75,12 @@ void Game::Run()
   LimitTimer frame_timer { desired_frame_duration };
 
   // main loop quit condition
-  bool running = true;
+  _is_running = true;
   // main game loop
-  while (running) {
+  while (_is_running) {
 
     // handle input
-    _controller.HandleInput(running, *_paddle);
+    _controller.HandleInput(_is_running, *_paddle);
 
     UpdateGame();
     GenerateOutput();
@@ -207,8 +207,10 @@ void Game::CreateBall()
 {
   // NOTE: randomize starting ball data: angle and speed perhaps
   _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-      // _randomizer(110.0f, 120.0f)
-      120.0f, _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
+      _randomizer(220.0f, 340.0f)
+      // 141.0f TODO: Remove after testing
+      ,
+      _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
       _side_walls);
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
@@ -248,4 +250,5 @@ void Game::CreatePaddle()
 void Game::BallEscapeHandler()
 {
   std::cout << "BallEscapeHandler()!" << std::endl;
+  _is_running = false;
 }

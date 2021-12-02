@@ -10,8 +10,8 @@
 // game - reference to the main game object
 // sideWalls - reference to sideWalls for collision detection
 Ball::Ball(float X, float Y, float directionAngle, float speed,
-    const Texture& texture, const Paddle& paddle, float screenBottomY,
-    Game& game, const std::vector<SideWall>& sideWalls)
+    const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
+    const std::vector<SideWall>& sideWalls)
     : _position(gMath::Vector2d(X, Y))
     , _direction(directionAngle)
     , _speed(speed)
@@ -34,6 +34,7 @@ void Ball::Update(float deltaTime)
   // if the ball hits the paddle we change direction
   if (HasHitPaddle()) {
     BouncePaddle();
+    _paddle.Stop();
     // TODO: handle sound
   }
 
@@ -54,10 +55,19 @@ void Ball::Update(float deltaTime)
 }
 
 // updates ball direction and velocity vector; takes new  direction angle
-void Ball::UpdateDirection(float directionAngle)
+void Ball::UpdateDirectionAndVelocity(float directionAngle)
 {
+  // REVIEW: remove AT
+  float old = _direction;
   // update direction angle
   _direction = directionAngle;
+  // / REVIEW: remove AT
+  std::cout << "Updated direction!\n"
+            << "old= " << old << " new= " << _direction << "\n-------------\n"
+            << std::endl;
+
+  // REVIEW: think of removing
+  ControlDirection();
   // update velocity
   _velocity = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
 }
@@ -77,19 +87,16 @@ bool Ball::HasHitPaddle() const
   if (_direction <= 180.0f && _direction >= 0.0f) {
     return false;
   }
-  //  we can consider the ball only above the paddle.
-  // We caalculate vertical distance from ball centre to paddle top
-  float distance = _paddle.TopBorderY() - _position._y;
 
-  // vertical condition of collision is met if the distance from from paddle's
-  // top border to the ball centre is smaller than the ball radius
-  bool vertical_condition = distance < _radius;
-  // horizontal condition  of collision is met if the ball center is
-  // horizontally between left and right paddle's borders
-  bool horizontal_condition = _paddle.LeftX() <= _position._x - _radius
-      && _paddle.RightX() > _position._x;
-  // if both condistions are met collision occurs;
-  return vertical_condition && horizontal_condition;
+  bool vertical_conditon
+      = gMath::VerticalDistance(_position, _paddle.Position())
+      < _radius + _paddle.HalfHeight();
+
+  bool horizontal_condition
+      = gMath::HorizontalDistance(_position, _paddle.Position())
+      < _radius + _paddle.HalfWidth();
+
+  return vertical_conditon && horizontal_condition;
 }
 
 // checks if the ball has left the screen
@@ -111,10 +118,10 @@ bool Ball::HasHitWall(const SideWall& wall) const
       [[fallthrough]];
     case ScreenSide::Right:
       return gMath::HorizontalDistance(_position, wall.Position())
-          < _radius + wall.HalfTickness();
+          <= _radius + wall.HalfTickness();
     case ScreenSide::Top:
       return gMath::VerticalDistance(_position, wall.Position())
-          < _radius + wall.HalfTickness();
+          <= _radius + wall.HalfTickness();
     default:
       throw std::logic_error(
           "Invalid screen side passed to Ball::HasHitWall()");
@@ -145,7 +152,7 @@ void Ball::BounceWall(const SideWall& wall)
           "Invalid screen side passed to Ball::BounceWall()");
   }
   // update ball's direction and velocity vector
-  UpdateDirection(new_direction);
+  UpdateDirectionAndVelocity(new_direction);
 }
 
 // calculates the ball new direction after hitting left wall
@@ -156,15 +163,15 @@ float Ball::NewDirectionLeftWallBounced()
   // Check if the ball is heading left and upwards
   if (_direction > 90.0f && _direction <= 180.0f) {
     new_direction = 180.0f - _direction;
-    return new_direction;
   }
   // Otherwise the ball is heading left and downwards
   else {
     float deltaAngle = 270.0f - _direction;
     new_direction = 270.0f + deltaAngle;
-    return new_direction;
   }
-
+  // REVIEW: remove after testing
+  // std::cout << "Should not be here: Left WallBounce: " << __LINE__
+  //           << "new_direction= " << new_direction << std::endl;
   return new_direction;
 }
 
@@ -182,7 +189,9 @@ float Ball::NewDirectionRightWallBounced()
     float angle = 360.0f - _direction;
     new_direction = 180.0f + angle;
   }
-
+  // REVIEW: remove after testing
+  // std::cout << "Should not be here: Right WallBounce: " << __LINE__
+  //           << "new_direction= " << new_direction << std::endl;
   return new_direction;
 }
 
@@ -200,7 +209,9 @@ float Ball::NewDirectionTopWallBounced()
   else {
     new_direction = 360.0f - _direction;
   }
-
+  // REVIEW: remove after testing
+  // std::cout << "Should not be here: Top WallBounce: " << __LINE__
+  //           << "new_direction= " << new_direction << std::endl;
   return new_direction;
 }
 
@@ -208,37 +219,68 @@ float Ball::NewDirectionTopWallBounced()
 // should be called only when the ball hits the paddle
 void Ball::BouncePaddle()
 {
-  // we assume that the ball to hit the paddle can only head downwards
-  // and we change th ball direction accordingly
+  // due to game specifics the ball will try to hit the paddle only from upper
+  // directions so we use this and change the ball direction accordingly
+
+  float new_direction {};
 
   // if the ball heads downwards and towards the left
   if (_direction > 180.0f && _direction < 270.0f) {
-    // angle between paddle plain and the ball direction: alfa = oldDirection
-    // - 180
-    float alfa = _direction - 180.0f;
-    // new ball direction = 180 - alfa
-    _direction = 180.0f - alfa;
+    float angle = _direction - 180.0f;
+    new_direction = 180.0f - angle;
   }
   // if the ball heads downwards and to the right
   if (_direction >= 270.0f && _direction < 360.0f) {
-    // new ball direction = alfa = 360 - oldDirection
-    float new_direction = 360.0f - _direction;
-    _direction = new_direction;
+    new_direction = 360.0f - _direction;
   }
-  // ball vellocity vector needs to be updated in both cases
-  _velocity = (gMath::Vector2d(gMath::ToRadians(_direction)) * _speed);
+  // REVIEW: consider removing
+  // introducing some randomization of bounce angle for more fun
+  new_direction = RandomizeAngles(new_direction);
+
+  // REVIEW: remove after testing
+  // std::cout << "Should not be here: Paddle bounce " << __LINE__
+  //           << "new_direction= " << new_direction << std::endl;
+  // update direction and vellocity
+  UpdateDirectionAndVelocity(new_direction);
 }
 
 // NOTE: might not be needed
 // keeps the ball direction angle in range [0,360)
 void Ball::ControlDirection()
 {
+  // REVIEW: remove AT
+  float old = _direction;
   // for angles exceeding the full 360.0 radius
   if (_direction >= 360.0f) {
     _direction -= 360.0f;
+    // REVIEW: remove AT
+    std::cout << "ControlDirection modified direction!\n"
+              << "old= " << old << " new= " << _direction << std::endl;
   }
   // for possible (but unlikely) negative angles
   if (_direction < 0.0f) {
     _direction = 360.0f - fabs(_direction);
+    // REVIEW: remove AT
+    std::cout << "ControlDirection modified direction!\n"
+              << "old= " << old << " new= " << _direction << std::endl;
   }
+}
+
+// returnes slightly randomized angles, especially when ball hits paddle with
+// angle affecting game experience in a negative way
+float Ball::RandomizeAngles(float angle)
+{
+  if (angle <= 180.0f && angle >= 150.0f) {
+    angle += gMath::RandNum::Random(-30.0f, -15.0f);
+  }
+  else if (angle <= 100.0f && angle >= 80.0f) {
+    angle += gMath::RandNum::Random(-15.0f, 15.0f);
+  }
+  else if (angle <= 30.0f && angle >= 0.0f) {
+    angle += gMath::RandNum::Random(15.0f, 30.0f);
+  }
+  else {
+    angle += gMath::RandNum::Random(-10.0f, 10.0f);
+  }
+  return angle;
 }

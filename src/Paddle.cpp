@@ -12,8 +12,7 @@ Paddle::Paddle(
     , _velocity(gMath::Vector2d())
     , _move_limits(moveLimits)
     , _texture(texture)
-    , _height(_texture.Height())
-    , _half_height(_height / 2.0f)
+    , _half_height(_texture.Height() / 2.0f)
     , _half_width(_texture.Width() / 2.0f)
 {
 }
