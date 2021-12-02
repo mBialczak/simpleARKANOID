@@ -4,7 +4,8 @@
 // #include "gMath.hpp" // NOTE: remvoe INU
 
 // pure virtual class for representing static (not moving objects in the game)
-class StaticObject {
+class StaticObject
+{
   public:
   // default constructor
   StaticObject();
@@ -12,10 +13,8 @@ class StaticObject {
   StaticObject(float x, float y);
   // virutual destructor for handling inheritence
   virtual ~StaticObject() = default;
-  // gets object positoin
+  // gets object position
   virtual gMath::Vector2d Position() const { return _position; };
-  // pure virtual function for setting position
-  virtual void SetPosition(float x, float y) = 0;
 
   protected:
   // vector representing object's position

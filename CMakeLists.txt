@@ -40,6 +40,7 @@ src/StaticObject.cpp
 src/SideWall.cpp
 src/RandNum.cpp
 src/Vector2d.cpp
+src/MovableObject.cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 

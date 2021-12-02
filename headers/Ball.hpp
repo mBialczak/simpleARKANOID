@@ -76,6 +76,7 @@ class Ball
   // reference to the main game object
   // NOTE: consider const and if necessary
   Game& _game;
+  // reference to vector of sidewall for collision detection
   const std::vector<SideWall>& _side_walls;
 };
 

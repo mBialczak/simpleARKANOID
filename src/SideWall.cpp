@@ -9,12 +9,6 @@ SideWall::SideWall(float x, float y, ScreenSide sideOfScreen,
     , _half_tickness(HalfTickness)
 {
 }
-// sets object position ; overrides StaticObject function
-void SideWall::SetPosition(float x, float y)
-{
-  // no special behavior, so calls base class function
-  StaticObject::SetPosition(x, y);
-}
 
 // render the sideWall
 void SideWall::Draw() const
