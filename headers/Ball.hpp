@@ -14,7 +14,7 @@ class Paddle;
 class Game;
 class SideWall;
 
-class Ball : public MovableObject
+class Ball : public virtual MovableObject
 {
   public:
   // constructor:

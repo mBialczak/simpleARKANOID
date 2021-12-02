@@ -1,5 +1,6 @@
 #ifndef Paddle_hpp
 #define Paddle_hpp
+#include "MovableObject.hpp"
 #include "Texture.hpp"
 #include "Vector2d.hpp"
 // #include "gMath.hpp" // NOTE: remove INU
@@ -8,7 +9,7 @@
 class Texture;
 
 // the movable paddle
-class Paddle
+class Paddle : public virtual MovableObject
 {
   public:
   // constructor:
@@ -16,14 +17,14 @@ class Paddle
   // speed - ball sclar speed in pixels / second
   // moveLimits - rectangle within the paddle can move
   // texture - texture used for displaying the ball
-  Paddle(float X, float Y, float speed, SDL_Rect moveLimits,
+  Paddle(float x, float y, float speed, SDL_Rect moveLimits,
       const Texture& texture);
+
+  ~Paddle() = default;
   // update paddle state
-  void Update(float deltaTime);
+  void Update(float deltaTime) override;
   // render the paddle
-  void Draw() const;
-  // returns paddle position
-  gMath::Vector2d Position() const { return _position; }
+  void Draw() const override;
   // returns half of the paddle height
   float HalfHeight() const { return _half_height; }
   // returns half of the paddle width
@@ -43,10 +44,6 @@ class Paddle
   // corrects position if paddle tries to escape allowed moving area
   void KeepInMovingLimits();
 
-  // paddle position
-  gMath::Vector2d _position;
-  // paddle scalar speed
-  float _speed;
   // paddle velocity vector
   gMath::Vector2d _velocity;
   // moving limits rectangle

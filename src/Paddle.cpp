@@ -6,9 +6,8 @@
 // moveLimits - rectangle within the paddle can move
 // texture - texture used for displaying the ball
 Paddle::Paddle(
-    float X, float Y, float speed, SDL_Rect moveLimits, const Texture& texture)
-    : _position(gMath::Vector2d(X, Y))
-    , _speed(speed)
+    float x, float y, float speed, SDL_Rect moveLimits, const Texture& texture)
+    : MovableObject(x, y, speed)
     , _velocity(gMath::Vector2d())
     , _move_limits(moveLimits)
     , _texture(texture)
