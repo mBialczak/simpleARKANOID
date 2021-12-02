@@ -121,8 +121,8 @@ void Renderer::Display() const
     object->Draw();
   }
 
-  // REVIEW: remove if no longer used
-  _ball->Draw();
+  // // REVIEW: remove if no longer used
+  // _ball->Draw();
 
   // REVIEW: remove INU
   // display the paddle
