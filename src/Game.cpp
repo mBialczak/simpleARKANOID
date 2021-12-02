@@ -250,8 +250,11 @@ void Game::CreatePaddle()
   if (!_paddle) {
     throw std::logic_error("Unable to create the paddle");
   }
-  // set the _renderer pointer to the ball for rendering operations
-  _renderer->SetPaddle(_paddle.get());
+  // REVIEW: remove INU
+  _renderer->AddMovableObject(_paddle.get());
+  // REVIEW: remove INU
+  // // set the _renderer pointer to the ball for rendering operations
+  // _renderer->SetPaddle(_paddle.get());
 }
 // TODO: refactor and COMMENTS
 // creates blocks

@@ -1,8 +1,9 @@
 #include "Renderer.hpp"
 #include "LimitTimer.hpp"
 #include "SDLexception.hpp"
-#include <iostream> // remove after testing
-// constructor
+#include <iostream> //REVIEW: remove after testing
+
+// constructor takes screen size for rendering
 Renderer::Renderer(const std::size_t screenHeight,
     const std::size_t screenWidth, const std::vector<SideWall>& sideWalls)
     : _screen_height(screenHeight)
@@ -114,11 +115,18 @@ void Renderer::Display() const
     object->Draw();
   }
 
+  // REVIEW: remove INU
+  // display all movable game objects
+  for (auto& object : _movable_objects) {
+    object->Draw();
+  }
+
   // REVIEW: remove if no longer used
   _ball->Draw();
 
+  // REVIEW: remove INU
   // display the paddle
-  _paddle->Draw();
+  // _paddle->Draw();
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);

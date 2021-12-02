@@ -17,7 +17,8 @@ class SideWall;
 class Renderer
 {
   public:
-  // constructor
+  // constructor takes screen size for rendering
+  // TODO: remove sideWalls from the constructor
   Renderer(const std::size_t screenHeight, const std::size_t screenWidth,
       const std::vector<SideWall>& sideWalls);
 
