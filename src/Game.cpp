@@ -161,6 +161,11 @@ void Game::CreateWalls()
   CreateLeftWall();
   CreateRightWall();
 
+  // NOTE: remove INU
+  // add walls to the renderers displayed objects
+  for (auto& wall : _side_walls) {
+    _renderer->AddStaticObject(&wall);
+  }
   // NOTE: remove AR if works
   // let the rernderer know which walls to render
   // _renderer->SetWalls(&_walls);

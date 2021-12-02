@@ -77,8 +77,22 @@ void Renderer::SetPaddle(const Paddle* const paddle)
   _paddle = paddle;
 }
 
+// adds StaticObject to be displayed //NOTE: remove INU
+void Renderer::AddStaticObject(const StaticObject* object)
+{
+  if (object) {
+    _static_objects.emplace_back(object);
+  }
+}
+// adds MovableObject to be displayed //NOTE: remove INU
+void Renderer::AddMovableObject(const MovableObject* object)
+{
+  if (object) {
+    _movable_objects.emplace_back(object);
+  }
+}
+
 // displays (renders) game graphics
-// NOTE: helper color #00aa00
 void Renderer::Display() const
 {
   UpdateTitleBar();
@@ -88,11 +102,19 @@ void Renderer::Display() const
   // clear screen
   SDL_RenderClear(_sdl_renderer);
 
+  // REVIEW: remove if no longer used
   // // display the walls
-  for (auto& wall : _side_walls) {
-    wall.Draw();
+  // for (auto& wall : _side_walls) {
+  //   wall.Draw();
+  // }
+
+  // REVIEW: remove INU
+  // display all static game objects
+  for (auto& object : _static_objects) {
+    object->Draw();
   }
 
+  // REVIEW: remove if no longer used
   _ball->Draw();
 
   // display the paddle
