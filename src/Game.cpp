@@ -82,7 +82,7 @@ void Game::Run()
   while (_is_running) {
 
     // handle input
-    _controller.HandleInput(_is_running, *_paddle);
+    _controller.HandleInput(_is_running, *_paddle, *_ball);
 
     UpdateGame();
     GenerateOutput();
@@ -211,8 +211,7 @@ void Game::CreateRightWall()
 // creates the ball
 void Game::CreateBall()
 {
-  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-      _randomizer(240.0f, 300.0f), _ball_speed, GetTexture("ball"), *_paddle,
+  _ball = std::make_unique<Ball>(_ball_speed, GetTexture("ball"), *_paddle,
       _screen_height, *this, _side_walls, _blocks);
 
   // verify if ball created successfully. If not throw exception

@@ -1,23 +1,21 @@
 #include "Ball.hpp"
 #include "Game.hpp"
 #include <iostream> // NOTE: remove after testing
+
 // constructor:
-// X, Y - ball centre coordinates
-// directionAngle - direction in degrees in which the ball starts moving
 // speed - ball sclar speed in pixels / second
 // texture - texture used for displaying the ball
 // paddle - reference to paddle against ball collision will be checked
 // game - reference to the main game object
 // sideWalls - reference to sideWalls for collision detection
 // blocks - blocks to be shot at; for collision detection
-Ball::Ball(float X, float Y, float directionAngle, float speed,
-    const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
-    const std::vector<SideWall>& sideWalls, std::vector<Block>& blocks)
-    : MovableObject(X, Y, speed)
-    , _direction(directionAngle)
-    // set velocity vector: create unit velocity vector and multiply by scalar
-    // speed
-    , _velocity(gMath::Vector2d(gMath::ToRadians(directionAngle)) * speed)
+Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
+    float screenBottomY, Game& game, const std::vector<SideWall>& sideWalls,
+    std::vector<Block>& blocks)
+    : MovableObject(0.0f, 0.0f, speed)
+    , _direction(0.0f)
+    , _velocity(gMath::Vector2d())
+    //(gMath::Vector2d(gMath::ToRadians(directionAngle)) * speed)
     , _texture(texture)
     , _radius(texture.Width() / 2.0)
     , _paddle(paddle)
@@ -32,57 +30,26 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
 // update ball state with given time difference from last update
 void Ball::Update(float deltaTime)
 {
-  // if the ball hits the paddle we change direction
-  if (HasHitPaddle()) {
-    BouncePaddle();
-    _paddle.Stop();
-    // TODO: handle sound
+  // until player starts the ball movement, it should be placed on the
+  // paddle
+  if (_in_starting_pos) {
+    PlaceOnPaddle();
   }
+  // otherwise perfom routine update cycle
+  else {
+    HandlePaddleCollisions();
 
-  // if the ball hits a sidewall we change direction
-  for (auto& wall : _side_walls) {
-    if (HasHitWall(wall)) {
-      BounceWall(wall);
-      // if one wall hit, no need to check the others in this run
-      break; // REVIEW: think if needed
-      // TODO: handle sound or something
+    HandleWallCollisions();
+
+    HandleBlockCollisions();
+
+    // update ball positoon
+    _position += _velocity * deltaTime;
+
+    // react if the ball has left the screen
+    if (HasLeftScreen()) {
+      _game.HandleBallEscape();
     }
-  }
-  // for limiting repetitions REVIEW: refactor
-  // bool switched_direction = false;
-
-  // TODO: COMMENT
-  for (auto& block : _blocks) {
-    // checks if the ball has hit any block which hasn't already been destroyed
-    if (!block.IsDestroyed() && HasHitBlock(block)) {
-      // TODO: limit repetitions if two balls hit in one go
-      BounceBlock(block);
-      // REVIEW: play sound or something
-      _game.HandleBlockHit(block);
-      // REVIEW: remove after testing
-      // std::cout << "Ball hit the block!" << std::endl;
-      // RectBorder border { BounceBlock(block) };
-      // switch (border) {
-      //   case RectBorder::bBottom:
-      //     std::cout << "Bottom border!" << std::endl;
-      //     break;
-      //   case RectBorder::bLeft:
-      //     std::cout << "Left border!" << std::endl;
-      //     break;
-      //   case RectBorder::bRight:
-      //     std::cout << "Right border!" << std::endl;
-      //     break;
-      //   case RectBorder::bTop:
-      //     std::cout << "Top Border!" << std::endl;
-      //     break;
-      // }
-    }
-  }
-  _position += _velocity * deltaTime;
-
-  // check if has left the screen
-  if (HasLeftScreen()) {
-    _game.HandleBallEscape();
   }
 }
 
@@ -112,6 +79,38 @@ void Ball::Draw() const
       static_cast<int>(_position._x), static_cast<float>(_position._y));
 }
 
+// starts the ball movement
+void Ball::Start()
+{
+  // calculate randomized starting direction when ball starts from the paddle
+  float starting_direction = _randomizer(20.0f, 160.0f);
+  // update ball state;
+  UpdateDirectionAndVelocity(starting_direction);
+  _in_starting_pos = false;
+}
+
+// puts the ball in the starting position on the paddle
+void Ball::PlaceOnPaddle()
+{
+  float start_x = _paddle.Position()._x;
+  float start_y
+      = _paddle.Position()._y - _paddle.HalfHeight() - _texture.Height() / 2.0;
+  _position = gMath::Vector2d(start_x, start_y);
+}
+
+// checks if the ball has hit the paddle. If so, updates the game state
+// accoringly
+void Ball::HandlePaddleCollisions()
+{
+  if (HasHitPaddle()) {
+    // change direction
+    BouncePaddle();
+    // REVIEW: verify IN
+    _paddle.Stop();
+    // TODO: handle sound
+  }
+}
+
 // checks for collision with the paddle. Returns true if colided, false if not
 bool Ball::HasHitPaddle() const
 {
@@ -136,6 +135,45 @@ bool Ball::HasHitPaddle() const
 bool Ball::HasLeftScreen() const
 {
   return _position._y - _radius > _screen_bottom_y;
+}
+
+// checks if the ball has hit any of the walls. If so, updates the game state
+// accordingly
+void Ball::HandleWallCollisions()
+{
+  for (auto& wall : _side_walls)
+    if (HasHitWall(wall)) {
+      {
+        // change direction
+        BounceWall(wall);
+        // REVIEW: think if needed
+        // if one wall hit, no need to check the others in this run
+        break;
+        // TODO: handle sound or something
+      }
+    }
+}
+
+// checks if the ball has hit any of the blocks. If so, updates the game state
+// accordingly
+void Ball::HandleBlockCollisions()
+{
+  // for limiting repetitions REVIEW: refactor
+  // bool switched_direction = false;
+
+  // TODO: COMMENT
+  for (auto& block : _blocks) {
+    // checks if the ball has hit any block which hasn't already been
+    // destroyed
+    if (!block.IsDestroyed() && HasHitBlock(block)) {
+      // TODO: limit repetitions if two balls hit in one go
+
+      // chagne ball direction
+      BounceBlock(block);
+      // REVIEW: play sound or something
+      _game.HandleBlockHit(block);
+    }
+  }
 }
 
 // check if the ball has collided with the specific wall

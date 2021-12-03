@@ -2,7 +2,7 @@
 #include "SDL.h"
 
 // function for handling all the input events
-void Controller::HandleInput(bool& running, Paddle& paddle) const
+void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
 {
   SDL_Event evt;
   // get all SDL events
@@ -13,16 +13,19 @@ void Controller::HandleInput(bool& running, Paddle& paddle) const
     }
   }
   // get all the pressed keyboard keys and handle them
-  HandleKeyPresses(evt, SDL_GetKeyboardState(NULL), paddle);
+  HandleKeyPresses(evt, SDL_GetKeyboardState(NULL), paddle, ball);
 }
 
 // helper function for  handling keypresses
 void Controller::HandleKeyPresses(
-    SDL_Event& evt, const Uint8* keysArray, Paddle& paddle) const
+    SDL_Event& evt, const Uint8* keysArray, Paddle& paddle, Ball& ball) const
 {
   // move the paddle accordingly to pressed keys
   if (keysArray[_up]) {
-    paddle.MoveUp();
+    // REVIEW: verify if needed and has set
+    if (!ball.HasHitPaddle()) {
+      paddle.MoveUp();
+    }
   }
   else if (keysArray[_down]) {
     paddle.MoveDown();
@@ -32,6 +35,12 @@ void Controller::HandleKeyPresses(
   }
   else if (keysArray[_right]) {
     paddle.MoveRight();
+  }
+  else if (keysArray[_start_pause]) {
+    // start the ball if it is in the starting position
+    if (!ball.IsMoving()) {
+      ball.Start();
+    }
   }
   else {
     paddle.Stop();

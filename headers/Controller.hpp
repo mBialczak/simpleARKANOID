@@ -4,15 +4,17 @@
 #include "SDL.h"
 
 // class for controling input and steering
-class Controller {
+class Controller
+{
   public:
   // function for handling all the input events
-  void HandleInput(bool& running, Paddle& paddle) const;
+  // REVIEW: verify
+  void HandleInput(bool& running, Paddle& paddle, Ball& ball) const;
 
   private:
   // helper function for  handling keypresses
   void HandleKeyPresses(
-      SDL_Event& evt, const Uint8* keysArray, Paddle& paddle) const;
+      SDL_Event& evt, const Uint8* keysArray, Paddle& paddle, Ball& ball) const;
 
   // key scancodes used for game control
   // paddle up
@@ -23,5 +25,8 @@ class Controller {
   Uint8 _left = SDL_SCANCODE_LEFT;
   // paddle right
   Uint8 _right = SDL_SCANCODE_RIGHT;
+  // REVIEW: verify if the comment is right
+  // start game, pause or unpause
+  Uint8 _start_pause = SDL_SCANCODE_SPACE;
 };
 #endif // !CONTROLLER_HPP
