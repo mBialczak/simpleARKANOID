@@ -13,6 +13,9 @@ Block::Block(float x, float y, const Texture& texture)
 // renders the block to the screen
 void Block::Draw() const
 {
-  _texture.Render(
-      static_cast<int>(_position._x), static_cast<float>(_position._y));
+  // we display the block if it has not been destroyed
+  if (!_destroyed) {
+    _texture.Render(
+        static_cast<int>(_position._x), static_cast<float>(_position._y));
+  }
 }

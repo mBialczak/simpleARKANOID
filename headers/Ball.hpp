@@ -1,7 +1,9 @@
 #ifndef Ball_HPP
 #define Ball_HPP
+#include "Block.hpp"
 #include "MovableObject.hpp"
 #include "Paddle.hpp"
+#include "RandNum.hpp"
 #include "SideWall.hpp"
 #include "Texture.hpp"
 #include "Vector2d.hpp"
@@ -13,6 +15,16 @@ class Texture;
 class Paddle;
 class Game;
 class SideWall;
+class Block;
+
+// enum class for distinguishing block border during collision with the ball
+enum class RectBorder
+{
+  bTop,
+  bBottom,
+  bRight,
+  bLeft
+};
 
 class Ball : public virtual MovableObject
 {
@@ -24,9 +36,10 @@ class Ball : public virtual MovableObject
   // texture - texture used for displaying the ball
   // paddle - reference to paddle against ball collision will be checked
   // game - reference to the main game object
+  // blocks - blocks to be shot at; for collision detection
   Ball(float X, float Y, float directionAngle, float speed,
       const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
-      const std::vector<SideWall>& sideWalls);
+      const std::vector<SideWall>& sideWalls, std::vector<Block>& blocks);
 
   // default virtual destructor
   ~Ball() override = default;
@@ -48,13 +61,25 @@ class Ball : public virtual MovableObject
   // updates ball's direction angle and velocity vector depending on wall hit
   void BounceWall(const SideWall& wall);
   // calculates the ball new direction after hitting left wall
-  float NewDirectionLeftWallBounced();
+  float NewDirectionLeftWallBounced() const;
   // calculates the ball new direction after hitting right wall
-  float NewDirectionRightWallBounced();
+  float NewDirectionRightWallBounced() const;
   // calculates the ball new direction after hitting top wall
-  float NewDirectionTopWallBounced();
+  float NewDirectionTopWallBounced() const;
   // change the ball direction after hitting paddle
   void BouncePaddle();
+  // checks if the ball hit a specific block
+  bool HasHitBlock(const Block& block) const;
+  // change the ball direction after hitting particualr block
+  void BounceBlock(const Block& block);
+  // returns new direction after block bounce when going up and right
+  float BounceBlockGoingUpRight(float leftX) const;
+  // returns new direction after block bounce when going up and left
+  float BounceBlockGoingUpLeft(float rightX) const;
+  // returns new direction after block bounce when going down and left
+  float BounceBlockGoingDownLeft(float rightX) const;
+  // returns new direction after block bounce when going down and right
+  float BounceBlockGoingDownRight(float leftX) const;
   // keeps the ball direction angle in range [0,360)
   // REVIEW: REMOVE INU
   void ControlDirection();
@@ -77,8 +102,12 @@ class Ball : public virtual MovableObject
   // reference to the main game object
   // NOTE: consider const and if necessary
   Game& _game;
-  // reference to vector of sidewall for collision detection
+  // random number generator used for simulating angle changes
+  gMath::RandNum _randomizer;
+  // sideWalls for collision detection
   const std::vector<SideWall>& _side_walls;
+  // blocks for collision detection
+  std::vector<Block>& _blocks;
 };
 
 #endif // !Ball_HPP

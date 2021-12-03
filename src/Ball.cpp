@@ -9,9 +9,10 @@
 // paddle - reference to paddle against ball collision will be checked
 // game - reference to the main game object
 // sideWalls - reference to sideWalls for collision detection
+// blocks - blocks to be shot at; for collision detection
 Ball::Ball(float X, float Y, float directionAngle, float speed,
     const Texture& texture, Paddle& paddle, float screenBottomY, Game& game,
-    const std::vector<SideWall>& sideWalls)
+    const std::vector<SideWall>& sideWalls, std::vector<Block>& blocks)
     : MovableObject(X, Y, speed)
     , _direction(directionAngle)
     // set velocity vector: create unit velocity vector and multiply by scalar
@@ -23,10 +24,11 @@ Ball::Ball(float X, float Y, float directionAngle, float speed,
     , _screen_bottom_y(screenBottomY)
     , _game(game)
     , _side_walls(sideWalls)
+    , _blocks(blocks)
 {
 }
 
-// TODO: make clean
+// TODO: make clean or break into functions
 // update ball state with given time difference from last update
 void Ball::Update(float deltaTime)
 {
@@ -41,15 +43,46 @@ void Ball::Update(float deltaTime)
   for (auto& wall : _side_walls) {
     if (HasHitWall(wall)) {
       BounceWall(wall);
+      // if one wall hit, no need to check the others in this run
+      break; // REVIEW: think if needed
       // TODO: handle sound or something
     }
   }
+  // for limiting repetitions REVIEW: refactor
+  // bool switched_direction = false;
 
+  // TODO: COMMENT
+  for (auto& block : _blocks) {
+    // checks if the ball has hit any block which hasn't already been destroyed
+    if (!block.IsDestroyed() && HasHitBlock(block)) {
+      // TODO: limit repetitions if two balls hit in one go
+      BounceBlock(block);
+      // REVIEW: play sound or something
+      _game.HandleBlockHit(block);
+      // REVIEW: remove after testing
+      // std::cout << "Ball hit the block!" << std::endl;
+      // RectBorder border { BounceBlock(block) };
+      // switch (border) {
+      //   case RectBorder::bBottom:
+      //     std::cout << "Bottom border!" << std::endl;
+      //     break;
+      //   case RectBorder::bLeft:
+      //     std::cout << "Left border!" << std::endl;
+      //     break;
+      //   case RectBorder::bRight:
+      //     std::cout << "Right border!" << std::endl;
+      //     break;
+      //   case RectBorder::bTop:
+      //     std::cout << "Top Border!" << std::endl;
+      //     break;
+      // }
+    }
+  }
   _position += _velocity * deltaTime;
 
   // check if has left the screen
   if (HasLeftScreen()) {
-    _game.BallEscapeHandler();
+    _game.HandleBallEscape();
   }
 }
 
@@ -66,6 +99,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
             << std::endl;
 
   // REVIEW: think of removing
+  // recalculate the ball direction to fit within 0 - 360 limitas
   ControlDirection();
   // update velocity
   _velocity = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
@@ -155,7 +189,7 @@ void Ball::BounceWall(const SideWall& wall)
 }
 
 // calculates the ball new direction after hitting left wall
-float Ball::NewDirectionLeftWallBounced()
+float Ball::NewDirectionLeftWallBounced() const
 {
   // Ball could hit the left wall only when heading left (up or down)
   float new_direction {};
@@ -175,7 +209,7 @@ float Ball::NewDirectionLeftWallBounced()
 }
 
 // calculates the ball new direction after hitting right wall
-float Ball::NewDirectionRightWallBounced()
+float Ball::NewDirectionRightWallBounced() const
 {
   // Ball could hit the right wall only when heading right (up or down)
   float new_direction {};
@@ -195,7 +229,7 @@ float Ball::NewDirectionRightWallBounced()
 }
 
 // calculates the ball new direction after hitting top wall
-float Ball::NewDirectionTopWallBounced()
+float Ball::NewDirectionTopWallBounced() const
 {
   // Ball could hit the top wall only when heading towards top (left or right)
   float new_direction {};
@@ -239,8 +273,138 @@ void Ball::BouncePaddle()
   // REVIEW: remove after testing
   // std::cout << "Should not be here: Paddle bounce " << __LINE__
   //           << "new_direction= " << new_direction << std::endl;
-  // update direction and vellocity
+
+  // update ball direction and vellocity
   UpdateDirectionAndVelocity(new_direction);
+}
+// TODO: COMMENTS
+// checks if the ball hit a specific block
+bool Ball::HasHitBlock(const Block& block) const
+{
+  // we assume that collision occurs when both the vertical and horizontal
+  // distance from ball to block centre are smaller that the sum of ball radius
+  // and half block hight or width accordingly
+  return (gMath::HorizontalDistance(_position, block.Position())
+             < _radius + block.HalfWidth())
+      && gMath::VerticalDistance(_position, block.Position())
+      < _radius + block.HalfHeight();
+}
+
+// TODO: review and clean
+// determines which block border was hit during collision
+void Ball::BounceBlock(const Block& block)
+{
+  // we use left and right coordinate of the block borders in relation to the
+  // ball's position X coordinate to approximate the side of the block being
+  // collided
+  float left_x = block.Position()._x - block.HalfWidth();
+  float right_x = block.Position()._x + block.HalfWidth();
+  // REVIEW: remove if X approch is better
+  // float bottom_y = block.Position()._y + block.HalfHeight();
+  // float top_y = block.Position()._y - block.HalfHeight();
+  // new direction of the ball to be calculated
+
+  float new_direction {};
+
+  // for the ball heading upwards and to the right
+  if (_direction >= 0.0f && _direction <= 90.0f) {
+    new_direction = BounceBlockGoingUpRight(left_x);
+  }
+  // for the ball  heading upwards and to the left
+  else if (_direction > 90.0f && _direction <= 180.0f) {
+    new_direction = BounceBlockGoingUpLeft(right_x);
+  }
+  // for the ball heading downwards and to the left
+  else if (_direction > 180.0f && _direction <= 270.0f) {
+    new_direction = BounceBlockGoingDownLeft(right_x);
+  }
+  // for the ball heading downwards and to the right,
+  else {
+    new_direction = BounceBlockGoingDownRight(left_x);
+  }
+
+  // update ball direction and vellocity
+  UpdateDirectionAndVelocity(new_direction);
+}
+// returns new direction after block bounce when going up and right
+float Ball::BounceBlockGoingUpRight(float leftX) const
+{
+  // If the ball is heading upwards and to the right,
+  // either left or bottom  border of the block could be hit
+  float new_direction {};
+
+  // left border bounce
+  if (_position._x <= leftX) {
+    new_direction = 180.0f - _direction;
+    // REVIEW: Consider removing or adjusting
+    // add random increase for low angles to simulate collision effect
+    if (new_direction >= 90.0f && new_direction <= 95.0f) {
+      new_direction += _randomizer(5.0f, 8.0f);
+      // REVIEW: remove AT
+      std::cout << "added random value!" << std::endl;
+    }
+  }
+  // otherwise it is a bottom border bounce
+  else {
+    new_direction = 360.0f - _direction;
+    // REVIEW: Consider removing or adjusting
+    // decrease by random value for low angles to simulate collision effect
+    // if (new_direction >= 350.0f && new_direction <= 360.0f) {
+    //   new_direction -= _randomizer(3.0f, 5.0f);
+    //   // REVIEW: remove AT
+    //   std::cout << "substracted random value!" << std::endl;
+    // }
+  }
+  return new_direction;
+}
+
+// returns new direction after block bounce when going up and left
+float Ball::BounceBlockGoingUpLeft(float rightX) const
+{
+  // if the ball is heading upwards and to the left
+  // either right or bottom border of the block could be hit
+
+  // left border bounce
+  if (_position._x >= rightX) {
+    return 180.0f - _direction;
+  }
+  // bottom border bounce
+  else {
+    return 360.0f - _direction;
+  }
+}
+// returns new direction after block bounce when going down and left
+float Ball::BounceBlockGoingDownLeft(float rightX) const
+{
+  // if the ball is heading downwards and to the left,
+  // either right or top border of the block could be hit
+
+  // right border bounce
+  if (_position._x >= rightX) {
+    float angle = _direction - 180.0f;
+    // new direction = 360 - angle
+    return 360.0f - angle;
+  }
+  // top border bounce
+  else {
+    return 360.0f - _direction;
+  }
+}
+// returns new direction after block bounce when going down and right
+float Ball::BounceBlockGoingDownRight(float leftX) const
+{
+  // if the ball is heading downwards and to the right,
+  // either left or top border of the block could be hit
+
+  // left border bounce
+  if (_position._x <= leftX) {
+    float angle = 360.0f - _direction;
+    return 180 + angle;
+  }
+  // top border bounce
+  else {
+    return 360 - _direction;
+  }
 }
 
 // NOTE: might not be needed

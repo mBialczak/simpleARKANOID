@@ -17,7 +17,7 @@ class RandNum
   // Can be used both on objects of class and as static function
   // works for various integral and floating point types
   template <typename T>
-  static T Random(T min, T max)
+  static T Random(T min, const T max)
   {
     // if T is a integral type
     if constexpr (std::is_integral_v<T>) {
@@ -36,7 +36,7 @@ class RandNum
   }
   // Alternative function operator doing the same as Random()
   template <class T>
-  T operator()(T min, T max)
+  T operator()(T min, T max) const
   {
     return Random(min, max);
   }

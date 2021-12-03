@@ -74,3 +74,7 @@ TODO: in Game create objects functions there are many constructors where perhaps
 instead of in might be better
 
 TODO: find a right place to reserve place for static objects in renderer and game
+
+TODO: consider changing paddle refernce to pointer in ball and reduce constructor (pointer could be set after paddle creation)
+
+TODO: consider simplyfing condition checks in direction determining (lik 0 < x < 90>)

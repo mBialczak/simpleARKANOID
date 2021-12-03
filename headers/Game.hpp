@@ -35,7 +35,10 @@ class Game
 
   // handles the ball leaving the allowed screen area
   // TODO: to implement
-  void BallEscapeHandler();
+  void HandleBallEscape();
+  // handles a block being hit by the ball
+  // TODO: to implement
+  void HandleBlockHit(Block& block);
 
   private:
   // initialize SDL subsystems
@@ -93,5 +96,7 @@ class Game
   gMath::RandNum _randomizer;
   // TODO: change into container and create comments
   std::vector<Block> _blocks;
+  // takes track of points achieved by the player
+  unsigned _points = 0;
 };
 #endif // !GAME_HPP

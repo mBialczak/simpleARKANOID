@@ -106,6 +106,7 @@ void Game::UpdateGame()
     // cap delta_time while debugging if time difference is to big
     delta_time = 0.5f;
   }
+  // REVIEW: consider one container of moveable objets instead seperate objects
   // upate paddle state
   _paddle->Update(delta_time);
   // update ball state
@@ -210,12 +211,23 @@ void Game::CreateRightWall()
 void Game::CreateBall()
 {
   // NOTE: randomize starting ball data: angle and speed perhaps
-  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-      _randomizer(220.0f, 340.0f)
+  // _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
+  //     _randomizer(220.0f, 340.0f)
+  //     // 141.0f TODO: Remove after testing
+  //     ,
+  //     _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
+  //     _side_walls, _blocks);
+
+  // REVIEW: remove after collision testing
+  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height - 530.0f,
+      300.0f
       // 141.0f TODO: Remove after testing
       ,
-      _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
-      _side_walls);
+      50.0f,
+      // _ball_speed,
+      GetTexture("ball"), *_paddle, _screen_height, *this, _side_walls,
+      _blocks);
+
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");
@@ -269,8 +281,22 @@ void Game::CreateBlocks()
 }
 
 // TODO: implement if needed
-void Game::BallEscapeHandler()
+void Game::HandleBallEscape()
 {
-  std::cout << "BallEscapeHandler()!" << std::endl;
+  std::cout << "HandleBallEscape()!" << std::endl;
   _is_running = false;
+}
+
+// handles a block being hit by the ball
+// TODO: to implement
+void Game::HandleBlockHit(Block& block)
+{
+  // set block as destroyed to skip further rendering and collision checks
+  block.MakeDestroyed();
+  // increase points score with point value assigned to the block
+  _points += block.Points();
+  // REVIEW: remove AT
+  std::cout << "A block has been hit!!!\n" << std::endl;
+  std::cout << "Total points = " << _points << "\n----------------------\n"
+            << std::endl;
 }
