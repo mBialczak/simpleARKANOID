@@ -26,7 +26,7 @@ int main(int argc, char const* argv[])
     std::cerr << e.Description();
     return -3;
   }
-  // handle standard exceptions
+  // handle standard iherited exceptions
   catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
     return -1;

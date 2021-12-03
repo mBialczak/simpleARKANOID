@@ -1,6 +1,7 @@
 #include "Game.hpp"
 #include "IntervalTimer.hpp"
 #include "LimitTimer.hpp"
+#include "Paths.hpp" // REVIEW: remove INU
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDLexception.hpp"
@@ -126,17 +127,17 @@ void Game::LoadTextures()
 {
   // load texture representing the ball
   _textures["ball"] = std::make_unique<Texture>(
-      "../assets/ball.png", _renderer->GetSDLrenderer());
+      Paths::pBallImage, _renderer->GetSDLrenderer());
   // load texture respresenting the paddle
   _textures["paddle"] = std::make_unique<Texture>(
-      "../assets/paddle.png", _renderer->GetSDLrenderer());
+      Paths::pPadleImage, _renderer->GetSDLrenderer());
   // load texture representing the side_wall
   _textures["horizontal_wall"] = std::make_unique<Texture>(
-      "../assets/horizontal_wall.png", _renderer->GetSDLrenderer());
+      Paths::pHorizontalWallImage, _renderer->GetSDLrenderer());
   _textures["vertical_wall"] = std::make_unique<Texture>(
-      "../assets/vertical_wall.png", _renderer->GetSDLrenderer());
+      Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
   _textures["block_green"] = std::make_unique<Texture>(
-      "../assets/block_green.png", _renderer->GetSDLrenderer());
+      Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
 }
 
 // gets a single texture from the stored textures
@@ -210,23 +211,9 @@ void Game::CreateRightWall()
 // creates the ball
 void Game::CreateBall()
 {
-  // NOTE: randomize starting ball data: angle and speed perhaps
-  // _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
-  //     _randomizer(220.0f, 340.0f)
-  //     // 141.0f TODO: Remove after testing
-  //     ,
-  //     _ball_speed, GetTexture("ball"), *_paddle, _screen_height, *this,
-  //     _side_walls, _blocks);
-
-  // REVIEW: remove after collision testing
-  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height - 530.0f,
-      300.0f
-      // 141.0f TODO: Remove after testing
-      ,
-      50.0f,
-      // _ball_speed,
-      GetTexture("ball"), *_paddle, _screen_height, *this, _side_walls,
-      _blocks);
+  _ball = std::make_unique<Ball>(_screen_width / 2.0f, _screen_height / 2.0f,
+      _randomizer(240.0f, 300.0f), _ball_speed, GetTexture("ball"), *_paddle,
+      _screen_height, *this, _side_walls, _blocks);
 
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
