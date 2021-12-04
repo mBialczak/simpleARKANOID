@@ -34,6 +34,11 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   CreateBlocks();
   CreatePaddle();
   CreateBall();
+
+  // Add ball to the collection of objects displayed by the renderer
+  _renderer->AddMovableObject(_ball.get());
+  // add paddle to the collection of objects displayed by the renderer
+  _renderer->AddMovableObject(_paddle.get());
 }
 
 // initialize SDL subsystems
@@ -219,9 +224,9 @@ void Game::CreateBall()
   if (!_ball) {
     throw std::logic_error("Unable to create the ball");
   }
-
-  // Add ball to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_ball.get());
+  // REVIEW: remove if not used
+  // // Add ball to the collection of objects displayed by the renderer
+  // _renderer->AddMovableObject(_ball.get());
 }
 
 // creates the paddle
@@ -247,8 +252,9 @@ void Game::CreatePaddle()
   if (!_paddle) {
     throw std::logic_error("Unable to create the paddle");
   }
-  // add paddle to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_paddle.get());
+  // REVIEW: remove if not used here
+  // // add paddle to the collection of objects displayed by the renderer
+  // _renderer->AddMovableObject(_paddle.get());
 }
 // TODO: refactor and COMMENTS
 // creates blocks

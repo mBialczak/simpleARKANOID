@@ -48,6 +48,8 @@ class Ball : public virtual MovableObject
   void UpdateDirectionAndVelocity(float directionAngle);
   // render the ball
   void Draw() const override;
+  // returns ball radius
+  float Radius() const { return _radius; }
   // starts the ball movement
   void Start();
   // checks if the ball is in the starting position

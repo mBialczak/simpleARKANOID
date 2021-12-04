@@ -22,8 +22,11 @@ void Controller::HandleKeyPresses(
 {
   // move the paddle accordingly to pressed keys
   if (keysArray[_up]) {
-    // REVIEW: verify if needed and has set
-    if (!ball.HasHitPaddle()) {
+    // REVIEW: verify if needed
+    // move up only if paddle has not outrun the ball with some reasonable
+    // margin
+    if (gMath::VerticalDistance(paddle.Position(), ball.Position())
+        > paddle.HalfHeight() + 5 * ball.Radius()) {
       paddle.MoveUp();
     }
   }
