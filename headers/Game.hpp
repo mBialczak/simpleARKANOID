@@ -87,7 +87,7 @@ class Game
   // pointer to the ball
   std::unique_ptr<Ball> _ball;
   // ball starting scalar speed (pixels per second)
-  float _ball_speed = 350.0f;
+  float _ball_speed = 250.0f;
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
   // paddle scalar moving speed

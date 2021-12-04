@@ -82,3 +82,5 @@ TODO: consider simplyfing condition checks in direction determining (lik 0 < x <
 TODO: consider making consts with assests names
 
 TODO: consider putting all enums in one file
+
+TODO: check all classes for leaking resources

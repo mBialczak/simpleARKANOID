@@ -17,9 +17,13 @@ class MovableObject
   virtual void Update(float deltaTime) = 0;
   // draws the object
   virtual void Draw() const = 0;
-
   // gets object position
   virtual gMath::Vector2d Position() const { return _position; };
+  // gets current speed of the object;
+  virtual float Speed() const { return _speed; }
+  // REMOVE INU
+  // sets the scalar speed of the object;
+  virtual void SetSpeed(float speed) { _speed = speed; }
 
   protected:
   // object position

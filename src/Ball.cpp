@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include <iostream> // NOTE: remove after testing
 
-// constructor:
+// constructor: // VERIFY comments
 // speed - ball sclar speed in pixels / second
 // texture - texture used for displaying the ball
 // paddle - reference to paddle against ball collision will be checked
@@ -24,6 +24,7 @@ Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
     , _side_walls(sideWalls)
     , _blocks(blocks)
 {
+  // REVIEW: consider checking invariants in the constructor
 }
 
 // TODO: make clean or break into functions
@@ -37,10 +38,12 @@ void Ball::Update(float deltaTime)
   }
   // otherwise perfom routine update cycle
   else {
+    // react to ball-paddle collisioins and apply changes to speed and direction
+    // due to spin (only when the the ball hits the paddle)
     HandlePaddleCollisions();
 
     HandleWallCollisions();
-
+    // VERIFY: comments?7
     HandleBlockCollisions();
 
     // update ball positoon
@@ -66,7 +69,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
             << std::endl;
 
   // REVIEW: think of removing
-  // recalculate the ball direction to fit within 0 - 360 limitas
+  // recalculate the ball direction to fit within 0 - 360 limits
   ControlDirection();
   // update velocity
   _velocity = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
@@ -77,6 +80,17 @@ void Ball::Draw() const
 {
   _texture.Render(
       static_cast<int>(_position._x), static_cast<float>(_position._y));
+}
+
+// sets current speed of the object if it is not lower than minimal speed
+void Ball::SetSpeed(float speed)
+{
+  if (speed >= _min_speed) {
+    // update speed
+    _speed = speed;
+    // update velocity vector // VERIFY
+    _velocity = gMath::Vector2d(gMath::ToRadians(_direction)) * speed;
+  }
 }
 
 // starts the ball movement
@@ -99,14 +113,17 @@ void Ball::PlaceOnPaddle()
 }
 
 // checks if the ball has hit the paddle. If so, updates the game state
-// accoringly
+// accoringly:
+// - changes ball direction after bounce - including applying spin
+// - increases or decreases speed if the user gave a command via controller
 void Ball::HandlePaddleCollisions()
 {
   if (HasHitPaddle()) {
-    // change direction
+    // change direction including spin application
     BouncePaddle();
-    // REVIEW: verify IN
-    // _paddle.Stop();
+    // VERIFY
+    // Apply speed change requested via keyboard
+    ApplySpeedDelta();
 
     // // TODO: handle sound
   }
@@ -241,17 +258,13 @@ float Ball::NewDirectionLeftWallBounced() const
     float deltaAngle = 270.0f - _direction;
     new_direction = 270.0f + deltaAngle;
   }
-  // REVIEW:: keep else statement if bouncing works , remove if still not
-
-  // if the direction is different than above simply keep it
-  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // if the direction is different than above simply keeps it unchanged in order
+  // to avoid strange cycles when the ball didn't menage to escepe far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;
   }
-  // REVIEW: remove after testing
-  // std::cout << "Should not be here: Left WallBounce: " << __LINE__
-  //           << "new_direction= " << new_direction << std::endl;
+
   return new_direction;
 }
 
@@ -269,18 +282,13 @@ float Ball::NewDirectionRightWallBounced() const
     float angle = 360.0f - _direction;
     new_direction = 180.0f + angle;
   }
-
-  // REVIEW:: keep else statement if bouncing works , remove if still not
-
-  // if the direction is different than above simply keep it
-  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // if the direction is different than above simply keeps it unchanged in order
+  // to avoid strange cycles when the ball didn't menage to escepe far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;
   }
-  // REVIEW: remove after testing
-  // std::cout << "Should not be here: Right WallBounce: " << __LINE__
-  //           << "new_direction= " << new_direction << std::endl;
+
   return new_direction;
 }
 
@@ -298,17 +306,14 @@ float Ball::NewDirectionTopWallBounced() const
   else if (_direction < 90.0f && _direction > 0.0f) {
     new_direction = 360.0f - _direction;
   }
-  // REVIEW:: keep else statement if bouncing works , remove if still not
 
-  // if the direction is different than above simply keep it
-  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // if the direction is different than above simply keeps it unchanged in order
+  // to avoid strange cycles when the ball didn't menage to escepe far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;
   }
-  // REVIEW: remove after testing
-  // std::cout << "Should not be here: Top WallBounce: " << __LINE__
-  //           << "new_direction= " << new_direction << std::endl;
+
   return new_direction;
 }
 
@@ -337,6 +342,7 @@ void Ball::BouncePaddle()
     // (bounce_angle == new_direction for the ball heading down and right)
     new_direction += CalcSpin(new_direction);
   }
+
   // avoid sending the ball to far to the left
   if (new_direction >= 175.0f) {
     new_direction = 175.0f;
@@ -409,13 +415,13 @@ float Ball::BounceBlockGoingUpRight(float leftX) const
   // left border bounce
   if (_position._x <= leftX) {
     new_direction = 180.0f - _direction;
-    // REVIEW: Consider removing or adjusting
-    // add random increase for low angles to simulate collision effect
-    if (new_direction >= 90.0f && new_direction <= 95.0f) {
-      new_direction += _randomizer(5.0f, 8.0f);
-      // REVIEW: remove AT
-      std::cout << "added random value!" << std::endl;
-    }
+    // // REVIEW: Consider removing or adjusting
+    // // add random increase for low angles to simulate collision effect
+    // if (new_direction >= 90.0f && new_direction <= 95.0f) {
+    //   new_direction += _randomizer(5.0f, 8.0f);
+    //   // REVIEW: remove AT
+    //   std::cout << "added random value!" << std::endl;
+    // }
   }
   // otherwise it is a bottom border bounce
   else {
@@ -455,7 +461,6 @@ float Ball::BounceBlockGoingDownLeft(float rightX) const
   // right border bounce
   if (_position._x >= rightX) {
     float angle = _direction - 180.0f;
-    // new direction = 360 - angle
     return 360.0f - angle;
   }
   // top border bounce
@@ -502,24 +507,25 @@ void Ball::ControlDirection()
   }
 }
 
+// REMOVE: most likely
 // returnes slightly randomized angles, especially when ball hits paddle with
 // angle affecting game experience in a negative way
-float Ball::RandomizeAngles(float angle)
-{
-  if (angle <= 180.0f && angle >= 170.0f) {
-    angle -= gMath::RandNum::Random(15.0f, 30.0f);
-  }
-  else if (angle <= 100.0f && angle >= 80.0f) {
-    angle += gMath::RandNum::Random(-15.0f, 15.0f);
-  }
-  else if (angle <= 10.0f && angle >= 0.0f) {
-    angle += gMath::RandNum::Random(15.0f, 30.0f);
-  }
-  else {
-    angle += gMath::RandNum::Random(-5.0f, 5.0f);
-  }
-  return angle;
-}
+// float Ball::RandomizeAngles(float angle)
+// {
+//   if (angle <= 180.0f && angle >= 170.0f) {
+//     angle -= gMath::RandNum::Random(15.0f, 30.0f);
+//   }
+//   else if (angle <= 100.0f && angle >= 80.0f) {
+//     angle += gMath::RandNum::Random(-15.0f, 15.0f);
+//   }
+//   else if (angle <= 10.0f && angle >= 0.0f) {
+//     angle += gMath::RandNum::Random(15.0f, 30.0f);
+//   }
+//   else {
+//     angle += gMath::RandNum::Random(-5.0f, 5.0f);
+//   }
+//   return angle;
+// }
 
 float Ball::CalcSpin(float bounceAngle) const
 {
@@ -527,7 +533,7 @@ float Ball::CalcSpin(float bounceAngle) const
   if (bounceAngle > 45.0) {
     bounceAngle = 90.0 - bounceAngle;
   }
-  // the spin increment to be added or devided from basic bounce angle
+  // the spin increment to be added or substracted from basic bounce angle
   float delta { 0.0f };
 
   // range of spin increment needs to be adjusted depending on the angle values
@@ -561,5 +567,20 @@ float Ball::CalcSpin(float bounceAngle) const
       return -delta;
     default:
       return 0;
+  }
+}
+
+// increases/deacreases the ball speed by speed delta
+void Ball::ApplySpeedDelta()
+{
+  if (_speed_delta != 0.0f) {
+    // REMOVE:'
+    float previous = _speed;
+    SetSpeed(_speed + _speed_delta);
+    // REMOVE:
+    if (previous != _speed) {
+      std::cout << "Speed changed! Before: " << previous
+                << "\tAfter: " << _speed << std::endl;
+    }
   }
 }

@@ -52,21 +52,25 @@ class Ball : public virtual MovableObject
 
   // update ball state with given time difference from last update
   void Update(float deltaTime) override;
-  // updates ball direction and velocity vector; takes new  direction angle
-  void UpdateDirectionAndVelocity(float directionAngle);
   // render the ball
   void Draw() const override;
-  // returns ball radius
-  float Radius() const { return _radius; }
+  // sets current speed of the object if it is not lower than minimal speed
+  void SetSpeed(float speed) override;
+  // sets the speed increase/decrease applied when the ball hits the paddle
+  void SetSpeedDelta(float speedChange) { _speed_delta = speedChange; }
+  // updates ball direction and velocity vector; takes new  direction angle
+  void UpdateDirectionAndVelocity(float directionAngle);
   // starts the ball movement
   void Start();
-  // checks if the ball is in the starting position
-  bool IsMoving() const { return !_in_starting_pos; }
-  // REVIEW: verify if should be public
   // puts the ball in the starting position on the paddle
   void PlaceOnPaddle();
   // sets ball spin
   void SetSpin(Spin spinDirection) { _spin = spinDirection; }
+
+  // returns ball radius
+  float Radius() const { return _radius; }
+  // checks if the ball is in the starting position
+  bool IsMoving() const { return !_in_starting_pos; }
 
   private:
   // checks for collision with the paddle. Returns true if colided, false if not
@@ -111,22 +115,29 @@ class Ball : public virtual MovableObject
   // returns slightly randomized angles, especially when ball hits paddle with
   // angle affecting game experience in a negative way
   // REMOVE if not used; most likely superseded by Spin()
-  float RandomizeAngles(float angle);
+  // float RandomizeAngles(float angle);
+
   // calculates the spin to be applied
   float CalcSpin(float bounceAngle) const;
+  // increases/deacreases the ball speed by speed delta
+  void ApplySpeedDelta();
 
-  // ball direction (angle in degrees
+  // ball direction in degrees (0.0 - 360.0)
   float _direction;
   // ball vector of velocity
   gMath::Vector2d _velocity;
   // texture used for displaying the ball
   const Texture& _texture;
-  // ball radius ; mainly for collision detection
+  // ball radius
   const float _radius;
   // indicates if the ball is in starting position on the paddle
   bool _in_starting_pos = true;
   // current value of spin to be applied
   Spin _spin = Spin::sNone;
+  // ball minimum speed in the current level
+  float _min_speed = _speed;
+  // speed change (pixels/second) aplied every time the ball hits the paddle
+  float _speed_delta = 0.0;
   // reference to paddle for collision detection
   Paddle& _paddle;
   // y coordinate of the bottom of the screen
