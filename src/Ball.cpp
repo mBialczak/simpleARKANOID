@@ -119,7 +119,7 @@ bool Ball::HasHitPaddle() const
   if (_direction <= 180.0f && _direction >= 0.0f) {
     return false;
   }
-
+  // vertical condition of collision
   bool vertical_conditon
       = gMath::VerticalDistance(_position, _paddle.Position())
       < _radius + _paddle.HalfHeight();
@@ -229,16 +229,24 @@ void Ball::BounceWall(const SideWall& wall)
 // calculates the ball new direction after hitting left wall
 float Ball::NewDirectionLeftWallBounced() const
 {
-  // Ball could hit the left wall only when heading left (up or down)
+  // Ball should hit the left wall only when heading left (up or down)
   float new_direction {};
-  // Check if the ball is heading left and upwards
+  // the ball is heading left and upwards
   if (_direction > 90.0f && _direction <= 180.0f) {
     new_direction = 180.0f - _direction;
   }
-  // Otherwise the ball is heading left and downwards
-  else {
+  // the ball is heading left and downwards
+  else if (_direction > 180.0f && _direction < 270.0f) {
     float deltaAngle = 270.0f - _direction;
     new_direction = 270.0f + deltaAngle;
+  }
+  // REVIEW:: keep else statement if bouncing works , remove if still not
+
+  // if the direction is different than above simply keep it
+  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // from the wall before next collision is detected
+  else {
+    new_direction = _direction;
   }
   // REVIEW: remove after testing
   // std::cout << "Should not be here: Left WallBounce: " << __LINE__
@@ -249,16 +257,25 @@ float Ball::NewDirectionLeftWallBounced() const
 // calculates the ball new direction after hitting right wall
 float Ball::NewDirectionRightWallBounced() const
 {
-  // Ball could hit the right wall only when heading right (up or down)
+  // Ball should hit the right wall only when heading right (up or down)
   float new_direction {};
-  // Check if the ball is heading right and upwards
-  if (_direction >= 0.0f && _direction <= 90.0f) {
+  // the ball is heading right and upwards
+  if (_direction >= 0.0f && _direction < 90.0f) {
     new_direction = 180.0f - _direction;
   }
-  // Otherwise the ball is heading right and downwards
-  else {
+  // the ball is heading right and downwards
+  else if (_direction > 270.0 && _direction > 0.0f) {
     float angle = 360.0f - _direction;
     new_direction = 180.0f + angle;
+  }
+
+  // REVIEW:: keep else statement if bouncing works , remove if still not
+
+  // if the direction is different than above simply keep it
+  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // from the wall before next collision is detected
+  else {
+    new_direction = _direction;
   }
   // REVIEW: remove after testing
   // std::cout << "Should not be here: Right WallBounce: " << __LINE__
@@ -269,16 +286,24 @@ float Ball::NewDirectionRightWallBounced() const
 // calculates the ball new direction after hitting top wall
 float Ball::NewDirectionTopWallBounced() const
 {
-  // Ball could hit the top wall only when heading towards top (left or right)
+  // Ball should hit the top wall only when heading towards top (left or right)
   float new_direction {};
-  // Check if the ball is heading towards top and to the left
+  // the ball is heading towards top and to the left
   if (_direction < 180.0f && _direction >= 90.0f) {
     float angle = 180.0f - _direction;
     new_direction = 180.0f + angle;
   }
-  // Otherwise the ball is heading towards top and to the right
-  else {
+  // the ball is heading towards top and to the right
+  else if (_direction < 90.0f && _direction > 0.0f) {
     new_direction = 360.0f - _direction;
+  }
+  // REVIEW:: keep else statement if bouncing works , remove if still not
+
+  // if the direction is different than above simply keep it
+  // helps avoid strange cycles when the ball didn't menage to escepe far enough
+  // from the wall before next collision is detected
+  else {
+    new_direction = _direction;
   }
   // REVIEW: remove after testing
   // std::cout << "Should not be here: Top WallBounce: " << __LINE__
@@ -290,8 +315,9 @@ float Ball::NewDirectionTopWallBounced() const
 // should be called only when the ball hits the paddle
 void Ball::BouncePaddle()
 {
-  // due to game specifics the ball will try to hit the paddle only from upper
-  // directions so we use this and change the ball direction accordingly
+  // In Ball::HasHitPaddle() we already checked that the ball is heading
+  // downwards (left or right) so we use this and change the ball direction
+  // accordingly
 
   float new_direction {};
 
@@ -471,17 +497,17 @@ void Ball::ControlDirection()
 // angle affecting game experience in a negative way
 float Ball::RandomizeAngles(float angle)
 {
-  if (angle <= 180.0f && angle >= 150.0f) {
-    angle += gMath::RandNum::Random(-30.0f, -15.0f);
+  if (angle <= 180.0f && angle >= 170.0f) {
+    angle -= gMath::RandNum::Random(15.0f, 30.0f);
   }
   else if (angle <= 100.0f && angle >= 80.0f) {
     angle += gMath::RandNum::Random(-15.0f, 15.0f);
   }
-  else if (angle <= 30.0f && angle >= 0.0f) {
+  else if (angle <= 10.0f && angle >= 0.0f) {
     angle += gMath::RandNum::Random(15.0f, 30.0f);
   }
   else {
-    angle += gMath::RandNum::Random(-10.0f, 10.0f);
+    angle += gMath::RandNum::Random(-5.0f, 5.0f);
   }
   return angle;
 }

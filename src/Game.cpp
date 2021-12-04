@@ -108,6 +108,7 @@ void Game::UpdateGame()
     delta_time = 0.5f;
   }
   // REVIEW: consider one container of moveable objets instead seperate objects
+
   // upate paddle state
   _paddle->Update(delta_time);
   // update ball state
