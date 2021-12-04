@@ -78,4 +78,7 @@ TODO: find a right place to reserve place for static objects in renderer and gam
 TODO: consider changing paddle refernce to pointer in ball and reduce constructor (pointer could be set after paddle creation)
 
 TODO: consider simplyfing condition checks in direction determining (lik 0 < x < 90>)
+
 TODO: consider making consts with assests names
+
+TODO: consider putting all enums in one file

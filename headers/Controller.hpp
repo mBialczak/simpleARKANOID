@@ -28,5 +28,9 @@ class Controller
   // REVIEW: verify if the comment is right
   // start game, pause or unpause
   Uint8 _start_pause = SDL_SCANCODE_SPACE;
+  // spin ball right
+  Uint8 _spin_left = SDL_SCANCODE_A;
+  // spin ball left
+  Uint8 _spin_right = SDL_SCANCODE_F;
 };
 #endif // !CONTROLLER_HPP

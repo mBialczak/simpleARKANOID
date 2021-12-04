@@ -35,8 +35,8 @@ void Paddle::Draw() const
 // stops the paddle by setting velocity vector to {0,0}
 void Paddle::Stop()
 {
-  _velocity._x = 0;
-  _velocity._y = 0;
+  _velocity._x = 0.0;
+  _velocity._y = 0.0;
 }
 
 // enables moving up by proper setting of the paddle velocity vector

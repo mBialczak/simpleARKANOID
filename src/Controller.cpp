@@ -39,6 +39,12 @@ void Controller::HandleKeyPresses(
   else if (keysArray[_right]) {
     paddle.MoveRight();
   }
+  else if (keysArray[_spin_left]) {
+    ball.SetSpin(Spin::sLeft);
+  }
+  else if (keysArray[_spin_right]) {
+    ball.SetSpin(Spin::sRight);
+  }
   else if (keysArray[_start_pause]) {
     // start the ball if it is in the starting position
     if (!ball.IsMoving()) {
@@ -47,5 +53,6 @@ void Controller::HandleKeyPresses(
   }
   else {
     paddle.Stop();
+    ball.SetSpin(Spin::sNone);
   }
 }

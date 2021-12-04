@@ -25,6 +25,14 @@ enum class RectBorder
   bRight,
   bLeft
 };
+// REVIEW: comment or remove
+// enum class for describing the spin of the ball
+enum class Spin
+{
+  sNone,
+  sLeft,
+  sRight
+};
 
 class Ball : public virtual MovableObject
 {
@@ -54,14 +62,15 @@ class Ball : public virtual MovableObject
   void Start();
   // checks if the ball is in the starting position
   bool IsMoving() const { return !_in_starting_pos; }
-  // REVIEW: temporary public, verify if should be private
-  // checks for collision with the paddle. Returns true if colided, false if not
-  bool HasHitPaddle() const;
   // REVIEW: verify if should be public
   // puts the ball in the starting position on the paddle
   void PlaceOnPaddle();
+  // sets ball spin
+  void SetSpin(Spin spinDirection) { _spin = spinDirection; }
 
   private:
+  // checks for collision with the paddle. Returns true if colided, false if not
+  bool HasHitPaddle() const;
   // checks if the ball has hit the paddle. If so, updates the game state
   // accoringly
   void HandlePaddleCollisions();
@@ -101,7 +110,10 @@ class Ball : public virtual MovableObject
   void ControlDirection();
   // returns slightly randomized angles, especially when ball hits paddle with
   // angle affecting game experience in a negative way
+  // REMOVE if not used; most likely superseded by Spin()
   float RandomizeAngles(float angle);
+  // calculates the spin to be applied
+  float CalcSpin(float bounceAngle) const;
 
   // ball direction (angle in degrees
   float _direction;
@@ -113,6 +125,8 @@ class Ball : public virtual MovableObject
   const float _radius;
   // indicates if the ball is in starting position on the paddle
   bool _in_starting_pos = true;
+  // current value of spin to be applied
+  Spin _spin = Spin::sNone;
   // reference to paddle for collision detection
   Paddle& _paddle;
   // y coordinate of the bottom of the screen

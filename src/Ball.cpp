@@ -62,7 +62,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
   _direction = directionAngle;
   // / REVIEW: remove AT
   std::cout << "Updated direction!\n"
-            << "old= " << old << " new= " << _direction << "\n-------------\n"
+            << "old= " << old << " new= " << _direction << "\n-------------"
             << std::endl;
 
   // REVIEW: think of removing
@@ -83,7 +83,7 @@ void Ball::Draw() const
 void Ball::Start()
 {
   // calculate randomized starting direction when ball starts from the paddle
-  float starting_direction = _randomizer(20.0f, 160.0f);
+  float starting_direction = _randomizer(90.0f, 90.0f);
   // update ball state;
   UpdateDirectionAndVelocity(starting_direction);
   _in_starting_pos = false;
@@ -106,8 +106,9 @@ void Ball::HandlePaddleCollisions()
     // change direction
     BouncePaddle();
     // REVIEW: verify IN
-    _paddle.Stop();
-    // TODO: handle sound
+    // _paddle.Stop();
+
+    // // TODO: handle sound
   }
 }
 
@@ -315,39 +316,47 @@ float Ball::NewDirectionTopWallBounced() const
 // should be called only when the ball hits the paddle
 void Ball::BouncePaddle()
 {
-  // In Ball::HasHitPaddle() we already checked that the ball is heading
-  // downwards (left or right) so we use this and change the ball direction
-  // accordingly
-
   float new_direction {};
+
+  // In Ball::HasHitPaddle() we already assured that the ball is heading
+  // downwards (left or right) so we use this to change the ball direction
+  // accordingly
 
   // if the ball heads downwards and towards the left
   if (_direction > 180.0f && _direction < 270.0f) {
-    float angle = _direction - 180.0f;
-    new_direction = 180.0f - angle;
+    float bounce_angle = _direction - 180.0f;
+    new_direction = 180.0f - bounce_angle;
+    // increment the bounce angle introducing (possibly negative) spin
+    new_direction += CalcSpin(bounce_angle);
   }
   // if the ball heads downwards and to the right
-  if (_direction >= 270.0f && _direction < 360.0f) {
+  //(_direction >= 270.0f && _direction < 360.0f)
+  else {
     new_direction = 360.0f - _direction;
+    // increment the bounce angle introducing (possibly negative) spin
+    // (bounce_angle == new_direction for the ball heading down and right)
+    new_direction += CalcSpin(new_direction);
   }
-  // REVIEW: consider removing
-  // introducing some randomization of bounce angle for more fun
-  new_direction = RandomizeAngles(new_direction);
-
-  // REVIEW: remove after testing
-  // std::cout << "Should not be here: Paddle bounce " << __LINE__
-  //           << "new_direction= " << new_direction << std::endl;
+  // avoid sending the ball to far to the left
+  if (new_direction >= 175.0f) {
+    new_direction = 175.0f;
+  }
+  // avoid sending the ball to fart to the right
+  if (new_direction <= 5.0f) {
+    new_direction = 5.0f;
+  }
 
   // update ball direction and vellocity
   UpdateDirectionAndVelocity(new_direction);
 }
+
 // TODO: COMMENTS
 // checks if the ball hit a specific block
 bool Ball::HasHitBlock(const Block& block) const
 {
   // we assume that collision occurs when both the vertical and horizontal
-  // distance from ball to block centre are smaller that the sum of ball radius
-  // and half block hight or width accordingly
+  // distance from ball to block centre are smaller that the sum of ball
+  // radius and half block hight or width accordingly
   return (gMath::HorizontalDistance(_position, block.Position())
              < _radius + block.HalfWidth())
       && gMath::VerticalDistance(_position, block.Position())
@@ -510,4 +519,47 @@ float Ball::RandomizeAngles(float angle)
     angle += gMath::RandNum::Random(-5.0f, 5.0f);
   }
   return angle;
+}
+
+float Ball::CalcSpin(float bounceAngle) const
+{
+  // reduce wide ball atackk angles angles in order not to squew the results
+  if (bounceAngle > 45.0) {
+    bounceAngle = 90.0 - bounceAngle;
+  }
+  // the spin increment to be added or devided from basic bounce angle
+  float delta { 0.0f };
+
+  // range of spin increment needs to be adjusted depending on the angle values
+  // and it was chosen to use random values for increased game experience
+
+  // angles in range (25,45] degrees
+  if (bounceAngle > 25.0f) {
+    // spin in range of 20-60 % of original bounce angle
+    delta = _randomizer(0.2f, 0.6f) * bounceAngle;
+  }
+  // angles in range (10,25] degrees
+  else if (bounceAngle > 10.0f) {
+    // spin in range of 40-80 % of original bounce angle
+    delta = _randomizer(0.4f, 0.8f) * bounceAngle;
+  }
+  // angles in range [0,10] degrees
+  else {
+    // spin range [5.0,10] degrees
+    delta = _randomizer(5.0f, 10.0f);
+  }
+
+  // depending of the requested spin return negative or positive spin increase
+  switch (_spin) {
+    case Spin::sLeft:
+      // REMOVE AT
+      std::cout << "Spin left applied!" << std::endl;
+      return delta;
+    case Spin::sRight:
+      // REMOVE AT
+      std::cout << "Spin right applied!" << std::endl;
+      return -delta;
+    default:
+      return 0;
+  }
 }
