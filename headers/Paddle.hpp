@@ -1,5 +1,6 @@
 #ifndef Paddle_hpp
 #define Paddle_hpp
+
 #include "MovableObject.hpp"
 #include "Texture.hpp"
 #include "Vector2d.hpp"

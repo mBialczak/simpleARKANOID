@@ -1,5 +1,6 @@
 #ifndef SideWall_HPP
 #define SideWall_HPP
+#include "Enums.hpp"
 #include "SDL.h"
 #include "StaticObject.hpp"
 #include "Texture.hpp"
@@ -9,14 +10,6 @@
 // class forward declarations
 class Texture;
 
-// enum class for marking which side of the ball is crucial for collision
-// detection
-enum class ScreenSide
-{
-  Top,
-  Right,
-  Left
-};
 // class representing border walls in the game
 class SideWall : public virtual StaticObject
 {

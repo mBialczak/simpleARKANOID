@@ -1,6 +1,7 @@
 #ifndef Ball_HPP
 #define Ball_HPP
 #include "Block.hpp"
+#include "Enums.hpp"
 #include "MovableObject.hpp"
 #include "Paddle.hpp"
 #include "RandNum.hpp"
@@ -16,23 +17,6 @@ class Paddle;
 class Game;
 class SideWall;
 class Block;
-
-// enum class for distinguishing block border during collision with the ball
-enum class RectBorder
-{
-  bTop,
-  bBottom,
-  bRight,
-  bLeft
-};
-// REVIEW: comment or remove
-// enum class for describing the spin of the ball
-enum class Spin
-{
-  sNone,
-  sLeft,
-  sRight
-};
 
 class Ball : public virtual MovableObject
 {
