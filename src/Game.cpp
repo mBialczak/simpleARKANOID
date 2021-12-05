@@ -11,7 +11,7 @@
 #include <iostream> // NOTE: remove AT
 #include <sstream> // VERIFY if needed
 
-// for operator""s usage
+// for operator""s usage // VERIFY if used in this file
 using std::string_literals::operator""s;
 
 // constructor
