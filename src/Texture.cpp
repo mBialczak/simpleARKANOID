@@ -3,6 +3,9 @@
 #include "SDLexception.hpp"
 #include <utility>
 
+// for operator""s usage
+using std::string_literals::operator""s;
+
 // constructor
 // takes path of the image file and renderer for texture creation and rendering
 Texture::Texture(const std::string& path, SDL_Renderer* gameRenderer)
@@ -21,9 +24,8 @@ Texture::Texture(const std::string& path, SDL_Renderer* gameRenderer)
 
   // check if texture created succesfully and throw if not
   if (!_sdl_texture) {
-    std::string error { "Failed to create texture from path: " };
-    error += path;
-    throw SDLexception(error, IMG_GetError(), __FILE__, __LINE__);
+    throw SDLexception("Failed to create texture from path: "s + path,
+        IMG_GetError(), __FILE__, __LINE__);
   }
   // set texture dimensions basing on louded image size
   _width = image_surface.GetSurfacePtr()->w;

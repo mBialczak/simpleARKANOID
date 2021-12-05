@@ -14,5 +14,7 @@ const std::string pHorizontalWallImage { "../assets/horizontal_wall.png" };
 const std::string pVerticalWallImage { "../assets/vertical_wall.png" };
 // path to the image used for displaying the green block
 const std::string pBlockGreenImage { "../assets/block_green.png" };
+// VERIFY name path to levels data
+const std::string pLevels { "../assets/Levels/" };
 }
 #endif // !Paths_HPP

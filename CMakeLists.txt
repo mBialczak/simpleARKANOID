@@ -42,6 +42,7 @@ src/RandNum.cpp
 src/Vector2d.cpp
 src/MovableObject.cpp
 src/Block.cpp
+src/LevelData.cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 

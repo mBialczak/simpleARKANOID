@@ -43,7 +43,7 @@ void Paddle::Stop()
 void Paddle::MoveUp()
 {
   _velocity._x = 0;
-  _velocity._y = -_speed;
+  _velocity._y = -_speed / 2.0;
 }
 
 // enables moving down by proper setting of the paddle velocity vector

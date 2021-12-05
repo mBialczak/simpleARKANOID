@@ -7,7 +7,12 @@
 #include "SDLexception.hpp"
 #include <algorithm>
 #include <exception>
+#include <fstream>
 #include <iostream> // NOTE: remove AT
+#include <sstream> // VERIFY if needed
+
+// for operator""s usage
+using std::string_literals::operator""s;
 
 // constructor
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
@@ -31,16 +36,20 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
   CreateWalls();
+
+  // VERIFY
+  LoadLevelData(1);
+
   CreateBlocks();
   CreatePaddle();
   CreateBall();
-
-  // Add ball to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_ball.get());
-  // add paddle to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_paddle.get());
+  // REMOVE
+  //   // Add ball to the collection of objects displayed by the renderer
+  //   _renderer->AddMovableObject(_ball.get());
+  //   // add paddle to the collection of objects displayed by the renderer
+  //   _renderer->AddMovableObject(_paddle.get());
+  // }
 }
-
 // initialize SDL subsystems
 void Game::InitSubsystems()
 {
@@ -132,32 +141,89 @@ void Game::GenerateOutput() const
 void Game::LoadTextures()
 {
   // load texture representing the ball
-  _textures["ball"] = std::make_unique<Texture>(
+  _textures[Sprite::Ball] = std::make_unique<Texture>(
       Paths::pBallImage, _renderer->GetSDLrenderer());
   // load texture respresenting the paddle
-  _textures["paddle"] = std::make_unique<Texture>(
+  _textures[Sprite::Paddle] = std::make_unique<Texture>(
       Paths::pPadleImage, _renderer->GetSDLrenderer());
   // load texture representing the side_wall
-  _textures["horizontal_wall"] = std::make_unique<Texture>(
+  _textures[Sprite::WallHorizontal] = std::make_unique<Texture>(
       Paths::pHorizontalWallImage, _renderer->GetSDLrenderer());
-  _textures["vertical_wall"] = std::make_unique<Texture>(
+  _textures[Sprite::WallVertical] = std::make_unique<Texture>(
       Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
-  _textures["block_green"] = std::make_unique<Texture>(
+  _textures[Sprite::BlockGreen] = std::make_unique<Texture>(
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
 }
 
+// VERIFY
+// Reads the level data from the file. Takes the number representing the
+// level and returns the table representing blocks composition on the screan
+std::vector<std::vector<std::string>> Game::LoadLevelData(unsigned level)
+{
+  // the path to the level data
+  std::string path { Paths::pLevels + "Level" + std::to_string(_level)
+    + ".txt" };
+  // the table representing blocks composition to be returned
+  std::vector<std::vector<std::string>> level_data;
+  level_data.reserve(_max_rows);
+  // open the file
+  std::ifstream file_stream(path);
+  // check if opening file for reading was successful
+  if (!file_stream) {
+    throw std::runtime_error(
+        "Unable to open stream to the level data!"s + path);
+  }
+  // single line of file data to be read
+  std::string file_line;
+  // read and discard the first line which has no meaning for level composition
+  // and serves only as helper for level editing
+  std::getline(file_stream, file_line);
+  // string stream for stripping each line into cells
+  std::istringstream line_stream;
+
+  unsigned row_count { 0 };
+  // read the file line by line until end of file or maximum number of
+  // rows predicted for displaying is rached
+  while (std::getline(file_stream, file_line) && row_count < _max_rows) {
+    // load the the  line data into string stream
+    line_stream.str(file_line);
+    // cell representing single block data
+    std::string cell;
+    // single line of cell data to be composed into returned table
+    std::vector<std::string> cell_line;
+    cell_line.reserve(_row_size);
+    // strip the line data into cells
+    while (line_stream >> cell) {
+      cell_line.emplace_back(cell);
+    }
+    // check for correct number of blocks in the signle row
+    if (cell_line.size() != 20) {
+      throw std::runtime_error(
+          "Wrong level-file format detected while reading level file: "s
+          + path);
+    }
+    level_data.emplace_back(std::move(cell_line));
+    row_count++;
+  }
+  // check if the created table is not empty and doesn't exceed max size
+  if (level_data.size() == 0 || level_data.size() >= _max_rows) {
+    throw std::runtime_error(
+        "Error while reading level data from the file"s + path);
+  }
+
+  return level_data;
+}
+
 // gets a single texture from the stored textures
-const Texture& Game::GetTexture(const std::string& textureName) const
+const Texture& Game::GetTexture(Sprite sprite) const
 {
   // try to find a stored texture of the given name
-  auto search = _textures.find(textureName);
+  auto search = _textures.find(sprite);
   // if texture wasn't found, throw exception
   // by this point the project design assumes that all requried textures were
   // created during game initialization
   if (search == _textures.end()) {
-    std::string error { "Unable to get texture: \"" };
-    error += textureName + "\"";
-    throw std::logic_error(error);
+    throw std::runtime_error("Unable to get texture: "s + textureName);
   }
   // return found texture
   return *(search->second);
@@ -180,13 +246,13 @@ void Game::CreateWalls()
 void Game::CreateTopWall()
 {
   // get texture for top wall
-  const Texture& texture { GetTexture("horizontal_wall") };
+  const Texture& texture { GetTexture(Sprite::WallHorizontal) };
   // calculate positon of the top wall
   float top_x { _screen_width / 2.0f };
   float top_y { texture.Height() / 2.0f };
   // create top Wall
   _side_walls.emplace_back(
-      top_x, top_y, ScreenSide::Top, texture, _wall_tickness / 2.0f);
+      top_x, top_y, ScreenSide::Top, texture, texture.Height() / 2.0f);
 }
 
 // creates the left wall
@@ -199,7 +265,7 @@ void Game::CreateLeftWall()
   float left_y { _screen_height / 2.0f };
   // create left Wall
   _side_walls.emplace_back(
-      left_x, left_y, ScreenSide::Left, texture, _wall_tickness / 2.0f);
+      left_x, left_y, ScreenSide::Left, texture, texture.Width() / 2.0f);
 }
 
 // creates the right wall
@@ -211,7 +277,7 @@ void Game::CreateRightWall()
   float right_y { _screen_height / 2.0f };
   // create the right Wall
   _side_walls.emplace_back(
-      right_x, right_y, ScreenSide::Right, texture, _wall_tickness / 2.0f);
+      right_x, right_y, ScreenSide::Right, texture, texture.Width() / 2.0f);
 }
 
 // creates the ball
@@ -222,11 +288,11 @@ void Game::CreateBall()
 
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
-    throw std::logic_error("Unable to create the ball");
+    throw std::runtime_error("Unable to create the ball");
   }
-  // REVIEW: remove if not used
-  // // Add ball to the collection of objects displayed by the renderer
-  // _renderer->AddMovableObject(_ball.get());
+
+  // Add ball to the collection of objects displayed by the renderer
+  _renderer->AddMovableObject(_ball.get());
 }
 
 // creates the paddle
@@ -236,12 +302,13 @@ void Game::CreatePaddle()
   auto& paddle_texture { GetTexture("paddle") };
   int paddle_y = _screen_height - paddle_texture.Height() / 2;
   // calculate and create rectangle limiting the paddle move range
+  int wall_tickness { GetTexture("vertical_wall").Width() / 2 };
   SDL_Rect limits;
   // set top-left coordinates of the limiting rectangle
-  limits.x = _wall_tickness;
-  limits.y = _screen_height * 3 / 4;
+  limits.x = wall_tickness;
+  limits.y = _screen_height * 4 / 5;
   // set width of the limiting rectangle
-  limits.w = _screen_width - 2 * _wall_tickness;
+  limits.w = _screen_width - 2 * wall_tickness;
   // set height of the limiting rectangle
   limits.h = _screen_height - limits.y;
 
@@ -250,11 +317,11 @@ void Game::CreatePaddle()
       _screen_width / 2, paddle_y, _paddle_speed, limits, paddle_texture);
   // verify if paddle created successfully. If not throw exception
   if (!_paddle) {
-    throw std::logic_error("Unable to create the paddle");
+    throw std::runtime_error("Unable to create the paddle");
   }
-  // REVIEW: remove if not used here
-  // // add paddle to the collection of objects displayed by the renderer
-  // _renderer->AddMovableObject(_paddle.get());
+
+  // add paddle to the collection of objects displayed by the renderer
+  _renderer->AddMovableObject(_paddle.get());
 }
 // TODO: refactor and COMMENTS
 // creates blocks
@@ -287,9 +354,10 @@ void Game::HandleBlockHit(Block& block)
   // set block as destroyed to skip further rendering and collision checks
   block.MakeDestroyed();
   // increase points score with point value assigned to the block
-  _points += block.Points();
+  _total_points += block.Points();
   // REVIEW: remove AT
   std::cout << "A block has been hit!!!\n" << std::endl;
-  std::cout << "Total points = " << _points << "\n----------------------\n"
+  std::cout << "Total points = " << _total_points
+            << "\n----------------------\n"
             << std::endl;
 }

@@ -212,7 +212,7 @@ bool Ball::HasHitWall(const SideWall& wall) const
       return gMath::VerticalDistance(_position, wall.Position())
           <= _radius + wall.HalfTickness();
     default:
-      throw std::logic_error(
+      throw std::invalid_argument(
           "Invalid screen side passed to Ball::HasHitWall()");
   }
 }
@@ -237,7 +237,7 @@ void Ball::BounceWall(const SideWall& wall)
       new_direction = NewDirectionTopWallBounced();
       break;
     default:
-      throw std::logic_error(
+      throw std::invalid_argument(
           "Invalid screen side passed to Ball::BounceWall()");
   }
   // update ball's direction and velocity vector
