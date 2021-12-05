@@ -35,6 +35,6 @@ enum class Sprite : short
   WallHorizontal,
   WallVertical,
   BlockGreen
-}
+};
 
 #endif // !Enums_hpp

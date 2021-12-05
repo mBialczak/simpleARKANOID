@@ -38,7 +38,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   CreateWalls();
 
   // VERIFY
-  LoadLevelData(1);
+  // LoadLevelData(1);
 
   CreateBlocks();
   CreatePaddle();
@@ -217,13 +217,15 @@ std::vector<std::vector<std::string>> Game::LoadLevelData(unsigned level)
 // gets a single texture from the stored textures
 const Texture& Game::GetTexture(Sprite sprite) const
 {
-  // try to find a stored texture of the given name
+  // try to find a stored texture of the given spirte type
   auto search = _textures.find(sprite);
   // if texture wasn't found, throw exception
-  // by this point the project design assumes that all requried textures were
-  // created during game initialization
+  // VERIFY if needed such a long comment
+  // by this point the project design assumes that all requried textures should
+  // be loaded created during game initialization
   if (search == _textures.end()) {
-    throw std::runtime_error("Unable to get texture: "s + textureName);
+    throw std::runtime_error(
+        "Unable to get texture for sprite in function Game::GetTexture()");
   }
   // return found texture
   return *(search->second);
@@ -259,7 +261,7 @@ void Game::CreateTopWall()
 void Game::CreateLeftWall()
 {
   //  get texture for the left wall
-  const Texture& texture { GetTexture("vertical_wall") };
+  const Texture& texture { GetTexture(Sprite::WallVertical) };
   // calculate positon of the left wall
   float left_x { texture.Width() / 2.0f };
   float left_y { _screen_height / 2.0f };
@@ -271,7 +273,7 @@ void Game::CreateLeftWall()
 // creates the right wall
 void Game::CreateRightWall()
 { //  get texture for the right wall
-  const Texture& texture { GetTexture("vertical_wall") };
+  const Texture& texture { GetTexture(Sprite::WallVertical) };
   // calculate positon of the right wall
   float right_x { _screen_width - texture.Width() / 2.0f };
   float right_y { _screen_height / 2.0f };
@@ -283,8 +285,8 @@ void Game::CreateRightWall()
 // creates the ball
 void Game::CreateBall()
 {
-  _ball = std::make_unique<Ball>(_ball_speed, GetTexture("ball"), *_paddle,
-      _screen_height, *this, _side_walls, _blocks);
+  _ball = std::make_unique<Ball>(_ball_speed, GetTexture(Sprite::Ball),
+      *_paddle, _screen_height, *this, _side_walls, _blocks);
 
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
@@ -299,10 +301,10 @@ void Game::CreateBall()
 void Game::CreatePaddle()
 {
   // get paddle texture and calculate vertical position
-  auto& paddle_texture { GetTexture("paddle") };
+  auto& paddle_texture { GetTexture(Sprite::Paddle) };
   int paddle_y = _screen_height - paddle_texture.Height() / 2;
   // calculate and create rectangle limiting the paddle move range
-  int wall_tickness { GetTexture("vertical_wall").Width() / 2 };
+  int wall_tickness { GetTexture(Sprite::WallVertical).Width() / 2 };
   SDL_Rect limits;
   // set top-left coordinates of the limiting rectangle
   limits.x = wall_tickness;
@@ -330,7 +332,7 @@ void Game::CreateBlocks()
   // TODO: reserve place for blocks
 
   // TODO: revise block creation
-  auto& block_texture = GetTexture("block_green");
+  auto& block_texture = GetTexture(Sprite::BlockGreen);
   _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
       _screen_height / 2.0f - 20 / 2.0, block_texture);
 
