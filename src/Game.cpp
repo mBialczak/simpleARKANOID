@@ -182,65 +182,6 @@ void Game::LoadTextures()
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
 }
 
-// VERIFY
-// Reads the level data from the file. Takes the number representing the
-// level and returns the table representing blocks composition on the screan
-std::vector<std::vector<std::string>> Game::LoadLevelData(unsigned level)
-{
-  // the path to the level data
-  std::string path { Paths::pLevels + "Level" + std::to_string(_level)
-    + ".txt" };
-  // the table representing blocks composition to be returned
-  std::vector<std::vector<std::string>> level_data;
-  level_data.reserve(_max_rows);
-  // open the file
-  std::ifstream file_stream(path);
-  // check if opening file for reading was successful
-  if (!file_stream) {
-    throw std::runtime_error(
-        "Unable to open stream to the level data!"s + path);
-  }
-  // single line of file data to be read
-  std::string file_line;
-  // read and discard the first line which has no meaning for level composition
-  // and serves only as helper for level editing
-  std::getline(file_stream, file_line);
-  // string stream for stripping each line into cells
-  std::istringstream line_stream;
-
-  unsigned row_count { 0 };
-  // read the file line by line until end of file or maximum number of
-  // rows predicted for displaying is rached
-  while (std::getline(file_stream, file_line) && row_count < _max_rows) {
-    // load the the  line data into string stream
-    line_stream.str(file_line);
-    // cell representing single block data
-    std::string cell;
-    // single line of cell data to be composed into returned table
-    std::vector<std::string> cell_line;
-    cell_line.reserve(_row_size);
-    // strip the line data into cells
-    while (line_stream >> cell) {
-      cell_line.emplace_back(cell);
-    }
-    // check for correct number of blocks in the signle row
-    if (cell_line.size() != 20) {
-      throw std::runtime_error(
-          "Wrong level-file format detected while reading level file: "s
-          + path);
-    }
-    level_data.emplace_back(std::move(cell_line));
-    row_count++;
-  }
-  // check if the created table is not empty and doesn't exceed max size
-  if (level_data.size() == 0 || level_data.size() >= _max_rows) {
-    throw std::runtime_error(
-        "Error while reading level data from the file"s + path);
-  }
-
-  return level_data;
-}
-
 // gets a single texture from the stored textures
 const Texture& Game::GetTexture(Sprite sprite) const
 {
@@ -315,8 +256,9 @@ void Game::CreateRightWall()
 // creates the ball
 void Game::CreateBall()
 {
-  _ball = std::make_unique<Ball>(_ball_speed, GetTexture(Sprite::Ball),
-      *_paddle, _screen_height, *this, _side_walls, _blocks);
+  _ball = std::make_unique<Ball>(_level_data->BallSpeed(),
+      GetTexture(Sprite::Ball), *_paddle, _screen_height, *this, _side_walls,
+      _blocks);
 
   // verify if ball created successfully. If not throw exception
   if (!_ball) {
@@ -345,8 +287,8 @@ void Game::CreatePaddle()
   limits.h = _screen_height - limits.y;
 
   // create the actuall paddle and set unique pointer
-  _paddle = std::make_unique<Paddle>(
-      _screen_width / 2, paddle_y, _paddle_speed, limits, paddle_texture);
+  _paddle = std::make_unique<Paddle>(_screen_width / 2, paddle_y,
+      _level_data->PaddleSpeed(), limits, paddle_texture);
   // verify if paddle created successfully. If not throw exception
   if (!_paddle) {
     throw std::runtime_error("Unable to create the paddle");
@@ -359,12 +301,35 @@ void Game::CreatePaddle()
 // creates blocks
 void Game::CreateBlocks()
 {
-  // TODO: reserve place for blocks
+  // reserve place for blocks
+  _blocks.reserve(LevelData::MaxRows() * LevelData::RowSize());
 
-  // TODO: revise block creation
-  auto& block_texture = GetTexture(Sprite::BlockGreen);
-  _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
-      _screen_height / 2.0f - 20 / 2.0, block_texture, 1);
+  // aquire the sprite table representing block layout
+  auto& sprite_table = _level_data->SpriteTable();
+
+  const float wall_offset { GetTexture(Sprite::WallVertical).Width() };
+  const float block_width { LevelData::_block_width };
+  const float block_height { LevelData::_block_height };
+  const unsigned point_value { _level_data->PointsPerBlock() };
+
+  float block_x {};
+  float block_y {};
+
+  for (std::size_t row = 0; row < sprite_table.size(); row++) {
+    for (std::size_t col = 0; col < sprite_table[row].size(); col++) {
+      if (sprite_table[row][col] != Sprite::None) {
+        block_x = (block_width * col) + wall_offset + (block_width / 2.0f);
+        block_y = (block_height * row) + wall_offset + (block_height / 2.0f);
+        auto& texture { GetTexture(sprite_table[row][col]) };
+        _blocks.emplace_back(block_x, block_y, texture, point_value);
+      }
+    }
+  }
+  // REMOVE:
+  // // TODO: revise block creation
+  // auto& block_texture = GetTexture(Sprite::BlockGreen);
+  // _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
+  //     _screen_height / 2.0f - 20 / 2.0, block_texture, 1);
 
   // add blocks to the collection of objects displayed by the renderer
   for (auto& block : _blocks) {

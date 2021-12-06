@@ -84,3 +84,7 @@ TODO: consider making consts with assests names
 TODO: consider putting all enums in one file
 
 TODO: check all classes for leaking resources
+
+TODO: consider making seperate file with crucial consts or putting static conts in classes were reasonable
+
+TODO: consider making static properties without \_

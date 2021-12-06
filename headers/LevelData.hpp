@@ -24,12 +24,31 @@ class LevelData
   unsigned PointsPerBlock() const { return _points_per_block; }
   // returns current level to which stored data corresponds // VERIFY if needed
   unsigned Level() const { return _level; }
+  // REMOVE if not used - most likely static consts will be ok
+  // returns the maximum number of maximum rows
+  static std::size_t MaxRows() { return _max_rows; };
+  // REMOVE if not used - most likely static consts will be ok
+  // returns the maximum block row size
+  static std::size_t RowSize() { return _row_size; }
+
   // returns the sprite table representing
   // the composition of blocks in the level
   const std::vector<std::vector<Sprite>>& SpriteTable() const
   {
     return _sprite_table;
   }
+
+  // REVIEW: if should be private
+  // public static consts (const so no risk of undesired access):
+  // static consts publicly accessible (const so no risk of undesired access)
+  // maximum number of the blocks in the row on the screen
+  static const std::size_t _row_size = 20;
+  // maximum number of block rows on the screen
+  static const std::size_t _max_rows = 15;
+  // block width in pixels
+  static constexpr float _block_width = 50.0f;
+  // block height in pixels
+  static constexpr float _block_height = 25.0f;
 
   private:
   // reads single value described by key from the file
@@ -50,10 +69,7 @@ class LevelData
   // helper for ReadSpriteRow()
   Sprite CharToSprite(char spriteCharRepresentation) const;
 
-  // maximum number of the blocks in the row on the screen
-  static const std::size_t _row_size = 20;
-  // maximum number of block rows on the screen
-  static const std::size_t _max_rows = 15;
+  // static private consts - no other class needs them
   // the keyword marking the ball speed in the parsed level file
   static const std::string _ball_speed_key;
   // the keyword marking the paddle speed in the parsed level file
