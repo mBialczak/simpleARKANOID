@@ -4,6 +4,7 @@
 #include "Paths.hpp" // REVIEW: remove INU
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h" // REVIEW: remove INU
 #include "SDLexception.hpp"
 #include <algorithm>
 #include <exception>
@@ -93,6 +94,13 @@ void Game::InitSubsystems()
     throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
         __FILE__, __LINE__);
   }
+
+  // REVIEW:
+  // initialize True Type Font support and check if it was done successfully
+  if (TTF_Init() == -1) {
+    throw SDLexception(
+        "Failed to initialize TTF support", TTF_GetError(), __FILE__, __LINE__);
+  }
 }
 
 // destructor
@@ -102,7 +110,9 @@ Game::~Game()
   delete (_renderer);
   _renderer = nullptr;
 
+  // REVIEW:
   // close SDL subsystems
+  TTF_Quit();
   IMG_Quit();
   SDL_Quit();
 }
@@ -158,9 +168,10 @@ void Game::UpdateGame()
 
 // generates all game output
 void Game::GenerateOutput() const
-{ // udpate display
-  _renderer->Display();
-
+{ // update display
+  // REVIEW: restore or modify for pausing
+  // _renderer->Display();
+  _renderer->Display("Test Message :)");
   // TODO: update sounds
 }
 

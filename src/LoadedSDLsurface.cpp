@@ -6,11 +6,11 @@ using std::string_literals::operator""s;
 
 // constructor
 // tries to load SDL surface from file specified by Path
-// throws exception if loading was unsuccessfull
+// throws exception if loading was unsuccessful
 LoadedSDLsufrace::LoadedSDLsufrace(const std::string& path)
     : _loaded_surface(IMG_Load(path.c_str()))
 {
-  if (_loaded_surface == nullptr) {
+  if (!_loaded_surface) {
     throw SDLexception { "Unable to load image: "s + path, IMG_GetError(),
       __FILE__, __LINE__ };
   }

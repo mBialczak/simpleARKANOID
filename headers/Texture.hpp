@@ -2,14 +2,20 @@
 #define Texture_HPP
 #include "Renderer.hpp"
 #include "SDL.h"
+#include "SDL_ttf.h"
 #include <string>
 
+// TODO: update comments
 // wrapper class for creating SDL_texture
 class Texture
 {
   public:
   // constructor creating SDL texture from file designated by path
-  Texture(const std::string& Path, SDL_Renderer* gameRenderer);
+  Texture(const std::string& imagePath, SDL_Renderer* gameRenderer);
+
+  // REMOVE INU or doesn't work or COMMENT
+  Texture(const std::string& fontPath, SDL_Color color, int textSize,
+      SDL_Renderer* gameRenderer, const std::string& text);
 
   // copying of class not predicted and copy operations may cause
   // problems with managed resources, so copy operations are disabled
@@ -47,6 +53,9 @@ class Texture
   // REVIEW: check if Renderer* or Renderer& would be better
   SDL_Renderer* _sdl_renderer;
 
+  // REVIEW: changes made for text display MAYBE not needed
+  // OWNED pointer to true type font
+  TTF_Font* _font;
   // image dimmensions
   int _width;
   int _height;

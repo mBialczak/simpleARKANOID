@@ -33,6 +33,8 @@ class Renderer
   void AddMovableObject(const MovableObject* object);
   // displays (renders) game graphics
   void Display() const;
+  // REMOVE INU , COMMENT if not
+  void Display(std::string message) const;
 
   // returns the owned SDL renderer
   // user of the class should not explicitly destroy the renderer

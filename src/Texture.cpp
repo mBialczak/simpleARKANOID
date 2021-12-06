@@ -6,17 +6,19 @@
 // for operator""s usage
 using std::string_literals::operator""s;
 
-// constructor
+// constructor // REVIEW: COMMENT
 // takes path of the image file and renderer for texture creation and rendering
-Texture::Texture(const std::string& path, SDL_Renderer* gameRenderer)
+Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
     : _sdl_texture(nullptr)
     , _sdl_renderer(gameRenderer)
+    , _font(nullptr)
     , _width(0)
     , _height(0)
 {
-  // load image at specified path into a surface
-  // surface will be automatically freed by LoadedSDLsurface wrapper
-  LoadedSDLsufrace image_surface(path);
+  // REVIEW: perhpas replace with unique_ptr with custom deleter? and delete
+  // Loaded.. clas?? load image at specified path into a surface surface will be
+  // automatically freed by LoadedSDLsurface wrapper
+  LoadedSDLsufrace image_surface(imagePath);
 
   // create surface from image surface
   _sdl_texture = SDL_CreateTextureFromSurface(
@@ -24,34 +26,89 @@ Texture::Texture(const std::string& path, SDL_Renderer* gameRenderer)
 
   // check if texture created succesfully and throw if not
   if (!_sdl_texture) {
-    throw SDLexception("Failed to create texture from path: "s + path,
+    throw SDLexception("Failed to create texture from path: "s + imagePath,
         IMG_GetError(), __FILE__, __LINE__);
   }
-  // set texture dimensions basing on louded image size
+  // set texture dimensions basing on loaded image size
   _width = image_surface.GetSurfacePtr()->w;
   _height = image_surface.GetSurfacePtr()->h;
 }
-// destructor
-Texture::~Texture()
+
+// REMOVE INU or doesn't work or COMMENT
+Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
+    SDL_Renderer* gameRenderer, const std::string& text)
+    : _sdl_texture(nullptr)
+    , _sdl_renderer(gameRenderer)
+    , _font(nullptr)
+    , _width(0)
+    , _height(0)
 {
-  if (_sdl_texture)
-    SDL_DestroyTexture(_sdl_texture);
+  auto font_deleter = [](TTF_Font* ptr) { TTF_CloseFont(ptr); };
+  // REVIEW: local variable or property?
+  std::unique_ptr<TTF_Font, decltype(font_deleter)> font { TTF_OpenFont(
+      fontPath.c_str(), textSize) };
+
+  // REVIEW:check if the font was created succesfully and throw if not
+  if (!font) {
+    throw SDLexception("Failed to open font from path: "s + fontPath,
+        TTF_GetError(), __FILE__, __LINE__);
+  }
+
+  auto surface_deleter = [](SDL_Surface* ptr) { SDL_FreeSurface(ptr); };
+
+  std::unique_ptr<SDL_Surface, decltype(surface_deleter)> text_surface {
+    TTF_RenderText_Solid(font.get(), text.c_str(), color)
+  };
+
+  if (!text_surface) {
+    throw SDLexception("Failed to render text surface! text:"s + text,
+        TTF_GetError(), __FILE__, __LINE__);
+  }
+
+  _sdl_texture
+      = SDL_CreateTextureFromSurface(_sdl_renderer, text_surface.get());
+
+  // check if texture created succesfully and throw if not
+  if (!_sdl_texture) {
+    throw SDLexception("Failed to create texture from  rendered text: "s + text,
+        SDL_GetError(), __FILE__, __LINE__);
+  }
+  // set own dimensions basing on loaded image size
+  _width = text_surface->w;
+  _height = text_surface->h;
 }
 
+// destructor // REVIEW:
+// consider making unique_ptr as well
+Texture::~Texture()
+{ // destroy texture if any exists
+  if (_sdl_texture) {
+    SDL_DestroyTexture(_sdl_texture);
+  }
+  // REMOVE if unique works
+  // // destroy font if eny exists
+  // if (_font) {
+  //   TTF_CloseFont(_font);
+  // }
+}
+
+// REVIEW: if unique_ptr applied for sdl texture
 // move constructor
-Texture::Texture(Texture&& other)
-    : _sdl_texture(other._sdl_texture)
-    , _width(other._width)
-    , _height(other._height)
+Texture::Texture(Texture&& moved)
+    : _sdl_texture(moved._sdl_texture)
+    , _font(std::move(moved._font))
+    , _width(moved._width)
+    , _height(moved._height)
 {
-  other._sdl_texture = nullptr;
-  other._width = 0;
-  other._height = 0;
+  moved._sdl_texture = nullptr;
+  moved._width = 0;
+  moved._height = 0;
 }
 
 // move assignment operator
 Texture& Texture::operator=(Texture&& moved)
 {
+  // REVIEW: if unique pointer applied
   // destroy owned SDL texture
   if (_sdl_texture) {
     SDL_DestroyTexture(_sdl_texture);
@@ -60,6 +117,8 @@ Texture& Texture::operator=(Texture&& moved)
   _sdl_texture = moved._sdl_texture;
   _width = moved._width;
   _height = moved._height;
+  // move properties governed by unique_ptr
+  _font = std::move(moved._font);
   // invalidate moved object
   moved._sdl_texture = nullptr;
   moved._width = 0;

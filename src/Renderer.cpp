@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 #include "LimitTimer.hpp"
+#include "Paths.hpp" // REMOVE INU
 #include "SDLexception.hpp"
 #include <iostream> //REVIEW: remove after testing
 
@@ -76,6 +77,29 @@ void Renderer::Display() const
   for (auto& object : _movable_objects) {
     object->Draw();
   }
+
+  // update screen
+  SDL_RenderPresent(_sdl_renderer);
+}
+
+// REMOVE INU , COMMENT if not
+void Renderer::Display(std::string message) const
+{
+  // COMMENT or REMOVE
+  SDL_Color color { 0, 255, 0 };
+
+  // COMMENT or REMOVE
+  Texture testMessage { Paths::pFontRobotoBold, color, 20, _sdl_renderer,
+    message };
+
+  // Set clear screen color
+  SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
+  // clear screen
+  SDL_RenderClear(_sdl_renderer);
+
+  // REMOVE or COMMENT
+
+  testMessage.Render(300, 300);
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);

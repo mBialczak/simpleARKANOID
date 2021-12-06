@@ -87,4 +87,6 @@ TODO: check all classes for leaking resources
 
 TODO: consider making seperate file with crucial consts or putting static conts in classes were reasonable
 
-TODO: consider making static properties without \_
+TODO: consider making static properties without
+
+TODO: consider simplyfying SDLexception and not print file and line
