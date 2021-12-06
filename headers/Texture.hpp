@@ -26,7 +26,7 @@ class Texture
   ~Texture();
 
   // gets texture width
-  // NOTE: consider returning float
+  // NOTE: consider returning back int from float
   int Width() const { return _width; }
 
   // gets texture height

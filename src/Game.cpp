@@ -274,7 +274,7 @@ void Game::CreatePaddle()
 {
   // get paddle texture and calculate vertical position
   auto& paddle_texture { GetTexture(Sprite::Paddle) };
-  int paddle_y = _screen_height - paddle_texture.Height() / 2;
+  float paddle_y = _screen_height - paddle_texture.Height() / 2.0f;
   // calculate and create rectangle limiting the paddle move range
   int wall_tickness { GetTexture(Sprite::WallVertical).Width() / 2 };
   SDL_Rect limits;
@@ -306,17 +306,24 @@ void Game::CreateBlocks()
 
   // aquire the sprite table representing block layout
   auto& sprite_table = _level_data->SpriteTable();
-
-  const float wall_offset { GetTexture(Sprite::WallVertical).Width() };
+  // position offset of each block
+  const float wall_offset { static_cast<float>(
+      GetTexture(Sprite::WallVertical).Width()) };
+  // horizontal position offset of each concecutive block from the other
   const float block_width { LevelData::_block_width };
+  // vertical position offset of each consecutive block from the other
   const float block_height { LevelData::_block_height };
+  // point value assigned to block on current game level
   const unsigned point_value { _level_data->PointsPerBlock() };
-
+  // temporary helper variables to be calculated on most loop passes
   float block_x {};
   float block_y {};
-
+  // parse each row of the spirte_table
   for (std::size_t row = 0; row < sprite_table.size(); row++) {
+    // parse each column of the row
     for (std::size_t col = 0; col < sprite_table[row].size(); col++) {
+      // construct only those blocks, for which there is a sprite set in the
+      // sprite table
       if (sprite_table[row][col] != Sprite::None) {
         block_x = (block_width * col) + wall_offset + (block_width / 2.0f);
         block_y = (block_height * row) + wall_offset + (block_height / 2.0f);
@@ -325,11 +332,6 @@ void Game::CreateBlocks()
       }
     }
   }
-  // REMOVE:
-  // // TODO: revise block creation
-  // auto& block_texture = GetTexture(Sprite::BlockGreen);
-  // _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
-  //     _screen_height / 2.0f - 20 / 2.0, block_texture, 1);
 
   // add blocks to the collection of objects displayed by the renderer
   for (auto& block : _blocks) {
