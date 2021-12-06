@@ -21,12 +21,11 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     , _screen_width(screenWidth)
     , _frame_rate(targetFrameRate)
     , _renderer(nullptr)
+    // load all the data for the first level
+    , _level_data(std::make_unique<LevelData>(Paths::pLevels))
 {
   // Initialize SDL subsystems
   InitSubsystems();
-
-  // design predicts only 3 walls so reserve enough space
-  _side_walls.reserve(3);
 
   // create graphics renderer here, only after SDL is initialized
   _renderer = new Renderer(_screen_height, _screen_width);
@@ -37,18 +36,45 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // components can be created
   CreateWalls();
 
-  // VERIFY
-  // LoadLevelData(1);
+  // REMOVE LevelData test
+  {
+    std::cout << "Level Data test\n-----------------\n"
+              << "Level number: " << _level_data->Level() << std::endl
+              << "Ball speed: " << _level_data->BallSpeed() << std::endl
+              << "Paddle speed: " << _level_data->PaddleSpeed() << std::endl
+              << "Points per block: " << _level_data->PointsPerBlock()
+              << std::endl
+              << "Level lives: " << _level_data->Lives() << std::endl
+              << std::endl;
+
+    std::cout << "Sprites layout\n-------------\n";
+
+    auto layout = _level_data->SpriteTable();
+
+    for (std::size_t row = 0; row < layout.size(); row++) {
+      std::cout << "Row " << std::to_string(row + 1) << ":\t";
+
+      for (std::size_t col = 0; col < layout[row].size(); col++) {
+        char sprite;
+        switch (layout[row][col]) {
+          case Sprite::None:
+            sprite = '0';
+            break;
+          case Sprite::BlockGreen:
+            sprite = 'g';
+            break;
+          default:
+            sprite = '?';
+        }
+        std::cout << sprite << "  ";
+      }
+      std::cout << std::endl;
+    }
+  }
 
   CreateBlocks();
   CreatePaddle();
   CreateBall();
-  // REMOVE
-  //   // Add ball to the collection of objects displayed by the renderer
-  //   _renderer->AddMovableObject(_ball.get());
-  //   // add paddle to the collection of objects displayed by the renderer
-  //   _renderer->AddMovableObject(_paddle.get());
-  // }
 }
 // initialize SDL subsystems
 void Game::InitSubsystems()
@@ -234,6 +260,9 @@ const Texture& Game::GetTexture(Sprite sprite) const
 // creates the wall limiting the game area
 void Game::CreateWalls()
 {
+  // design predicts 3 walls so reserve enough space
+  _side_walls.reserve(3);
+
   CreateTopWall();
   CreateLeftWall();
   CreateRightWall();
@@ -334,7 +363,7 @@ void Game::CreateBlocks()
   // TODO: revise block creation
   auto& block_texture = GetTexture(Sprite::BlockGreen);
   _blocks.emplace_back(_screen_width / 2.0 - 49 / 2.0f,
-      _screen_height / 2.0f - 20 / 2.0, block_texture);
+      _screen_height / 2.0f - 20 / 2.0, block_texture, 1);
 
   // add blocks to the collection of objects displayed by the renderer
   for (auto& block : _blocks) {

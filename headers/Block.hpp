@@ -10,7 +10,8 @@ class Block : public virtual StaticObject
 {
   public:
   // constructor
-  Block(float x, float y, const Texture& texture);
+  // takes: x and y coordinates, texture for drawing and point value of block
+  Block(float x, float y, const Texture& texture, unsigned pointValue);
   // default virtual destructor
   ~Block() override = default;
   // renders the block to the screen
@@ -38,6 +39,6 @@ class Block : public virtual StaticObject
   // indicates if the block should be displayed and affects game
   bool _destroyed = false;
   // point value assigned to the block
-  unsigned _point_value = 10;
+  unsigned _point_value;
 };
 #endif // !Block_HPP

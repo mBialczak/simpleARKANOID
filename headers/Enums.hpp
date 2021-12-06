@@ -26,7 +26,7 @@ enum class ScreenSide : short
   Left
 };
 
-// enum class describing sprites used in the game
+// enum representing sprites used in the game
 enum class Sprite : short
 {
   None,
@@ -37,4 +37,11 @@ enum class Sprite : short
   BlockGreen
 };
 
+// enum representing allowed char values to be put while level-file creation
+enum class BlockCharCode : char
+{
+  None = '0',
+  BlockGreen = 'g',
+
+};
 #endif // !Enums_hpp

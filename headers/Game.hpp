@@ -3,6 +3,7 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Controller.hpp"
+#include "LevelData.hpp"
 #include "Paddle.hpp"
 #include "RandNum.hpp"
 #include "Renderer.hpp"
@@ -108,7 +109,7 @@ class Game
   unsigned _total_points = 0;
   // REMOVE current game level
   std::size_t _level = 1;
-  // REMOVE INN (maybe in function enough) current level data
-  std::vector<std::vector<std::string>> _level_data;
+  // inlcudes all the current level data
+  std::unique_ptr<LevelData> _level_data;
 };
 #endif // !GAME_HPP
