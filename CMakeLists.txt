@@ -34,7 +34,6 @@ src/IntervalTimer.cpp
 src/Ball.cpp
 # src/gMath.cpp //NOTE: remove if not used
 src/Texture.cpp
-src/LoadedSDLsurface.cpp
 src/Paddle.cpp
 src/StaticObject.cpp
 src/SideWall.cpp
