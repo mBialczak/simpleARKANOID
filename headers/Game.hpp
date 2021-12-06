@@ -82,7 +82,7 @@ class Game
   const std::size_t _max_rows = 15;
   // target frame rate of the display
   const Uint32 _frame_rate;
-  // container with all textures used in the game //NOTE: verify
+  // container with all textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _textures;
 
   // controller for handling keyboard input
@@ -107,9 +107,12 @@ class Game
   std::vector<Block> _blocks;
   // takes track of points achieved by the player
   unsigned _total_points = 0;
-  // REMOVE current game level
+  // REMOVE if used from LevelData class current game level
   std::size_t _level = 1;
   // inlcudes all the current level data
   std::unique_ptr<LevelData> _level_data;
+  // REMOVE INU
+  // number of remaining lives (balls) befor "game over"
+  unsigned _lives_remaining;
 };
 #endif // !GAME_HPP
