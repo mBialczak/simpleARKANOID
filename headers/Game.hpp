@@ -69,7 +69,9 @@ class Game
   void CreateBlocks();
 
   // controls main loop run
-  bool _is_running = false;
+  bool _is_running = false; // NOTE: rename?
+  // REVIEW: controls if the game is paused
+  bool _paused = false;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;

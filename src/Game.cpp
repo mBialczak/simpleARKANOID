@@ -171,7 +171,7 @@ void Game::GenerateOutput() const
 { // update display
   // REVIEW: restore or modify for pausing
   // _renderer->Display();
-  _renderer->Display("Test Message :)");
+  _renderer->Display("PAUSE Message :)");
   // TODO: update sounds
 }
 
