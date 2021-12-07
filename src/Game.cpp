@@ -227,19 +227,109 @@ void Game::LoadTextures()
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
 }
 
-// creates all the texts which won't change for entire game
+// creates all the texts which won't change for the entire game
 void Game::CreateTexts()
 {
-  // REMOVE
-  // TextElement
-  // (float x, float y, const std::string& fontPath, SDL_Color color,
-  //       int textSize, SDL_Renderer* gameRenderer, const std::string& text);
+  // helper const for marking centre x position
+  const float horizontal_centre = _screen_width / 2.0f;
 
-  std::string greeting { "Thank's for trying out my game:" };
-  float x = _screen_width / 2.0f;
-  float y = 10.0f;
-  _texts.emplace_back(x, y, Paths::pFontRobotoBold, Color::LightGreen, 20,
-      _renderer->GetSDLrenderer(), greeting);
+  // Create text for the top
+  std::string top { "Thank's for trying out my game:" };
+  const float top_x = horizontal_centre;
+  const float top_y = 45.0f;
+  _texts.emplace_back(top_x, top_y, Paths::pFontRobotoRegular, Color::Yellow,
+      30, _renderer->GetSDLrenderer(), top);
+
+  // Create text for game title
+  std::string title { " s i m p l e   A r k a n o i d  ! ! !" };
+  const float title_x = horizontal_centre;
+  const float title_y = top_y + 80.0f;
+  _texts.emplace_back(title_x, title_y, Paths::pFontRobotoBoldItalic,
+      Color::Green, 72, _renderer->GetSDLrenderer(), title);
+
+  // Create text about the paused state
+  std::string paused { "Game PAUSED" };
+  const float paused_x = horizontal_centre;
+  const float paused_y = title_y + 80.0f;
+  _texts.emplace_back(paused_x, paused_y, Paths::pFontRobotoBold, Color::Red,
+      36, _renderer->GetSDLrenderer(), paused);
+
+  // Create instruction about unpausing
+  std::string unpause { "( press 'ESCAPE' key to unpause )" };
+  const float unpause_x = horizontal_centre;
+  const float unpause_y = paused_y + 40.0f;
+  _texts.emplace_back(unpause_x, unpause_y, Paths::pFontRobotoRegular,
+      Color::Orange, 24, _renderer->GetSDLrenderer(), unpause);
+
+  // spacer for the area where dynamically created text whill apear
+  const float spacer = 160.0f;
+
+  // Create "Game Instructions" text
+  std::string instructions {
+    "G   A   M   E       C   O   N   T   R   O   L   S"
+  };
+  const float instr_x = horizontal_centre;
+  const float instr_y = unpause_y + spacer;
+  _texts.emplace_back(instr_x, instr_y, Paths::pFontRobotoBold, Color::Blue, 32,
+      _renderer->GetSDLrenderer(), instructions);
+
+  // spacer between instructions
+  const float instr_spacer = 40.0f;
+  // 1st line of instructions
+  std::string line_1 { "S P A C E   -   start the ball from the paddle" };
+  const float line_1_x = horizontal_centre;
+  const float line_1_y = instr_y + instr_spacer + 10.0f;
+  _texts.emplace_back(line_1_x, line_1_y, Paths::pFontRobotoRegular,
+      Color::Yellow, 22, _renderer->GetSDLrenderer(), line_1);
+
+  // 2nd line of instructions
+  std::string line_2 { "E S C A P E  -   pause / unpause the game" };
+  const float line_2_x = horizontal_centre;
+  const float line_2_y = line_1_y + instr_spacer;
+  _texts.emplace_back(line_2_x, line_2_y, Paths::pFontRobotoRegular,
+      Color::Orange, 22, _renderer->GetSDLrenderer(), line_2);
+
+  // 3rd line of instructions
+  std::string line_3 {
+    "L E F T   and   R I G H T  arrows  -  move the paddle HORIZONTALLY"
+  };
+  const float line_3_x = horizontal_centre;
+  const float line_3_y = line_2_y + instr_spacer;
+  _texts.emplace_back(line_3_x, line_3_y, Paths::pFontRobotoRegular,
+      Color::Yellow, 22, _renderer->GetSDLrenderer(), line_3);
+
+  // 4th line of instructions
+  std::string line_4 { "U P   and   D O W N   arrows  -  move the paddle "
+                       "VERTICALLY (within allowed limits)" };
+  const float line_4_x = horizontal_centre;
+  const float line_4_y = line_3_y + instr_spacer;
+  _texts.emplace_back(line_4_x, line_4_y, Paths::pFontRobotoRegular,
+      Color::Orange, 22, _renderer->GetSDLrenderer(), line_4);
+
+  // 5th line of instructions
+  std::string line_5 { "CONTROLS WORKING ONLY IF PRESSED / HELD WHILE "
+                       "THE BALL HITS THE PADDLE :" };
+  const float line_5_x = horizontal_centre;
+  const float line_5_y = line_4_y + instr_spacer + 20.0f;
+  _texts.emplace_back(line_5_x, line_5_y, Paths::pFontRobotoRegular,
+      Color::Violet, 24, _renderer->GetSDLrenderer(), line_5);
+
+  // 6th line of instructions
+  std::string line_6 {
+    "A -  spin the ball to the left          F -  spin the ball to the right"
+  };
+  const float line_6_x = horizontal_centre;
+  const float line_6_y = line_5_y + instr_spacer;
+  _texts.emplace_back(line_6_x, line_6_y, Paths::pFontRobotoRegular,
+      Color::Orange, 22, _renderer->GetSDLrenderer(), line_6);
+
+  // 7th line of instructions
+  std::string line_7 { "E - speed up the ball (steps with no limit)     D - "
+                       "slow down the ball (no more than  the level minimum)" };
+  const float line_7_x = horizontal_centre;
+  const float line_7_y = line_6_y + instr_spacer;
+  _texts.emplace_back(line_7_x, line_7_y, Paths::pFontRobotoRegular,
+      Color::Yellow, 22, _renderer->GetSDLrenderer(), line_7);
 }
 
 // REVIEW:and COMMENT
@@ -256,11 +346,11 @@ void Game::DisplayPauseScreen() const
 
   // create text elements which change during game
   // REMOVE
-  float x = _screen_width / 2.0f + 30.0f;
-  float y = 20.0f;
-  TextElement test(x, y, Paths::pFontRobotoBold, Color::LightGreen, 60,
-      _renderer->GetSDLrenderer(), "TEST!!!");
-  all_texts.emplace_back(&test);
+  // float x = _screen_width / 2.0f + 30.0f;
+  // float y = 20.0f;
+  // TextElement test(x, y, Paths::pLooneyTunes, Color::LightGreen, 60,
+  //     _renderer->GetSDLrenderer(), "TEST!!!");
+  // all_texts.emplace_back(&test);
 
   // Display all pause text on screen
   _renderer->DisplayStaticScreen(all_texts);
@@ -273,8 +363,8 @@ const Texture& Game::GetTexture(Sprite sprite) const
   auto search = _images.find(sprite);
   // if texture wasn't found, throw exception
   // VERIFY if needed such a long comment
-  // by this point the project design assumes that all requried textures should
-  // be loaded created during game initialization
+  // by this point the project design assumes that all requried textures
+  // should be loaded created during game initialization
   if (search == _images.end()) {
     throw std::runtime_error(
         "Unable to get texture for sprite in function Game::GetTexture()");

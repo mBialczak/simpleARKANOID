@@ -18,7 +18,19 @@ const std::string pVerticalWallImage { "../assets/images/vertical_wall.png" };
 const std::string pBlockGreenImage { "../assets/images/block_green.png" };
 // VERIFY path to levels data
 const std::string pLevels { "../assets/Levels/" };
-// VERIFY path to roboto bold font
+// VERIFY paths to roboto fonts
 const std::string pFontRobotoBold { "../assets/fonts/Roboto-Bold.ttf" };
+const std::string pFontRobotoRegular { "../assets/fonts/Roboto-Regular.ttf" };
+const std::string pFontRobotoBoldItalic {
+  "../assets/fonts/Roboto-BoldItalic.ttf"
+};
+
+// path to Lexia Bold font // REMOVE
+// const std::string pFontLexiaBold { "../assets/fonts/Lexia-Bold.ttf" };
+
+// REMOVE
+// const std::string pLooneyTunes { "../assets/fonts/Looney-Tunes-Tilt-BT.ttf"
+// };
+
 }
 #endif // !Paths_HPP
