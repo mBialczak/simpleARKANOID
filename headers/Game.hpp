@@ -3,6 +3,7 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Controller.hpp"
+#include "IntervalTimer.hpp" //REMOVE INU
 #include "LevelData.hpp"
 #include "Paddle.hpp"
 #include "RandNum.hpp"
@@ -38,18 +39,16 @@ class Game
 
   // runs the game ; implements main game loop
   void Run();
-
+  // pauses or unpauses the game (pause on/off)
+  void TogglePause();
+  // returns true if the game is paused, false if not
+  bool isPaused() const { return _paused; }
   // handles the ball leaving the allowed screen area
   // TODO: to implement
   void HandleBallEscape();
   // handles a block being hit by the ball
   // TODO: to implement
   void HandleBlockHit(Block& block);
-  // returns true if the game is paused, false if not // REVIEW:
-  bool isPaused() const { return _paused; }
-  // REVIEW:
-  // pauses or unpauses the game depending of the argument value
-  void Pause(bool toPause = true) { _paused = toPause; }
 
   private:
   // initialize SDL subsystems
@@ -111,5 +110,7 @@ class Game
   // REMOVE INU
   // number of remaining lives (balls) befor "game over"
   unsigned _lives_remaining;
+  // timer regulating the updates of the game state
+  IntervalTimer _timer;
 };
 #endif // !GAME_HPP

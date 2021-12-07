@@ -8,7 +8,7 @@ void Controller::HandleInput(
   SDL_Event evt;
   // get all SDL events
   while (SDL_PollEvent(&evt)) {
-    // handle quit evt
+    // handle quit event (like "close window" button)
     if (evt.type == SDL_QUIT) {
       running = false;
     }
@@ -17,12 +17,7 @@ void Controller::HandleInput(
       // and the the key was the pause key
       if (evt.key.keysym.sym == _pause_key) {
         // pause/unpause the game
-        if (game.isPaused()) {
-          game.Pause(false);
-        }
-        else {
-          game.Pause();
-        }
+        game.TogglePause();
       }
     }
   }

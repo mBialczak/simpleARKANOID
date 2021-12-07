@@ -1,5 +1,5 @@
 #include "Game.hpp"
-#include "IntervalTimer.hpp"
+#include "IntervalTimer.hpp" //REMOVE most likely as is in header
 #include "LimitTimer.hpp"
 #include "Paths.hpp" // REVIEW: remove INU
 #include "SDL.h"
@@ -137,11 +137,15 @@ void Game::Run()
     // handle input
     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
 
-    // REVIEW:
-    if (!_paused) {
-      UpdateGame();
+    // In paused state display the pause message
+    if (_paused) {
+      _renderer->Display("PAUSE Message :)");
     }
-    GenerateOutput();
+    // if not paused - perform routime game updates and output
+    else {
+      UpdateGame();
+      GenerateOutput();
+    }
 
     // execute frame FPS limiting policy by waiting untill
     // each frame time completes
@@ -151,19 +155,28 @@ void Game::Run()
   }
 }
 
+// pauses or unpauses the game (pause on/off)
+void Game::TogglePause()
+{
+  _paused = !_paused;
+  // need to pause the timer if the game is paused
+  if (_paused == true) {
+    _timer.Pause();
+  }
+}
+
 // updates the state of the game
 void Game::UpdateGame()
 {
-  // create timer measuring time difference for update calculations
-  static IntervalTimer timer;
   // calculate delta time and udpate timer
-  auto delta_time = timer.UpdateAndGetInterval();
+  auto delta_time = _timer.UpdateAndGetInterval();
+
   // REVIEW: for debugging purposes
   // if (delta_time >= 0.5f) {
   //   // cap delta_time while debugging if time difference is to big
   //   delta_time = 0.5f;
   // }
-  // REVIEW: consider one container of moveable objets instead seperate objects
+  // REVIEW: consider one container of moveable objects instead seperate objects
 
   // upate paddle state
   _paddle->Update(delta_time);
@@ -175,15 +188,10 @@ void Game::UpdateGame()
 // generates all game output
 void Game::GenerateOutput() const
 {
-  if (!_paused) {
-    // update game display normaly
-    _renderer->Display();
-  }
-  else {
-    // display pause message
-    _renderer->Display("PAUSE Message :)");
-  }
-  // TODO: update sounds
+  // update game display
+  _renderer->Display();
+
+  // TODO: update sounds somewhere
 }
 
 // / load all textures used in the game //NOTE: verify
