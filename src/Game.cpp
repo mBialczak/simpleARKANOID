@@ -36,6 +36,13 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
 
   // load textures used in the game
   LoadTextures();
+
+  // REVIEW:
+  // reserve space for all pointers to objects to be displayed on the game
+  // screen (all the blocks + walls)
+  _static_for_game_screen.reserve(
+      LevelData::_max_rows * LevelData::_row_size + 3);
+
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
   CreateWalls();
@@ -97,7 +104,6 @@ void Game::InitSubsystems()
         __FILE__, __LINE__);
   }
 
-  // REVIEW:
   // initialize True Type Font support and check if it was done successfully
   if (TTF_Init() == -1) {
     throw SDLexception(
@@ -193,7 +199,8 @@ void Game::UpdateGame()
 void Game::GenerateOutput() const
 {
   // update game display
-  _renderer->Display();
+  _renderer->DisplayGameScreen(
+      _static_for_game_screen, _movable_for_game_screen);
 
   // TODO: update sounds somewhere
 }
@@ -236,6 +243,7 @@ const Texture& Game::GetTexture(Sprite sprite) const
 // creates the wall limiting the game area
 void Game::CreateWalls()
 {
+  // REVIEW:
   // design predicts 3 walls so reserve enough space
   _side_walls.reserve(3);
 
@@ -243,9 +251,9 @@ void Game::CreateWalls()
   CreateLeftWall();
   CreateRightWall();
 
-  // add walls to the renderers displayed objects
+  // add walls to the displayed objects
   for (auto& wall : _side_walls) {
-    _renderer->AddStaticObject(&wall);
+    _static_for_game_screen.emplace_back(&wall);
   };
 }
 
@@ -299,8 +307,8 @@ void Game::CreateBall()
     throw std::runtime_error("Unable to create the ball");
   }
 
-  // Add ball to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_ball.get());
+  // Add ball to the collection of movable objects to be displayed
+  _movable_for_game_screen.emplace_back(_ball.get());
 }
 
 // creates the paddle
@@ -328,8 +336,8 @@ void Game::CreatePaddle()
     throw std::runtime_error("Unable to create the paddle");
   }
 
-  // add paddle to the collection of objects displayed by the renderer
-  _renderer->AddMovableObject(_paddle.get());
+  // add paddle to the collection of objects to be displayed
+  _movable_for_game_screen.emplace_back(_paddle.get());
 }
 // TODO: refactor and COMMENTS
 // creates blocks
@@ -367,9 +375,9 @@ void Game::CreateBlocks()
     }
   }
 
-  // add blocks to the collection of objects displayed by the renderer
+  // add blocks to the collection of static objects to be displayed
   for (auto& block : _blocks) {
-    _renderer->AddStaticObject(&block);
+    _static_for_game_screen.emplace_back(&block);
   }
 }
 

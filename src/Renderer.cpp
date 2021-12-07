@@ -42,24 +42,10 @@ Renderer::~Renderer()
   _sdl_window = nullptr;
 }
 
-// adds StaticObject to be displayed
-void Renderer::AddStaticObject(const StaticObject* object)
-{
-  if (object) {
-    _static_objects.emplace_back(object);
-  }
-}
-
-// adds MovableObject to be displayed
-void Renderer::AddMovableObject(const MovableObject* object)
-{
-  if (object) {
-    _movable_objects.emplace_back(object);
-  }
-}
-
 // displays (renders) game graphics
-void Renderer::Display() const
+void Renderer::DisplayGameScreen(
+    const std::vector<const StaticObject*>& staticObjects,
+    const std::vector<const MovableObject*>& movableObjects) const
 {
   UpdateTitleBar();
 
@@ -69,12 +55,12 @@ void Renderer::Display() const
   SDL_RenderClear(_sdl_renderer);
 
   // display all static game objects
-  for (auto& object : _static_objects) {
+  for (auto& object : staticObjects) {
     object->Draw();
   }
 
   // display all movable game objects
-  for (auto& object : _movable_objects) {
+  for (auto& object : movableObjects) {
     object->Draw();
   }
 

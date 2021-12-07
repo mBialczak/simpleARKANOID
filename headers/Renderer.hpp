@@ -29,12 +29,10 @@ class Renderer
   Renderer& operator=(const Renderer&) = delete;
   // destructor
   ~Renderer();
-  // adds StaticObject to be displayed
-  void AddStaticObject(const StaticObject* object);
-  // adds MovableObject to be displayed
-  void AddMovableObject(const MovableObject* object);
-  // displays (renders) game graphics
-  void Display() const;
+
+  // displays (renders) game graphics //COMMENT
+  void DisplayGameScreen(const std::vector<const StaticObject*>& staticObjects,
+      const std::vector<const MovableObject*>& movableObjects) const;
   // REMOVE INU , COMMENT if not
   // void Display(std::string message) const;
   // REVIEW:
@@ -57,10 +55,5 @@ class Renderer
   // game window size
   const std::size_t _screen_height;
   const std::size_t _screen_width;
-
-  // vector of NOT OWNED StaticObjects to display
-  std::vector<const StaticObject*> _static_objects;
-  // vector of NOT OWNED MovableObjects to display
-  std::vector<const MovableObject*> _movable_objects;
 };
 #endif // !RENDERER_HPP

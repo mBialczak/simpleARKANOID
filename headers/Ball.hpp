@@ -32,7 +32,7 @@ class Ball : public virtual MovableObject
       std::vector<Block>& blocks);
 
   // default virtual destructor
-  ~Ball() override = default;
+  ~Ball() override = default; // NOTE: override?
 
   // update ball state with given time difference from last update
   void Update(float deltaTime) override;

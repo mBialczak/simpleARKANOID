@@ -16,7 +16,6 @@
 #include <unordered_map>
 #include <vector>
 
-// REMOVE INU
 // class forward declarations
 class Controller;
 
@@ -87,10 +86,10 @@ class Game
   // target frame rate of the display
   const Uint32 _frame_rate;
   // REVIEW: rename to "images?"
-  // container with all textures used in the game
+  // container with all image textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
-  // REVIEW:
-  // container with static text elements to be displayed
+
+  //  REVIEW: container with static text elements to be displayed
   // on the welcome/pause screen
   // std::vector<TextElement> _texts;
   // controller for handling keyboard input
@@ -105,8 +104,13 @@ class Game
   std::unique_ptr<Paddle> _paddle;
   // randomizer used for getting random numbers
   gMath::RandNum _randomizer;
-  // TODO: change into container and create comments
+  // container of all the blocks in the current level
   std::vector<Block> _blocks;
+  // REVIEW: perhaps can be put into one drawable parent class
+  // Group all the static and movable objects to be displayed on the game
+  // screen. (for display purposes only, objects are managed by other members)
+  std::vector<const StaticObject*> _static_for_game_screen;
+  std::vector<const MovableObject*> _movable_for_game_screen;
   // takes track of points achieved by the player
   unsigned _total_points = 0;
   // REMOVE if used from LevelData class current game level
