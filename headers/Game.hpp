@@ -85,6 +85,7 @@ class Game
   const std::size_t _screen_width;
   // target frame rate of the display
   const Uint32 _frame_rate;
+  // REVIEW: rename to "images?"
   // container with all textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _textures;
   // controller for handling keyboard input
