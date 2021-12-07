@@ -92,7 +92,7 @@ class Game
   // REVIEW:
   // container with static text elements to be displayed
   // on the welcome/pause screen
-  std::vector<TextElement> _texts;
+  // std::vector<TextElement> _texts;
   // controller for handling keyboard input
   std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible

@@ -8,9 +8,9 @@
 TextElement::TextElement(float x, float y, const std::string& fontPath,
     SDL_Color color, int textSize, SDL_Renderer* gameRenderer,
     const std::string& text)
-    : _texture(std::make_unique<Texture>(
-        fontPath, color, textSize, gameRenderer, text))
-    , _x(x)
-    , _y(y)
+    : StaticObject(x, y)
+    , _texture(std::make_unique<Texture>(
+          fontPath, color, textSize, gameRenderer, text))
+
 {
 }
