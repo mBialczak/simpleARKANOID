@@ -2,7 +2,8 @@
 #define IntervalTimer_HPP
 
 #include "SDL.h"
-class IntervalTimer {
+class IntervalTimer
+{
   public:
   // constructor
   IntervalTimer();
@@ -10,6 +11,9 @@ class IntervalTimer {
   // updates timer and returns time difference since last check
   // unit of the returned interval: seconds
   float UpdateAndGetInterval();
+
+  // VERIFY
+  void Pause();
 
   // copying of class object should be unnecassary, so copy operations are
   // disabled

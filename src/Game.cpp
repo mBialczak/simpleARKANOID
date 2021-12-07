@@ -21,7 +21,9 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
     , _frame_rate(targetFrameRate)
+    , _controller(std::make_unique<Controller>())
     , _renderer(nullptr)
+    // , _controller(Controller()) // REMOVE?
     // load all the data for the first level
     , _level_data(std::make_unique<LevelData>(Paths::pLevels))
     , _lives_remaining(_level_data->Lives())
@@ -133,9 +135,12 @@ void Game::Run()
   while (_is_running) {
 
     // handle input
-    _controller.HandleInput(_is_running, *_paddle, *_ball);
+    _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
 
-    UpdateGame();
+    // REVIEW:
+    if (!_paused) {
+      UpdateGame();
+    }
     GenerateOutput();
 
     // execute frame FPS limiting policy by waiting untill
@@ -154,10 +159,10 @@ void Game::UpdateGame()
   // calculate delta time and udpate timer
   auto delta_time = timer.UpdateAndGetInterval();
   // REVIEW: for debugging purposes
-  if (delta_time >= 0.5f) {
-    // cap delta_time while debugging if time difference is to big
-    delta_time = 0.5f;
-  }
+  // if (delta_time >= 0.5f) {
+  //   // cap delta_time while debugging if time difference is to big
+  //   delta_time = 0.5f;
+  // }
   // REVIEW: consider one container of moveable objets instead seperate objects
 
   // upate paddle state
@@ -166,12 +171,18 @@ void Game::UpdateGame()
   _ball->Update(delta_time);
 }
 
+// REVIEW: general implementation
 // generates all game output
 void Game::GenerateOutput() const
-{ // update display
-  // REVIEW: restore or modify for pausing
-  // _renderer->Display();
-  _renderer->Display("PAUSE Message :)");
+{
+  if (!_paused) {
+    // update game display normaly
+    _renderer->Display();
+  }
+  else {
+    // display pause message
+    _renderer->Display("PAUSE Message :)");
+  }
   // TODO: update sounds
 }
 

@@ -2,7 +2,8 @@
 #include "SDL.h"
 
 // function for handling all the input events
-void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
+void Controller::HandleInput(
+    bool& running, Paddle& paddle, Ball& ball, Game& game) const
 {
   SDL_Event evt;
   // get all SDL events
@@ -11,14 +12,28 @@ void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
     if (evt.type == SDL_QUIT) {
       running = false;
     }
+    // a key was pressed
+    else if (evt.type == SDL_KEYDOWN) {
+      // and the the key was the pause key
+      if (evt.key.keysym.sym == _pause_key) {
+        // pause/unpause the game
+        if (game.isPaused()) {
+          game.Pause(false);
+        }
+        else {
+          game.Pause();
+        }
+      }
+    }
   }
-  // get all the pressed keyboard keys and handle them
-  HandleKeyPresses(evt, SDL_GetKeyboardState(NULL), paddle, ball);
+  // get the rest of the pressed keyboard keys and handle them
+  HandleKeyPresses(evt, SDL_GetKeyboardState(NULL), paddle, ball, game);
 }
 
+// NOTE: consider refactoring
 // helper function for  handling keypresses
-void Controller::HandleKeyPresses(
-    SDL_Event& evt, const Uint8* keysArray, Paddle& paddle, Ball& ball) const
+void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
+    Paddle& paddle, Ball& ball, Game& game) const
 {
   // move the paddle up when the key: _up is pressed
   if (keysArray[_up]) {
@@ -59,8 +74,8 @@ void Controller::HandleKeyPresses(
   else if (keysArray[_slow_down]) {
     ball.SetSpeedDelta(-25.0f);
   }
-  // VERIFY: start the ball or pause / unpause the game
-  else if (keysArray[_start_pause]) {
+  // start the ball from the paddle
+  else if (keysArray[_start]) {
     // start the ball if it is in the starting position
     if (!ball.IsMoving()) {
       ball.Start();

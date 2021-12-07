@@ -14,6 +14,10 @@
 #include <unordered_map>
 #include <vector>
 
+// REMOVE INU
+// class forward declarations
+class Controller;
+
 // COMMENT
 // main game class
 class Game
@@ -41,6 +45,11 @@ class Game
   // handles a block being hit by the ball
   // TODO: to implement
   void HandleBlockHit(Block& block);
+  // returns true if the game is paused, false if not // REVIEW:
+  bool isPaused() const { return _paused; }
+  // REVIEW:
+  // pauses or unpauses the game depending of the argument value
+  void Pause(bool toPause = true) { _paused = toPause; }
 
   private:
   // initialize SDL subsystems
@@ -70,7 +79,7 @@ class Game
 
   // controls main loop run
   bool _is_running = false; // NOTE: rename?
-  // REVIEW: controls if the game is paused
+  //  controls if the game is paused
   bool _paused = false;
   // window size properties
   const std::size_t _screen_height;
@@ -80,7 +89,7 @@ class Game
   // container with all textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _textures;
   // controller for handling keyboard input
-  Controller _controller;
+  std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible
   Renderer* _renderer;
   // container for side walls

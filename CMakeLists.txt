@@ -25,10 +25,10 @@ include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_I
 
 add_executable(simpleArkanoid 
 src/main.cpp
+src/Controller.cpp
 src/Game.cpp
 src/Renderer.cpp
 src/LimitTimer.cpp
-src/Controller.cpp
 src/SDLexception.cpp
 src/IntervalTimer.cpp
 src/Ball.cpp
