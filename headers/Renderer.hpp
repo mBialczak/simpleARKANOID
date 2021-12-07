@@ -30,14 +30,17 @@ class Renderer
   // destructor
   ~Renderer();
 
-  // displays (renders) game graphics //COMMENT
+  // displays game screen filled with game objects
   void DisplayGameScreen(const std::vector<const StaticObject*>& staticObjects,
       const std::vector<const MovableObject*>& movableObjects) const;
   // REMOVE INU , COMMENT if not
-  // void Display(std::string message) const;
-  // REVIEW:
-  // Displays single TextElement on the screen
-  void Display(const TextElement& textElement) const;
+  // Displays a screen containing static objects
+  void DisplayStaticScreen(
+      const std::vector<const StaticObject*>& staticObjects) const;
+
+  //  REMOVE INU
+  // // Displays single TextElement on the screen
+  // void Display(const TextElement& textElement) const;
 
   // returns the owned SDL renderer
   // user of the class should not explicitly destroy the renderer

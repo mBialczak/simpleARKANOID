@@ -17,11 +17,11 @@ struct TextElement : public StaticObject
   TextElement(float x, float y, const std::string& fontPath, SDL_Color color,
       int textSize, SDL_Renderer* gameRenderer, const std::string& text);
 
-  // REVIEW:
-  // Displays text texture to the screen
+  // Displays text screen
+  void Draw() const override;
 
   private:
-  // pointer texture containing text to be displayed
+  // pointer to texture containing text to be displayed
   std::unique_ptr<Texture> _texture;
 };
 

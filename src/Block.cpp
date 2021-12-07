@@ -17,6 +17,6 @@ void Block::Draw() const
   // we display the block if it has not been destroyed
   if (!_destroyed) {
     _texture.Render(
-        static_cast<int>(_position._x), static_cast<float>(_position._y));
+        static_cast<int>(_position._x), static_cast<int>(_position._y));
   }
 }

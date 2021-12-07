@@ -1,3 +1,5 @@
+TODO: consider making shared_ptr in Texture
+
 TODO:
 disable copying and moving for classes not predicted for copying or moving if owning resources
 

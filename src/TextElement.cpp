@@ -11,6 +11,12 @@ TextElement::TextElement(float x, float y, const std::string& fontPath,
     : StaticObject(x, y)
     , _texture(std::make_unique<Texture>(
           fontPath, color, textSize, gameRenderer, text))
-
 {
+}
+
+// Displays text screen
+void TextElement::Draw() const
+{
+  _texture->Render(
+      static_cast<int>(_position._x), static_cast<int>(_position._y));
 }

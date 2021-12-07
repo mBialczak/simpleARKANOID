@@ -79,7 +79,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
 void Ball::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position._x), static_cast<float>(_position._y));
+      static_cast<int>(_position._x), static_cast<int>(_position._y));
 }
 
 // sets current speed of the object if it is not lower than minimal speed

@@ -18,7 +18,7 @@ class SideWall : public virtual StaticObject
   SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture,
       float halfTickness);
   // default virtual constructor
-  ~SideWall() override = default;
+  ~SideWall() override = default; // NOTE: override?
   // renders the sideWall to the screen
   void Draw() const override;
 

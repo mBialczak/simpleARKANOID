@@ -57,10 +57,15 @@ class Game
   void UpdateGame();
   // generates game output
   void GenerateOutput() const; // NOTE: const might not be good
-  // load all textures used in the game //NOTE: verify
+  // REVIEW:
+  // Generates container of static objects to be displayed on the pause screen
+  void DisplayPauseScreen() const;
+  // load all image textures used in the game //NOTE: verify
   void LoadTextures();
-  // gets a single texture from the stored textures
+  // gets a single image texture from the stored textures
   const Texture& GetTexture(Sprite sprite) const;
+  // creates all the texts which won't change for entire game
+  void CreateTexts();
   // creates the wall limiting the game area
   void CreateWalls();
   // creates the top wall
@@ -88,7 +93,8 @@ class Game
   // REVIEW: rename to "images?"
   // container with all image textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
-
+  // container with texts constructed once for the entire game duration
+  std::vector<TextElement> _texts;
   //  REVIEW: container with static text elements to be displayed
   // on the welcome/pause screen
   // std::vector<TextElement> _texts;

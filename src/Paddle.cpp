@@ -29,7 +29,7 @@ void Paddle::Update(float deltaTime)
 void Paddle::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position._x), static_cast<float>(_position._y));
+      static_cast<int>(_position._x), static_cast<int>(_position._y));
 }
 
 // stops the paddle by setting velocity vector to {0,0}

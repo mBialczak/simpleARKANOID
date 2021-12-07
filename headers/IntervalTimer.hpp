@@ -19,9 +19,10 @@ class IntervalTimer
   // so copy operations are disabled
   IntervalTimer(const IntervalTimer&) = delete;
   IntervalTimer& operator=(const IntervalTimer&) = delete;
+  // constant describing how many SDL clock ticks has each second
+  static constexpr float _ticks_per_second = 1000.0f;
 
   private:
-  static constexpr float _ticks_per_second = 1000.0f;
   Uint32 _previous_time;
   Uint32 _current_time;
   // indicates if the timer is paused

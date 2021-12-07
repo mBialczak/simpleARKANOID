@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "Colors.hpp" // REMOVE INU
 #include "IntervalTimer.hpp" //REMOVE most likely as is in header
 #include "LimitTimer.hpp"
 #include "Paths.hpp" // REVIEW: remove INU
@@ -86,6 +87,9 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   CreateBlocks();
   CreatePaddle();
   CreateBall();
+  // REVIEW:
+  // create all displayable texts which will not change in the game
+  CreateTexts();
 }
 // initialize SDL subsystems
 void Game::InitSubsystems()
@@ -129,8 +133,8 @@ Game::~Game()
 void Game::Run()
 {
   // calculate desired duration of a single frame
-  const Uint32 c_SDL_ticks_per_second = 1000;
-  const Uint32 desired_frame_duration { c_SDL_ticks_per_second / _frame_rate };
+  const Uint32 desired_frame_duration { static_cast<Uint32>(
+      IntervalTimer::_ticks_per_second / _frame_rate) };
 
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };
@@ -143,19 +147,14 @@ void Game::Run()
   _is_running = true;
   // main game loop
   while (_is_running) {
-
     // handle input
     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-    // REVIEW:
-    // In paused state display the pause message
-    if (_paused) {
-      // _renderer->Display("PAUSE Message :)");
-    }
-    // if not paused - perform routime game updates and output
-    else {
+    // Update game state only if it isn't paused
+    if (!_paused) {
       UpdateGame();
-      GenerateOutput();
     }
+
+    GenerateOutput();
 
     // execute frame FPS limiting policy by waiting untill
     // each frame time completes
@@ -198,11 +197,16 @@ void Game::UpdateGame()
 // generates all game output
 void Game::GenerateOutput() const
 {
-  // update game display
-  _renderer->DisplayGameScreen(
-      _static_for_game_screen, _movable_for_game_screen);
-
-  // TODO: update sounds somewhere
+  // if not paused perform routime game output
+  if (!_paused) {
+    // display all static and movable objects
+    _renderer->DisplayGameScreen(
+        _static_for_game_screen, _movable_for_game_screen);
+    // TODO: update sounds somewhere
+  }
+  else {
+    DisplayPauseScreen();
+  }
 }
 
 // / load all textures used in the game //NOTE: verify
@@ -221,6 +225,45 @@ void Game::LoadTextures()
       Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
   _images[Sprite::BlockGreen] = std::make_unique<Texture>(
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
+}
+
+// creates all the texts which won't change for entire game
+void Game::CreateTexts()
+{
+  // REMOVE
+  // TextElement
+  // (float x, float y, const std::string& fontPath, SDL_Color color,
+  //       int textSize, SDL_Renderer* gameRenderer, const std::string& text);
+
+  std::string greeting { "Thank's for trying out my game:" };
+  float x = _screen_width / 2.0f;
+  float y = 10.0f;
+  _texts.emplace_back(x, y, Paths::pFontRobotoBold, Color::LightGreen, 20,
+      _renderer->GetSDLrenderer(), greeting);
+}
+
+// REVIEW:and COMMENT
+// Generates container of static objects to be displayed on the pause screen
+void Game::DisplayPauseScreen() const
+{
+  // create vector of static objects to be displayed
+  std::vector<const StaticObject*> all_texts;
+  // TODO: reserve
+  // copy addresses of all stored texts which won't change during game
+  for (auto& text : _texts) {
+    all_texts.emplace_back(&text);
+  }
+
+  // create text elements which change during game
+  // REMOVE
+  float x = _screen_width / 2.0f + 30.0f;
+  float y = 20.0f;
+  TextElement test(x, y, Paths::pFontRobotoBold, Color::LightGreen, 60,
+      _renderer->GetSDLrenderer(), "TEST!!!");
+  all_texts.emplace_back(&test);
+
+  // Display all pause text on screen
+  _renderer->DisplayStaticScreen(all_texts);
 }
 
 // gets a single texture from the stored textures

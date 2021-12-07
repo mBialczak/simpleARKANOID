@@ -68,45 +68,41 @@ void Renderer::DisplayGameScreen(
   SDL_RenderPresent(_sdl_renderer);
 }
 
-// // REMOVE INU , COMMENT if not
-// void Renderer::Display(std::string message) const
-// {
-//   // COMMENT or REMOVE
-//   SDL_Color color { 0, 255, 0 };
-
-//   // COMMENT or REMOVE
-//   Texture testMessage { Paths::pFontRobotoBold, color, 20, _sdl_renderer,
-//     message };
-//   Texture testMessage2 { Paths::pFontRobotoBold, color, 32, _sdl_renderer,
-//     message };
-
-//   // Set clear screen color
-//   SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
-//   // clear screen
-//   SDL_RenderClear(_sdl_renderer);
-
-//   // REMOVE or COMMENT
-
-//   testMessage.Render(300, 300);
-//   testMessage2.Render(310, 310);
-
-//   // update screen
-//   SDL_RenderPresent(_sdl_renderer);
-// }
-
-// Displays single TextElement on the screen
-void Renderer::Display(const TextElement& textElement) const
+// REMOVE INU , COMMENT if not
+// Displays a screen containing static objects
+void Renderer::DisplayStaticScreen(
+    const std::vector<const StaticObject*>& staticObjects) const
 {
+  UpdateTitleBar();
+
   // Set clear screen color
   SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
   // clear screen
   SDL_RenderClear(_sdl_renderer);
 
-  // textElement._texture
+  // display all text objects game objects
+  for (auto& object : staticObjects) {
+    object->Draw();
+  }
 
   // update screen
   SDL_RenderPresent(_sdl_renderer);
 }
+
+// REMOVE INU
+// // Displays single TextElement on the screen
+// void Renderer::Display(const TextElement& textElement) const
+// {
+//   // Set clear screen color
+//   SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
+//   // clear screen
+//   SDL_RenderClear(_sdl_renderer);
+
+//   // textElement._texture
+
+//   // update screen
+//   SDL_RenderPresent(_sdl_renderer);
+// }
 
 // update title bar
 void Renderer::UpdateTitleBar() const
