@@ -42,6 +42,7 @@ src/Vector2d.cpp
 src/MovableObject.cpp
 src/Block.cpp
 src/LevelData.cpp
+src/TextElement.cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 

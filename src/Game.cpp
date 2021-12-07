@@ -129,6 +129,10 @@ void Game::Run()
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };
 
+  // REVIEW:
+  // Pause the game to display welcom screen/instructions
+  TogglePause();
+
   // main loop quit condition
   _is_running = true;
   // main game loop
@@ -136,10 +140,10 @@ void Game::Run()
 
     // handle input
     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-
+    // REVIEW:
     // In paused state display the pause message
     if (_paused) {
-      _renderer->Display("PAUSE Message :)");
+      // _renderer->Display("PAUSE Message :)");
     }
     // if not paused - perform routime game updates and output
     else {
@@ -198,17 +202,17 @@ void Game::GenerateOutput() const
 void Game::LoadTextures()
 {
   // load texture representing the ball
-  _textures[Sprite::Ball] = std::make_unique<Texture>(
+  _images[Sprite::Ball] = std::make_unique<Texture>(
       Paths::pBallImage, _renderer->GetSDLrenderer());
   // load texture respresenting the paddle
-  _textures[Sprite::Paddle] = std::make_unique<Texture>(
+  _images[Sprite::Paddle] = std::make_unique<Texture>(
       Paths::pPadleImage, _renderer->GetSDLrenderer());
   // load texture representing the side_wall
-  _textures[Sprite::WallHorizontal] = std::make_unique<Texture>(
+  _images[Sprite::WallHorizontal] = std::make_unique<Texture>(
       Paths::pHorizontalWallImage, _renderer->GetSDLrenderer());
-  _textures[Sprite::WallVertical] = std::make_unique<Texture>(
+  _images[Sprite::WallVertical] = std::make_unique<Texture>(
       Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
-  _textures[Sprite::BlockGreen] = std::make_unique<Texture>(
+  _images[Sprite::BlockGreen] = std::make_unique<Texture>(
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
 }
 
@@ -216,12 +220,12 @@ void Game::LoadTextures()
 const Texture& Game::GetTexture(Sprite sprite) const
 {
   // try to find a stored texture of the given spirte type
-  auto search = _textures.find(sprite);
+  auto search = _images.find(sprite);
   // if texture wasn't found, throw exception
   // VERIFY if needed such a long comment
   // by this point the project design assumes that all requried textures should
   // be loaded created during game initialization
-  if (search == _textures.end()) {
+  if (search == _images.end()) {
     throw std::runtime_error(
         "Unable to get texture for sprite in function Game::GetTexture()");
   }

@@ -5,6 +5,7 @@
 #include "Paddle.hpp"
 #include "SDL.h"
 #include "SideWall.hpp"
+#include "TextElement.hpp" // REVIEW:
 #include <memory>
 #include <vector>
 
@@ -13,6 +14,7 @@
 class Ball;
 class Paddle;
 class SideWall;
+class TextElement;
 
 // class for rendering graphics
 class Renderer
@@ -34,7 +36,10 @@ class Renderer
   // displays (renders) game graphics
   void Display() const;
   // REMOVE INU , COMMENT if not
-  void Display(std::string message) const;
+  // void Display(std::string message) const;
+  // REVIEW:
+  // Displays single TextElement on the screen
+  void Display(const TextElement& textElement) const;
 
   // returns the owned SDL renderer
   // user of the class should not explicitly destroy the renderer

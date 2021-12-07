@@ -3,12 +3,13 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Controller.hpp"
-#include "IntervalTimer.hpp" //REMOVE INU
+#include "IntervalTimer.hpp"
 #include "LevelData.hpp"
 #include "Paddle.hpp"
 #include "RandNum.hpp"
 #include "Renderer.hpp"
 #include "SideWall.hpp"
+#include "TextElement.hpp" // REVIEW
 #include "Texture.hpp"
 #include <cstddef>
 #include <memory>
@@ -87,7 +88,11 @@ class Game
   const Uint32 _frame_rate;
   // REVIEW: rename to "images?"
   // container with all textures used in the game
-  std::unordered_map<Sprite, std::unique_ptr<Texture>> _textures;
+  std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
+  // REVIEW:
+  // container with static text elements to be displayed
+  // on the welcome/pause screen
+  std::vector<TextElement> _texts;
   // controller for handling keyboard input
   std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible
