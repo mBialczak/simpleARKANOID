@@ -1,5 +1,6 @@
 #ifndef CONTROLLER_HPP
 #define CONTROLLER_HPP
+#include "Ball.hpp"
 #include "Game.hpp"
 #include "Paddle.hpp"
 #include "SDL.h"
@@ -7,17 +8,35 @@
 // class for controling input and steering
 class Controller
 {
+  // TODO:
+  // think about disabling copy/move operations
+
   public:
-  // COMMENT; consider refactoring
+  // COMMENT
+  // Contructor taking the game object to control
+  Controller(Game& game);
+
+  // COMMENT; consider refactoring and Ranaming
   // function for handling all the input events
   void HandleInput(bool& running, Paddle& paddle, Ball& ball, Game& game) const;
 
   private:
+  // REMOVE or COMMENT
+  void HandlePauseInput() const;
+  // REMOVE or COMMENT
+  void HandleRoutineEvents(Paddle& paddle, Ball& ball) const;
+  // REMOVE or COMMENT
+  void HandleGameOverEvents() const;
+
   // helper function for  handling keypresses
   void HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray, Paddle& paddle,
       Ball& ball, Game& game) const;
 
-  // key scancodes (keys) used for game control
+  // REMOVE INU
+  // refernece to main game object being controlled
+  Game& _game;
+
+  // key used for game control and corresponding SDL codes
   // paddle up key
   Uint8 _up = SDL_SCANCODE_UP;
   // paddle down key

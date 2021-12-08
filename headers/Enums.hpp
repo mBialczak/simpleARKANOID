@@ -49,7 +49,7 @@ enum class BlockCharCode : char
 enum class GameState : char
 {
   // "nomral" running state, where all the action happens
-  Resumed,
+  Routine,
   // game is paused or not yet started
   Paused,
   // game is over (player lost all the balls)

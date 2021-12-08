@@ -1,10 +1,20 @@
 #include "Controller.hpp"
 #include "SDL.h"
 
+// REVIEW: Consider major refactor
+
+// Contructor taking the game object to control
+Controller::Controller(Game& game)
+    : _game(game)
+{
+}
+
 // function for handling all the input events
 void Controller::HandleInput(
     bool& running, Paddle& paddle, Ball& ball, Game& game) const
 {
+  // REVIEW: genral implementation
+
   SDL_Event evt;
   // get all SDL events
   while (SDL_PollEvent(&evt)) {
@@ -12,6 +22,35 @@ void Controller::HandleInput(
     if (evt.type == SDL_QUIT) {
       running = false;
     }
+
+    // switch (_game::State()) {
+    //   case GameState::Routine:
+
+    //     break;
+    //   case GameState::Paused:
+    //     _timer.Pause();
+    //     // REVIEW: rename and COMMENT
+    //     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+    //     DisplayPauseScreen();
+    //     break;
+    //   case GameState::Over:
+    //     // / TODO: handle game over
+    //     // - display game over screen
+    //     // - play some sound
+    //     // + save high score
+    //     // - check if player wants to start again
+    //     //    -> yes - reset game state
+    //     //    -> no - display goodbye! and close the game
+
+    //     // TODO: sound
+    //     // REVIEW: rename and COMMENT
+    //     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+    //     DisplayGameOverScreen();
+    //     break;
+    //   default:
+    //     break;
+    // }
+
     // a key was pressed
     else if (evt.type == SDL_KEYDOWN) {
       // and the the key was the pause key
@@ -72,10 +111,12 @@ void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
   // start the ball from the paddle
   else if (keysArray[_start]) {
     // start the ball if it is in the starting position
-    if (!ball.IsMoving() && !game.isPaused()) {
+    // REVIEW: and remove NNS
+    // if (!ball.IsMoving() && !game.isPaused()) {
+    if (!ball.IsMoving() && game.State() == GameState::Routine)
       ball.Start();
-    }
   }
+
   // actions to be executed whenever the above keys are not pressed
   else {
     paddle.Stop();
@@ -83,3 +124,9 @@ void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
     ball.SetSpeedDelta(0.0f);
   }
 }
+
+// REMOVE or COMMENT
+void Controller::HandlePauseInput() const { }
+
+// REMOVE or COMMENT
+void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const { }

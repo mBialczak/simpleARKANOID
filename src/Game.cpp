@@ -22,9 +22,8 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
     , _frame_rate(targetFrameRate)
-    , _controller(std::make_unique<Controller>())
+    , _controller(std::make_unique<Controller>(*this))
     , _renderer(nullptr)
-    // , _controller(Controller()) // REMOVE?
     // load all the data for the first level
     , _level_data(std::make_unique<LevelData>(Paths::pLevels))
     , _lives_remaining(_level_data->Lives())
@@ -139,32 +138,57 @@ void Game::Run()
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };
 
-  // REVIEW:
-  // Pause the game to display welcom screen/instructions
-  TogglePause();
+  // // REVIEW:
+  // // Pause the game to display welcom screen/instructions
+  // TogglePause();
 
   // main loop quit condition
   _is_running = true;
   // main game loop
   while (_is_running) {
+    // REVIEW:
     // handle input
-    _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-    // Update game state only if it isn't paused
-    if (!_paused) {
-      UpdateGame();
-    }
+    // _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+    // // Update game state only if it isn't paused
+    // if (!_paused) {
+    //   UpdateGame();
+    // }
 
     // REMOVE INU COMMENT
-    switch (expression) {
-      case /* constant-expression */:
-        /* code */
+    switch (_state) {
+      case GameState::Routine:
+        // REVIEW: rename and COMMENT
+        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        UpdateGame();
+        // GenerateOutput(); // REVIEW:
+        _renderer->DisplayGameScreen(
+            _static_for_game_screen, _movable_for_game_screen);
         break;
+      case GameState::Paused:
+        _timer.Pause();
+        // REVIEW: rename and COMMENT
+        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        DisplayPauseScreen();
+        break;
+      case GameState::Over:
+        // / TODO: handle game over
+        // - display game over screen
+        // - play some sound
+        // + save high score
+        // - check if player wants to start again
+        //    -> yes - reset game state
+        //    -> no - display goodbye! and close the game
 
+        // TODO: sound
+        // REVIEW: rename and COMMENT
+        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        DisplayGameOverScreen();
+        break;
       default:
         break;
     }
-
-    GenerateOutput();
+    // REVIEW:
+    // GenerateOutput();
 
     // execute frame FPS limiting policy by waiting untill
     // each frame time completes
@@ -177,11 +201,23 @@ void Game::Run()
 // pauses or unpauses the game (pause on/off)
 void Game::TogglePause()
 {
-  _paused = !_paused;
-  // need to pause the timer if the game is paused
-  if (_paused == true) {
-    _timer.Pause();
+  // REVIEW:
+
+  if (_state == GameState::Routine) {
+    _state = GameState::Paused;
   }
+  else if (_state == GameState::Paused) {
+    _state = GameState::Routine;
+  }
+  // REMOVE:
+
+  // _state = GameState::Routine;
+  // REMOVE INU
+  // _paused = !_paused;
+  // // need to pause the timer if the game is paused
+  // if (_paused == true) {
+  //   _timer.Pause();
+  // }
 }
 
 // updates the state of the game
@@ -208,15 +244,16 @@ void Game::UpdateGame()
 void Game::GenerateOutput() const
 {
   // if not paused perform routime game output
-  if (!_paused) {
-    // display all static and movable objects
-    _renderer->DisplayGameScreen(
-        _static_for_game_screen, _movable_for_game_screen);
-    // TODO: update sounds somewhere
-  }
-  else {
-    DisplayPauseScreen();
-  }
+  // REVIEW: remove what not needed
+  // if (!_paused) {
+  //   // display all static and movable objects
+  //   _renderer->DisplayGameScreen(
+  //       _static_for_game_screen, _movable_for_game_screen);
+  //   // TODO: update sounds somewhere
+  // }
+  // else {
+  //   DisplayPauseScreen();
+  // }
 }
 
 // / load all textures used in the game //NOTE: verify
@@ -518,21 +555,6 @@ void Game::DisplayGameOverScreen() const
 
   // Display all text on screen
   _renderer->DisplayStaticScreen(texts);
-
-  SDL_Event evt;
-  // get all SDL events
-  while (SDL_PollEvent(&evt)) {
-    // filetre out push down key events
-    if (evt.type == SDL_KEYDOWN) {
-      // and the the key was the esc key
-      if (evt.key.keysym.sym == SDLK_ESCAPE) {
-        std::cout << "ESC!!!!" << std::endl;
-      }
-      else if (evt.key.keysym.sym == SDLK_SPACE) {
-        std::cout << "SPACE!!!!" << std::endl;
-      }
-    }
-  }
 }
 
 // gets a single texture from the stored textures
@@ -700,17 +722,7 @@ void Game::HandleBallEscape()
   _lives_remaining--;
   // check if game is over
   if (_lives_remaining <= 0) {
-    // TODO: handle game over
-    // - display game over screen
-    // - play some sound
-    // + save high score
-    // - check if player wants to start again
-    //    -> yes - reset game state
-    //    -> no - display goodbye! and close the game
-
-    // TODO: sound
-
-    DisplayGameOverScreen();
+    _state = GameState::Over;
   }
   // handle the case where player still have lives/balls left
   else {

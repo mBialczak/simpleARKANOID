@@ -41,8 +41,11 @@ class Game
   void Run();
   // pauses or unpauses the game (pause on/off)
   void TogglePause();
+  // REMOVE inu
   // returns true if the game is paused, false if not
   bool isPaused() const { return _paused; }
+  // returns game state , that is current bahaviour mode
+  GameState State() const { return _state; }
   // handles the ball leaving the allowed screen area
   // TODO: to implement
   void HandleBallEscape();
@@ -55,6 +58,7 @@ class Game
   void InitSubsystems();
   // updates game state
   void UpdateGame();
+  // REVIEW: rename?
   // generates game output
   void GenerateOutput() const; // NOTE: const might not be good
   // REVIEW:
@@ -88,10 +92,10 @@ class Game
   // controls if the main loop is running
   bool _is_running = false; // NOTE: rename?
   // REVIEW: controlls the bahaviour of inner main loop
-  GameState _state =
-      //  REMOVE INU
-      //  controls if the game is paused
-      bool _paused = false;
+  GameState _state = GameState::Paused;
+  //  REMOVE INU
+  //  controls if the game is paused
+  bool _paused = false;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;
