@@ -236,21 +236,21 @@ void Game::CreateTexts()
   // Create text for the top
   std::string top { "Thank's for trying out my game:" };
   const float top_x = horizontal_centre;
-  const float top_y = 45.0f;
+  const float top_y = 30.0f;
   _texts.emplace_back(top_x, top_y, Paths::pFontRobotoRegular, Color::Yellow,
       30, _renderer->GetSDLrenderer(), top);
 
   // Create text for game title
   std::string title { " s i m p l e   A r k a n o i d  ! ! !" };
   const float title_x = horizontal_centre;
-  const float title_y = top_y + 80.0f;
+  const float title_y = top_y + 70.0f;
   _texts.emplace_back(title_x, title_y, Paths::pFontRobotoBoldItalic,
-      Color::Green, 72, _renderer->GetSDLrenderer(), title);
+      Color::Green, 70, _renderer->GetSDLrenderer(), title);
 
   // Create text about the paused state
   std::string paused { "Game PAUSED" };
   const float paused_x = horizontal_centre;
-  const float paused_y = title_y + 80.0f;
+  const float paused_y = title_y + 70.0f;
   _texts.emplace_back(paused_x, paused_y, Paths::pFontRobotoBold, Color::Red,
       36, _renderer->GetSDLrenderer(), paused);
 
@@ -259,10 +259,10 @@ void Game::CreateTexts()
   const float unpause_x = horizontal_centre;
   const float unpause_y = paused_y + 40.0f;
   _texts.emplace_back(unpause_x, unpause_y, Paths::pFontRobotoRegular,
-      Color::Orange, 24, _renderer->GetSDLrenderer(), unpause);
+      Color::Red, 22, _renderer->GetSDLrenderer(), unpause);
 
   // spacer for the area where dynamically created text whill apear
-  const float spacer = 160.0f;
+  const float spacer = 240.0f;
 
   // Create "Game Instructions" text
   std::string instructions {
@@ -270,11 +270,11 @@ void Game::CreateTexts()
   };
   const float instr_x = horizontal_centre;
   const float instr_y = unpause_y + spacer;
-  _texts.emplace_back(instr_x, instr_y, Paths::pFontRobotoBold, Color::Blue, 32,
-      _renderer->GetSDLrenderer(), instructions);
+  _texts.emplace_back(instr_x, instr_y, Paths::pFontRobotoBold, Color::Violet,
+      32, _renderer->GetSDLrenderer(), instructions);
 
   // spacer between instructions
-  const float instr_spacer = 40.0f;
+  const float instr_spacer = 35.0f;
   // 1st line of instructions
   std::string line_1 { "S P A C E   -   start the ball from the paddle" };
   const float line_1_x = horizontal_centre;
@@ -307,12 +307,12 @@ void Game::CreateTexts()
       Color::Orange, 22, _renderer->GetSDLrenderer(), line_4);
 
   // 5th line of instructions
-  std::string line_5 { "CONTROLS WORKING ONLY IF PRESSED / HELD WHILE "
-                       "THE BALL HITS THE PADDLE :" };
+  std::string line_5 { "CONTROLS  WORKING  ONLY  WHILE  "
+                       "THE  BALL  HITS  THE  PADDLE :" };
   const float line_5_x = horizontal_centre;
-  const float line_5_y = line_4_y + instr_spacer + 20.0f;
+  const float line_5_y = line_4_y + instr_spacer + 10.0f;
   _texts.emplace_back(line_5_x, line_5_y, Paths::pFontRobotoRegular,
-      Color::Violet, 24, _renderer->GetSDLrenderer(), line_5);
+      Color::Violet, 26, _renderer->GetSDLrenderer(), line_5);
 
   // 6th line of instructions
   std::string line_6 {
@@ -336,23 +336,68 @@ void Game::CreateTexts()
 // Generates container of static objects to be displayed on the pause screen
 void Game::DisplayPauseScreen() const
 {
-  // create vector of static objects to be displayed
+  // create container of static objects to be displayed
   std::vector<const StaticObject*> all_texts;
-  // TODO: reserve
+  // reserve container space for all predicted elements
+  all_texts.reserve(_texts.size() + 6);
+
   // copy addresses of all stored texts which won't change during game
   for (auto& text : _texts) {
     all_texts.emplace_back(&text);
   }
 
-  // create text elements which change during game
-  // REMOVE
-  // float x = _screen_width / 2.0f + 30.0f;
-  // float y = 20.0f;
-  // TextElement test(x, y, Paths::pLooneyTunes, Color::LightGreen, 60,
-  //     _renderer->GetSDLrenderer(), "TEST!!!");
-  // all_texts.emplace_back(&test);
+  // create remaining balls counter display
+  std::string balls_str { std::to_string(_lives_remaining) };
+  const float balls_x = _screen_width / 2.0f;
+  const float balls_y = _screen_height / 3.0f + 45.0f;
+  TextElement balls { balls_x, balls_y, Paths::pFontRobotoBold, Color::Yellow,
+    70, _renderer->GetSDLrenderer(), balls_str };
 
-  // Display all pause text on screen
+  // create "remaining balls" text
+  std::string remaining_str { "Balls left" };
+  const float remaining_x = _screen_width / 2.0f;
+  const float remaining_y = balls_y + 70;
+  TextElement remaining { remaining_x, remaining_y, Paths::pFontRobotoBold,
+    Color::Yellow, 36, _renderer->GetSDLrenderer(), remaining_str };
+
+  // create level counter display
+  std::string level_str { std::to_string(_level_data->Level()) };
+  const float level_x
+      = (remaining.Position()._x - (remaining.Width() / 2.0f)) / 2.0f;
+  const float level_y = balls_y;
+  TextElement level { level_x, level_y, Paths::pFontRobotoBold, Color::Blue, 70,
+    _renderer->GetSDLrenderer(), level_str };
+
+  // create "level" text
+  std::string lvl_txt_str { "Level" };
+  const float lvl_txt_x = level_x;
+  const float lvl_txt_y = remaining_y;
+  TextElement lvl_txt { lvl_txt_x, lvl_txt_y, Paths::pFontRobotoBold,
+    Color::Blue, 36, _renderer->GetSDLrenderer(), lvl_txt_str };
+
+  // create total score counter display
+  std::string score_str { std::to_string(_total_points) };
+  const float score_x = _screen_width - level_x;
+  const float score_y = balls_y;
+  TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Green,
+    70, _renderer->GetSDLrenderer(), score_str };
+
+  // create "score" text
+  std::string score_txt_str { "SCORE" };
+  const float score_txt_x = score_x;
+  const float score_txt_y = lvl_txt_y;
+  TextElement score_txt { score_txt_x, score_txt_y, Paths::pFontRobotoBold,
+    Color::Green, 36, _renderer->GetSDLrenderer(), score_txt_str };
+
+  // add text elements to the container
+  all_texts.emplace_back(&remaining);
+  all_texts.emplace_back(&balls);
+  all_texts.emplace_back(&level);
+  all_texts.emplace_back(&lvl_txt);
+  all_texts.emplace_back(&score);
+  all_texts.emplace_back(&score_txt);
+
+  // Display all text on screen
   _renderer->DisplayStaticScreen(all_texts);
 }
 

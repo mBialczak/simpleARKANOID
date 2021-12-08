@@ -72,7 +72,7 @@ void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
   // start the ball from the paddle
   else if (keysArray[_start]) {
     // start the ball if it is in the starting position
-    if (!ball.IsMoving()) {
+    if (!ball.IsMoving() && !game.isPaused()) {
       ball.Start();
     }
   }

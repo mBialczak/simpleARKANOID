@@ -44,4 +44,16 @@ enum class BlockCharCode : char
   BlockGreen = 'g',
 
 };
+// VERIFY
+// enum representing possible states of the game
+enum class GameState : char
+{
+  // "nomral" running state, where all the action happens
+  Resumed,
+  // game is paused or not yet started
+  Paused,
+  // game is over (player lost all the balls)
+  Over
+
+};
 #endif // !Enums_hpp

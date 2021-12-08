@@ -19,6 +19,8 @@ struct TextElement : public StaticObject
 
   // Displays text screen
   void Draw() const override;
+  // Returns width of the text element
+  float Width() const;
 
   private:
   // pointer to texture containing text to be displayed
