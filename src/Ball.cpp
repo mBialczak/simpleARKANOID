@@ -100,7 +100,8 @@ void Ball::Reset(float speed)
   _direction = 0.0f;
   _velocity = gMath::Vector2d { 0.0 };
   _speed = speed;
-  // REVIEW: reset to level speed??
+
+  // set bolean indicating state where ball should start from the paddle
   _in_starting_pos = true;
 }
 

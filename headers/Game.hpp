@@ -62,6 +62,8 @@ class Game
   void DisplayPauseScreen() const;
   // Displays the screen after ball leaving the screen
   void DisplayBallLostScreen() const;
+  // Displays the screen after all lives/balls have been lost
+  void DisplayGameOverScreen() const;
   // load all image textures used in the game //NOTE: verify
   void LoadTextures();
   // gets a single image texture from the stored textures
@@ -83,10 +85,13 @@ class Game
   // creates blocks
   void CreateBlocks();
 
-  // controls main loop run
+  // controls if the main loop is running
   bool _is_running = false; // NOTE: rename?
-  //  controls if the game is paused
-  bool _paused = false;
+  // REVIEW: controlls the bahaviour of inner main loop
+  GameState _state =
+      //  REMOVE INU
+      //  controls if the game is paused
+      bool _paused = false;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;
