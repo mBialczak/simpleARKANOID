@@ -401,6 +401,62 @@ void Game::DisplayPauseScreen() const
   _renderer->DisplayStaticScreen(all_texts);
 }
 
+// Displays the screen after ball leaving the screen
+void Game::DisplayBallLostScreen() const
+{
+  // create container of static objects to be displayed
+  std::vector<const StaticObject*> texts;
+  // TODO: reserve container space for all predicted elements
+  texts.reserve(_texts.size() + 6); // REVIEW:
+
+  // create "ball lost text"
+  std::string ball_out_str { " B A L L   L E F T " };
+  const float ball_out_x = _screen_width / 2.0f;
+  const float ball_out_y = _screen_height / 5.0f;
+  TextElement ball_out { ball_out_x, ball_out_y, Paths::pFontRobotoBold,
+    Color::Red, 90, _renderer->GetSDLrenderer(), ball_out_str };
+
+  // create "ball lost text - 2nd part"
+  std::string ball_out2_str { "T H E   S C R E E N" };
+  const float ball_out2_x = _screen_width / 2.0f;
+  const float ball_out2_y = ball_out_y + 100.0f;
+  TextElement ball_2out { ball_out2_x, ball_out2_y, Paths::pFontRobotoBold,
+    Color::Red, 90, _renderer->GetSDLrenderer(), ball_out2_str };
+
+  // create remaining balls counter display
+  std::string balls_str { std::to_string(_lives_remaining) };
+  const float balls_x = _screen_width / 2.0f;
+  const float balls_y = _screen_height / 2.0f + 20.f;
+  TextElement balls { balls_x, balls_y, Paths::pFontRobotoBold, Color::Orange,
+    120, _renderer->GetSDLrenderer(), balls_str };
+
+  // create "remaining balls" text
+  std::string remaining_str { "Ball(s) remaining" };
+  const float remaining_x = _screen_width / 2.0f;
+  const float remaining_y = balls_y + 120;
+  TextElement remaining { remaining_x, remaining_y, Paths::pFontRobotoBold,
+    Color::Orange, 36, _renderer->GetSDLrenderer(), remaining_str };
+
+  // create "resuming" text
+  std::string resume_str { "Game will resume in a couple of seconds . . ." };
+  const float resume_x = _screen_width / 2.0f;
+  const float resume_y = remaining_y + 100.0f;
+  TextElement resume { resume_x, resume_y, Paths::pFontRobotoBold, Color::Green,
+    45, _renderer->GetSDLrenderer(), resume_str };
+
+  // add text elements to the container
+  texts.emplace_back(&remaining);
+  texts.emplace_back(&balls);
+  texts.emplace_back(&ball_out);
+  texts.emplace_back(&resume);
+  texts.emplace_back(&ball_2out);
+  // all_texts.emplace_back(&lvl_txt);
+  // all_texts.emplace_back(&score);
+  // all_texts.emplace_back(&score_txt);
+
+  // Display all text on screen
+  _renderer->DisplayStaticScreen(texts);
+}
 // gets a single texture from the stored textures
 const Texture& Game::GetTexture(Sprite sprite) const
 {
@@ -562,8 +618,28 @@ void Game::CreateBlocks()
 // TODO: implement if needed
 void Game::HandleBallEscape()
 {
-  std::cout << "HandleBallEscape()!" << std::endl;
-  _is_running = false;
+  // decrease number of balls available
+  _lives_remaining--;
+  // check if game is over
+  if (_lives_remaining == 0) {
+    // TODO: handle game over
+    // - display game over screen
+    // - play some sound
+    // + save high score
+    // - check if player wants to start again
+    //    -> yes - reset game state
+    //    -> no - display goodbye! and close the game
+  }
+  // still have lives left
+  else {
+    DisplayBallLostScreen();
+    // halt execution a couple of seconds
+    LimitTimer timer(4000);
+    timer.waitTillExpire();
+
+    // reset the ball passing the original level speed
+    _ball->Reset(_level_data->BallSpeed());
+  }
 }
 
 // handles a block being hit by the ball

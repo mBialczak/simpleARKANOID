@@ -15,7 +15,6 @@ Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
     : MovableObject(0.0f, 0.0f, speed)
     , _direction(0.0f)
     , _velocity(gMath::Vector2d())
-    //(gMath::Vector2d(gMath::ToRadians(directionAngle)) * speed)
     , _texture(texture)
     , _radius(texture.Width() / 2.0)
     , _paddle(paddle)
@@ -33,6 +32,7 @@ void Ball::Update(float deltaTime)
 {
   // until player starts the ball movement, it should be placed on the
   // paddle
+  // REVIEW: if makes sense
   if (_in_starting_pos) {
     PlaceOnPaddle();
   }
@@ -93,11 +93,22 @@ void Ball::SetSpeed(float speed)
   }
 }
 
+// resets the ball to the starting position on the paddle
+void Ball::Reset(float speed)
+{ // REVIEW:
+  PlaceOnPaddle();
+  _direction = 0.0f;
+  _velocity = gMath::Vector2d { 0.0 };
+  _speed = speed;
+  // REVIEW: reset to level speed??
+  _in_starting_pos = true;
+}
+
 // starts the ball movement
 void Ball::Start()
 {
   // calculate randomized starting direction when ball starts from the paddle
-  float starting_direction = _randomizer(90.0f, 90.0f);
+  float starting_direction = _randomizer(35.0f, 135.0f);
   // update ball state;
   UpdateDirectionAndVelocity(starting_direction);
   _in_starting_pos = false;
@@ -110,6 +121,7 @@ void Ball::PlaceOnPaddle()
   float start_y
       = _paddle.Position()._y - _paddle.HalfHeight() - _texture.Height() / 2.0;
   _position = gMath::Vector2d(start_x, start_y);
+  // REVIEW:
 }
 
 // checks if the ball has hit the paddle. If so, updates the game state

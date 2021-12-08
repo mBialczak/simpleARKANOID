@@ -44,6 +44,9 @@ class Ball : public virtual MovableObject
   void SetSpeedDelta(float speedChange) { _speed_delta = speedChange; }
   // updates ball direction and velocity vector; takes new  direction angle
   void UpdateDirectionAndVelocity(float directionAngle);
+  // resets the ball to the starting position on the paddle
+  // takes speed to update
+  void Reset(float speed);
   // starts the ball movement
   void Start();
   // puts the ball in the starting position on the paddle

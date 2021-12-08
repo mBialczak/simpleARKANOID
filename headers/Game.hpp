@@ -60,6 +60,8 @@ class Game
   // REVIEW:
   // Generates container of static objects to be displayed on the pause screen
   void DisplayPauseScreen() const;
+  // Displays the screen after ball leaving the screen
+  void DisplayBallLostScreen() const;
   // load all image textures used in the game //NOTE: verify
   void LoadTextures();
   // gets a single image texture from the stored textures
