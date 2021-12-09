@@ -39,6 +39,10 @@ class Game
 
   // runs the game ; implements main game loop
   void Run();
+  // quits the game by stopping the main loop
+  void Quit() { _is_running = false; }
+  // Restarts the game
+  void Restart();
   // pauses or unpauses the game (pause on/off)
   void TogglePause();
   // REMOVE inu
@@ -52,6 +56,9 @@ class Game
   // handles a block being hit by the ball
   // TODO: to implement
   void HandleBlockHit(Block& block);
+  // returns the speed increment applied every time the
+  // user orders so
+  float SpeedIncrement() const { return _speed_increment; };
 
   private:
   // initialize SDL subsystems
@@ -101,6 +108,8 @@ class Game
   const std::size_t _screen_width;
   // target frame rate of the display
   const Uint32 _frame_rate;
+  // speed increase applied when the user orders so
+  const float _speed_increment = 40.0f;
   // REVIEW: rename to "images?"
   // container with all image textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;

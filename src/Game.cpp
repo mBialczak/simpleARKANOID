@@ -158,7 +158,7 @@ void Game::Run()
     switch (_state) {
       case GameState::Routine:
         // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        _controller->HandleInput(_is_running, *_paddle, *_ball);
         UpdateGame();
         // GenerateOutput(); // REVIEW:
         _renderer->DisplayGameScreen(
@@ -167,7 +167,7 @@ void Game::Run()
       case GameState::Paused:
         _timer.Pause();
         // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        _controller->HandleInput(_is_running, *_paddle, *_ball);
         DisplayPauseScreen();
         break;
       case GameState::Over:
@@ -181,7 +181,7 @@ void Game::Run()
 
         // TODO: sound
         // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
+        _controller->HandleInput(_is_running, *_paddle, *_ball);
         DisplayGameOverScreen();
         break;
       default:
@@ -197,6 +197,9 @@ void Game::Run()
     frame_timer.restart();
   }
 }
+
+// Restarts the game
+void Game::Restart() { }
 
 // pauses or unpauses the game (pause on/off)
 void Game::TogglePause()

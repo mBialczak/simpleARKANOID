@@ -1,78 +1,65 @@
 #include "Controller.hpp"
 #include "SDL.h"
 
-// REVIEW: Consider major refactor
-
 // Contructor taking the game object to control
 Controller::Controller(Game& game)
     : _game(game)
 {
 }
 
-// function for handling all the input events
-void Controller::HandleInput(
-    bool& running, Paddle& paddle, Ball& ball, Game& game) const
+// Handles all the input events
+// Takes the paddle and ball to synchronise game control
+void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
 {
-  // REVIEW: genral implementation
-
-  SDL_Event evt;
   // get all SDL events
+  SDL_Event evt;
+
   while (SDL_PollEvent(&evt)) {
     // handle quit event (like "close window" button)
     if (evt.type == SDL_QUIT) {
       running = false;
     }
-
-    // switch (_game::State()) {
-    //   case GameState::Routine:
-
-    //     break;
-    //   case GameState::Paused:
-    //     _timer.Pause();
-    //     // REVIEW: rename and COMMENT
-    //     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-    //     DisplayPauseScreen();
-    //     break;
-    //   case GameState::Over:
-    //     // / TODO: handle game over
-    //     // - display game over screen
-    //     // - play some sound
-    //     // + save high score
-    //     // - check if player wants to start again
-    //     //    -> yes - reset game state
-    //     //    -> no - display goodbye! and close the game
-
-    //     // TODO: sound
-    //     // REVIEW: rename and COMMENT
-    //     _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-    //     DisplayGameOverScreen();
-    //     break;
-    //   default:
-    //     break;
-    // }
-
-    // a key was pressed
-    else if (evt.type == SDL_KEYDOWN) {
-      // and the the key was the pause key
-      if (evt.key.keysym.sym == _pause_key) {
-        // pause/unpause the game
-        game.TogglePause();
-      }
+    // dispatch the rest event handling to helpers depending on the game state
+    switch (_game.State()) {
+      case GameState::Routine:
+        HandleRoutineEvents(paddle, ball);
+        break;
+      case GameState::Paused:
+        HandlePausedEvents();
+        break;
+      case GameState::Over:
+        HandleGameOverEvents();
+        break;
+      default:
+        // report error if unknown game state encountered
+        throw std::runtime_error(
+            "Unknown game state passed to game input controller!");
     }
   }
-  // get the rest of the pressed keyboard keys and handle them
-  HandleKeyPresses(evt, SDL_GetKeyboardState(NULL), paddle, ball, game);
 }
 
-// NOTE: consider refactoring
-// helper function for  handling keypresses
-void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
-    Paddle& paddle, Ball& ball, Game& game) const
+// handles input events specific to the game paused state
+void Controller::HandlePausedEvents() const
 {
+  // get the current keyboard state
+  const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
+  // handle pause key presses
+  if (keysArray[_pause_key]) {
+    _game.TogglePause();
+  }
+}
+
+// handles input events specific to the game routine running
+void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
+{
+  // get the current keyboard state
+  const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
   // move the paddle up when the key: _up is pressed
   if (keysArray[_up]) {
-    // move up only if paddle has not outrun the ball with some reasonable
-    // margin
+    // move paddle up only if it has not outrun the ball
+    // (with some reasonable margin)
+    // helps avoid visual apearance of ball overlaping the paddle
+    // when ball hits the paddle but the paddle is still moving up
     if (gMath::VerticalDistance(paddle.Position(), ball.Position())
         > paddle.HalfHeight() + 5 * ball.Radius()) {
       paddle.MoveUp();
@@ -98,25 +85,25 @@ void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
   else if (keysArray[_spin_right]) {
     ball.SetSpin(Spin::sRight);
   }
-  // speed up by increasing the speed delta of the ball
-  // note: the increase is applied every time the ball hits the paddle
+  // increase the ball speed when the key: _speed_up is pressed
   else if (keysArray[_speed_up]) {
-    ball.SetSpeedDelta(25.0f);
+    ball.SetSpeedDelta(_game.SpeedIncrement());
   }
-  // slow down by setting the speed delta of the ball to negative value
-  // note: the increase is applied every time the ball hits the paddle
+  // decrease the ball speed when the key: _slow_down is pressed
   else if (keysArray[_slow_down]) {
     ball.SetSpeedDelta(-25.0f);
   }
-  // start the ball from the paddle
+  // start the ball from the paddle when the key: _start is pressed
   else if (keysArray[_start]) {
-    // start the ball if it is in the starting position
-    // REVIEW: and remove NNS
-    // if (!ball.IsMoving() && !game.isPaused()) {
-    if (!ball.IsMoving() && game.State() == GameState::Routine)
+    // start the ball only if it is in the starting position
+    if (!ball.IsMoving() && _game.State() == GameState::Routine) {
       ball.Start();
+    }
   }
-
+  // pause the game when the pause key is pressed
+  else if (keysArray[_pause_key]) {
+    _game.TogglePause();
+  }
   // actions to be executed whenever the above keys are not pressed
   else {
     paddle.Stop();
@@ -125,8 +112,17 @@ void Controller::HandleKeyPresses(SDL_Event& evt, const Uint8* keysArray,
   }
 }
 
-// REMOVE or COMMENT
-void Controller::HandlePauseInput() const { }
-
-// REMOVE or COMMENT
-void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const { }
+// handles input events specific to the game routine running
+void Controller::HandleGameOverEvents() const
+{
+  // get the current keyboard state
+  const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
+  // restart the game if the key: _start is pressed
+  if (keysArray[_start]) {
+    _game.Restart();
+  }
+  // quit the game if the key: _quit is pressed
+  else if (keysArray[_quit]) {
+    _game.Quit();
+  }
+}
