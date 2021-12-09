@@ -45,13 +45,9 @@ class Game
   void Restart();
   // pauses or unpauses the game (pause on/off)
   void TogglePause();
-  // REMOVE inu
-  // returns true if the game is paused, false if not
-  bool isPaused() const { return _paused; }
-  // returns game state , that is current bahaviour mode
+  // returns game state, that is the current bahaviour mode
   GameState State() const { return _state; }
   // handles the ball leaving the allowed screen area
-  // TODO: to implement
   void HandleBallEscape();
   // handles a block being hit by the ball
   // TODO: to implement
@@ -63,13 +59,21 @@ class Game
   private:
   // initialize SDL subsystems
   void InitSubsystems();
+  // REMOVE INU COMMENT
+  // Perfoms actions in routine game state
+  void RoutineGameActions();
+  // REMOVE INU COMMENT
+  // Perfoms actions in when the game is paused
+  void PausedGameActions();
+  // REMOVE INU COMMENT
+  // Perfoms actions when the player looses the game
+  void GameOverActions();
   // updates game state
   void UpdateGame();
-  // REVIEW: rename?
+  // REVIEW: rename or REMOVE
   // generates game output
   void GenerateOutput() const; // NOTE: const might not be good
-  // REVIEW:
-  // Generates container of static objects to be displayed on the pause screen
+  // Displays the pause screen when the game is paused
   void DisplayPauseScreen() const;
   // Displays the screen after ball leaving the screen
   void DisplayBallLostScreen() const;
@@ -98,11 +102,8 @@ class Game
 
   // controls if the main loop is running
   bool _is_running = false; // NOTE: rename?
-  // REVIEW: controlls the bahaviour of inner main loop
+  // controlls the bahaviour of main loop
   GameState _state = GameState::Paused;
-  //  REMOVE INU
-  //  controls if the game is paused
-  bool _paused = false;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;
@@ -110,15 +111,11 @@ class Game
   const Uint32 _frame_rate;
   // speed increase applied when the user orders so
   const float _speed_increment = 40.0f;
-  // REVIEW: rename to "images?"
   // container with all image textures used in the game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
   // container with texts constructed once for the entire game duration
   std::vector<TextElement> _texts;
-  //  REVIEW: container with static text elements to be displayed
-  // on the welcome/pause screen
-  // std::vector<TextElement> _texts;
-  // controller for handling keyboard input
+  // pointer to controller for handling keyboard input
   std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible
   Renderer* _renderer;
@@ -139,13 +136,13 @@ class Game
   std::vector<const MovableObject*> _movable_for_game_screen;
   // takes track of points achieved by the player
   unsigned _total_points = 0;
-  // REMOVE if used from LevelData class current game level
-  std::size_t _level = 1;
+  // // REMOVE if used from LevelData class current game level
+  // std::size_t _level = 1;
+
   // inlcudes all the current level data
   std::unique_ptr<LevelData> _level_data;
-  // REMOVE INU
-  // number of remaining lives (balls) befor "game over"
-  unsigned _lives_remaining;
+  // number of remaining lives (balls) before "game over"
+  unsigned _balls_remaining;
   // timer regulating the updates of the game state
   IntervalTimer _timer;
 };

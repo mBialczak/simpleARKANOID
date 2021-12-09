@@ -89,21 +89,6 @@ void Renderer::DisplayStaticScreen(
   SDL_RenderPresent(_sdl_renderer);
 }
 
-// REMOVE INU
-// // Displays single TextElement on the screen
-// void Renderer::Display(const TextElement& textElement) const
-// {
-//   // Set clear screen color
-//   SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
-//   // clear screen
-//   SDL_RenderClear(_sdl_renderer);
-
-//   // textElement._texture
-
-//   // update screen
-//   SDL_RenderPresent(_sdl_renderer);
-// }
-
 // update title bar
 void Renderer::UpdateTitleBar() const
 {

@@ -26,7 +26,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     , _renderer(nullptr)
     // load all the data for the first level
     , _level_data(std::make_unique<LevelData>(Paths::pLevels))
-    , _lives_remaining(_level_data->Lives())
+    , _balls_remaining(_level_data->Lives())
 {
   // Initialize SDL subsystems
   InitSubsystems();
@@ -39,7 +39,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
 
   // REVIEW:
   // reserve space for all pointers to objects to be displayed on the game
-  // screen (all the blocks + walls)
+  // screen (all the blocks + number of walls)
   _static_for_game_screen.reserve(
       LevelData::_max_rows * LevelData::_row_size + 3);
 
@@ -138,57 +138,31 @@ void Game::Run()
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };
 
-  // // REVIEW:
-  // // Pause the game to display welcom screen/instructions
-  // TogglePause();
-
-  // main loop quit condition
+  // REVIEW: setting on game start
+  // set main loop quit condition
   _is_running = true;
   // main game loop
   while (_is_running) {
-    // REVIEW:
-    // handle input
-    // _controller->HandleInput(_is_running, *_paddle, *_ball, *this);
-    // // Update game state only if it isn't paused
-    // if (!_paused) {
-    //   UpdateGame();
-    // }
+    // handle the game input
+    _controller->HandleInput(_is_running, *_paddle, *_ball);
 
-    // REMOVE INU COMMENT
+    // depending on the current game state dispatch the control
+    // to proper helper function
     switch (_state) {
       case GameState::Routine:
-        // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball);
-        UpdateGame();
-        // GenerateOutput(); // REVIEW:
-        _renderer->DisplayGameScreen(
-            _static_for_game_screen, _movable_for_game_screen);
+        RoutineGameActions();
         break;
       case GameState::Paused:
-        _timer.Pause();
-        // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball);
-        DisplayPauseScreen();
+        PausedGameActions();
         break;
       case GameState::Over:
-        // / TODO: handle game over
-        // - display game over screen
-        // - play some sound
-        // + save high score
-        // - check if player wants to start again
-        //    -> yes - reset game state
-        //    -> no - display goodbye! and close the game
-
-        // TODO: sound
-        // REVIEW: rename and COMMENT
-        _controller->HandleInput(_is_running, *_paddle, *_ball);
-        DisplayGameOverScreen();
+        GameOverActions();
         break;
       default:
-        break;
+        // report error if unexpected game state occurs
+        throw std::runtime_error(
+            "Uknown game state occured in the main game loop!");
     }
-    // REVIEW:
-    // GenerateOutput();
 
     // execute frame FPS limiting policy by waiting untill
     // each frame time completes
@@ -204,23 +178,48 @@ void Game::Restart() { }
 // pauses or unpauses the game (pause on/off)
 void Game::TogglePause()
 {
-  // REVIEW:
-
+  // REVIEW: if else is enough
   if (_state == GameState::Routine) {
     _state = GameState::Paused;
   }
   else if (_state == GameState::Paused) {
     _state = GameState::Routine;
   }
-  // REMOVE:
+}
 
-  // _state = GameState::Routine;
-  // REMOVE INU
-  // _paused = !_paused;
-  // // need to pause the timer if the game is paused
-  // if (_paused == true) {
-  //   _timer.Pause();
-  // }
+// Perfoms actions in routine game state
+void Game::RoutineGameActions()
+{
+  // update state of the game objects (ball, paddle, blocks, etc.)
+  UpdateGame();
+  // Display the game screen
+  _renderer->DisplayGameScreen(
+      _static_for_game_screen, _movable_for_game_screen);
+}
+
+// REMOVE INU COMMENT
+// Perfoms actions in when the game is paused
+void Game::PausedGameActions()
+{
+  // Pause the game timer for correct update calculations
+  // If not paused, the game update calculations will break
+  // all the display after unpausing
+  _timer.Pause();
+
+  DisplayPauseScreen();
+}
+
+// REVIEW: if only one action, consider removing
+// Perfoms actions when the player looses the game
+void Game::GameOverActions()
+{
+  // TODO: play some sound
+  // TODO: maybe save high score
+  // - check if player wants to start again
+  //    -> yes - reset game state
+  //    -> no - display goodbye! and close the game
+
+  DisplayGameOverScreen();
 }
 
 // updates the state of the game
@@ -397,7 +396,7 @@ void Game::DisplayPauseScreen() const
   }
 
   // create remaining balls counter display
-  std::string balls_str { std::to_string(_lives_remaining) };
+  std::string balls_str { std::to_string(_balls_remaining) };
   const float balls_x = _screen_width / 2.0f;
   const float balls_y = _screen_height / 3.0f + 45.0f;
   TextElement balls { balls_x, balls_y, Paths::pFontRobotoBold, Color::Yellow,
@@ -474,7 +473,7 @@ void Game::DisplayBallLostScreen() const
     Color::Red, 90, _renderer->GetSDLrenderer(), ball_out2_str };
 
   // create remaining balls counter display
-  std::string balls_str { std::to_string(_lives_remaining) };
+  std::string balls_str { std::to_string(_balls_remaining) };
   const float balls_x = _screen_width / 2.0f;
   const float balls_y = _screen_height / 2.0f + 20.f;
   TextElement balls { balls_x, balls_y, Paths::pFontRobotoBold, Color::Orange,
@@ -523,38 +522,45 @@ void Game::DisplayGameOverScreen() const
   // create "all ball lost" text
   std::string all_lost_str { "( all balls have been lost )" };
   const float all_lost_x = _screen_width / 2.0f;
-  const float all_lost_y = g_over_y + 60.0f;
-  TextElement all_lost { all_lost_x, all_lost_y, Paths::pFontRobotoBold,
-    Color::Red, 90, _renderer->GetSDLrenderer(), all_lost_str };
+  const float all_lost_y = g_over_y + 70.0f;
+  TextElement all_lost { all_lost_x, all_lost_y, Paths::pFontRobotoRegular,
+    Color::Red, 30, _renderer->GetSDLrenderer(), all_lost_str };
 
   // create total score counter display
-  std::string score_str { std::to_string(_lives_remaining) };
+  std::string score_str { std::to_string(_balls_remaining) };
   const float score_x = _screen_width / 2.0f;
-  const float score_y = _screen_height / 2.0f + 20.f;
-  TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Orange,
+  const float score_y = _screen_height / 2.0f - 50.f;
+  TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Green,
     120, _renderer->GetSDLrenderer(), score_str };
 
   // create "total score" text
   std::string score_txt_str { "T O T A L   S C O R E" };
   const float score_txt_x = _screen_width / 2.0f;
-  const float score_txt_y = score_y + 120;
+  const float score_txt_y = score_y + 100;
   TextElement score_txt { score_txt_x, score_txt_y, Paths::pFontRobotoBold,
-    Color::Orange, 36, _renderer->GetSDLrenderer(), score_txt_str };
+    Color::Green, 36, _renderer->GetSDLrenderer(), score_txt_str };
 
-  // // create "resuming" text
-  // std::string resume_str { "Game will resume in a couple of seconds . . ." };
-  // const float resume_x = _screen_width / 2.0f;
-  // const float resume_y = remaining_y + 100.0f;
-  // TextElement resume { resume_x, resume_y, Paths::pFontRobotoBold,
-  // Color::Green,
-  //   45, _renderer->GetSDLrenderer(), resume_str };
+  // create offer of restarting the game text
+  std::string restart_str { "Press    ' S P A C E '    to    restart" };
+  const float restart_x = _screen_width / 2.0f;
+  const float restart_y = _screen_height * 2.5f / 3.0f;
+  TextElement restart { restart_x, restart_y, Paths::pFontRobotoBold,
+    Color::Orange, 45, _renderer->GetSDLrenderer(), restart_str };
+
+  // create offer for quiting text
+  std::string quit_str { "Press    ' E S C A P E '    to    quit" };
+  const float quit_x = restart_x - 10.0f;
+  const float quit_y = restart_y + 80.0f;
+  TextElement quit { quit_x, quit_y, Paths::pFontRobotoBold, Color::Blue, 45,
+    _renderer->GetSDLrenderer(), quit_str };
 
   // add text elements to the container
   texts.emplace_back(&g_over);
   texts.emplace_back(&all_lost);
   texts.emplace_back(&score);
   texts.emplace_back(&score_txt);
-  // texts.emplace_back(&ball_2out);
+  texts.emplace_back(&restart);
+  texts.emplace_back(&quit);
 
   // Display all text on screen
   _renderer->DisplayStaticScreen(texts);
@@ -722,15 +728,16 @@ void Game::CreateBlocks()
 void Game::HandleBallEscape()
 {
   // decrease number of balls available
-  _lives_remaining--;
-  // check if game is over
-  if (_lives_remaining <= 0) {
+  _balls_remaining--;
+  // check if the player run out of lives/balls
+  if (_balls_remaining <= 0) {
+    // the game is over
     _state = GameState::Over;
   }
-  // handle the case where player still have lives/balls left
+  // player still has lives/balls left
   else {
     DisplayBallLostScreen();
-    // halt execution a couple of seconds
+    // halt execution for a couple of seconds
     LimitTimer timer(4000);
     timer.waitTillExpire();
 
@@ -740,10 +747,12 @@ void Game::HandleBallEscape()
 }
 
 // handles a block being hit by the ball
-// TODO: to implement
+// REVIEW:
 void Game::HandleBlockHit(Block& block)
 {
-  // set block as destroyed to skip further rendering and collision checks
+  // TODO: play some sound
+
+  // mark block as destroyed to skip further rendering and collision checks
   block.MakeDestroyed();
   // increase points score with point value assigned to the block
   _total_points += block.Points();
