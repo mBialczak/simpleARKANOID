@@ -28,6 +28,8 @@ void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
         HandlePausedEvents();
         break;
       case GameState::Over:
+        [[fallthrough]];
+      case GameState::Won:
         HandleGameOverEvents();
         break;
       default:
@@ -112,7 +114,7 @@ void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
   }
 }
 
-// handles input events specific to the game routine running
+// handles input events specific to the game over or won
 void Controller::HandleGameOverEvents() const
 {
   // get the current keyboard state

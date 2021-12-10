@@ -69,6 +69,9 @@ class Game
   // REMOVE INU COMMENT
   // Perfoms actions when the player looses the game
   void GameOverActions();
+  // REMOVE INU COMMENT
+  // Perfoms actions when the player wins the game
+  void GameWonActions();
   // REMOVE INU
   // Loads new level. Returns true if new level loaded successfully,
   // false if the current level was the last one implemented
@@ -86,6 +89,8 @@ class Game
   void DisplayLevelCompleted() const;
   // Displays the screen after all lives/balls have been lost
   void DisplayGameOverScreen() const;
+  // Displays the screen when the game is won
+  void DisplayGameWonScreen() const;
   // load all image textures used in the game //NOTE: verify
   void LoadTextures();
   // gets a single image texture from the stored textures

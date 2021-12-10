@@ -159,6 +159,9 @@ void Game::Run()
       case GameState::Over:
         GameOverActions();
         break;
+      case GameState::Won:
+        GameWonActions();
+        break;
       default:
         // report error if unexpected game state occurs
         throw std::runtime_error(
@@ -207,17 +210,22 @@ void Game::RoutineGameActions()
   _renderer->DisplayGameScreen(
       _static_for_game_screen, _movable_for_game_screen);
 
-  // REVIEW: if works
   // Load next level if all the blocks have been destroyed
   if (std::all_of(_blocks.begin(), _blocks.end(),
           [](const Block& block) { return block.IsDestroyed(); })) {
 
+    // if loading a new level succeds
     if (LoadNewLevel(_level_data->Level() + 1)) {
       DisplayLevelCompleted();
-      // halt execution for the tim// halt execution for the time of display;
+      // halt execution for the the time of display;
       SDL_Delay(4000);
       // TODO:
       // play sound
+    }
+    // LoadNewLevel returns fasle only when there are no more levels,
+    // so the game is won
+    else {
+      _state = GameState::Won;
     }
   }
 }
@@ -243,6 +251,14 @@ void Game::GameOverActions()
   //    -> no - display goodbye! and close the game
 
   DisplayGameOverScreen();
+}
+
+// Perfoms actions when the player wins the game
+void Game::GameWonActions()
+{
+  // TODO: play some sound
+  // TODO: maybe save high score
+  DisplayGameWonScreen();
 }
 
 // Loads new level
@@ -582,7 +598,9 @@ void Game::DisplayLevelCompleted() const
 
   // create "game over" text
   std::string completed_str { "L E V E L   " };
-  completed_str += std::to_string(_level_data->Level());
+  // need to decrease level number by one, because after loading
+  // a new level by now the counter is already set to new level
+  completed_str += std::to_string(_level_data->Level() - 1);
   const float completed_x = _screen_width / 2.0f;
   const float completed_y = _screen_height / 6.0f;
   TextElement completed { completed_x, completed_y, Paths::pFontRobotoBold,
@@ -596,7 +614,7 @@ void Game::DisplayLevelCompleted() const
     Color::Green, 80, _renderer->GetSDLrenderer(), congrats_str };
 
   // create total score counter display
-  std::string score_str { std::to_string(_balls_remaining) };
+  std::string score_str { std::to_string(_total_points) };
   const float score_x = _screen_width / 2.0f;
   const float score_y = _screen_height / 2.0f;
   TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Yellow,
@@ -652,7 +670,7 @@ void Game::DisplayGameOverScreen() const
     Color::Red, 30, _renderer->GetSDLrenderer(), all_lost_str };
 
   // create total score counter display
-  std::string score_str { std::to_string(_balls_remaining) };
+  std::string score_str { std::to_string(_total_points) };
   const float score_x = _screen_width / 2.0f;
   const float score_y = _screen_height / 2.0f - 50.f;
   TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Green,
@@ -684,6 +702,70 @@ void Game::DisplayGameOverScreen() const
   // add text elements to the container
   texts.emplace_back(&g_over);
   texts.emplace_back(&all_lost);
+  texts.emplace_back(&score);
+  texts.emplace_back(&score_txt);
+  texts.emplace_back(&restart);
+  texts.emplace_back(&quit);
+
+  // Display all text on screen
+  _renderer->DisplayStaticScreen(texts);
+}
+
+// Displays the screen when the game is won
+void Game::DisplayGameWonScreen() const
+{
+  // create container of static objects to be displayed
+  std::vector<const StaticObject*> texts;
+  // reserve container space for all predicted elements
+  texts.reserve(_texts.size() + 6);
+
+  // create "game won" text
+  std::string won_str { "Y O U    W O N  ! ! !" };
+  const float won_x = _screen_width / 2.0f;
+  const float won_y = _screen_height / 3.0f;
+  TextElement won { won_x, won_y, Paths::pFontRobotoBold, Color::Green, 90,
+    _renderer->GetSDLrenderer(), won_str };
+
+  // create "Congratulations" text
+  std::string congrats_str { "C O N G R A T U L A T I O N S ! ! !" };
+  const float congrats_x = _screen_width / 2.0f;
+  const float congrats_y = _screen_height / 6.5f;
+  TextElement congrats { congrats_x, congrats_y, Paths::pFontRobotoRegular,
+    Color::Green, 50, _renderer->GetSDLrenderer(), congrats_str };
+
+  // create total score counter display
+  std::string score_str { std::to_string(_total_points) };
+  const float score_x = _screen_width / 2.0f;
+  const float score_y = _screen_height / 2.0f;
+  TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Yellow,
+    120, _renderer->GetSDLrenderer(), score_str };
+
+  // create "total score" text
+  std::string score_txt_str { "T O T A L   S C O R E" };
+  const float score_txt_x = _screen_width / 2.0f;
+  const float score_txt_y = score_y + 100;
+  TextElement score_txt { score_txt_x, score_txt_y, Paths::pFontRobotoBold,
+    Color::Yellow, 36, _renderer->GetSDLrenderer(), score_txt_str };
+
+  // create offer of restarting the game text
+  std::string restart_str {
+    "Press   ' E N T E R   ( R E T U R N ) '   to   play   again"
+  };
+  const float restart_x = _screen_width / 2.0f;
+  const float restart_y = _screen_height * 2.5f / 3.0f;
+  TextElement restart { restart_x, restart_y, Paths::pFontRobotoBold,
+    Color::Orange, 40, _renderer->GetSDLrenderer(), restart_str };
+
+  // create offer for quiting text
+  std::string quit_str { "Press    ' E S C A P E '    to    quit" };
+  const float quit_x = restart_x - 10.0f;
+  const float quit_y = restart_y + 80.0f;
+  TextElement quit { quit_x, quit_y, Paths::pFontRobotoBold, Color::Blue, 45,
+    _renderer->GetSDLrenderer(), quit_str };
+
+  // add text elements to the container
+  texts.emplace_back(&won);
+  texts.emplace_back(&congrats);
   texts.emplace_back(&score);
   texts.emplace_back(&score_txt);
   texts.emplace_back(&restart);
@@ -865,8 +947,7 @@ void Game::HandleBallEscape()
   else {
     DisplayBallLostScreen();
     // halt execution for a couple of seconds
-    LimitTimer timer(4000);
-    timer.waitTillExpire();
+    SDL_Delay(4000);
 
     // reset the ball passing the level starting speed
     _ball->Reset(_level_data->BallSpeed());

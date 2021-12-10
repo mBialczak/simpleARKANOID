@@ -27,7 +27,7 @@ class Controller
   void HandlePausedEvents() const;
   // handles input events specific to the game routine running
   void HandleRoutineEvents(Paddle& paddle, Ball& ball) const;
-  // handles input events specific to the game routine running
+  // handles input events specific to the game over or won
   void HandleGameOverEvents() const;
 
   // reference to the main game object being controlled
@@ -58,7 +58,7 @@ class Controller
   // works after game over only
   Uint8 _quit = SDL_SCANCODE_ESCAPE;
   // the key for restarting the game
-  // works after game over only
+  // works after game over or won only
   Uint8 _restart = SDL_SCANCODE_RETURN;
 };
 #endif // !CONTROLLER_HPP

@@ -53,7 +53,9 @@ enum class GameState : char
   // game is paused or not yet started
   Paused,
   // game is over (player lost all the balls)
-  Over
+  Over,
+  // game is won (all the levels completed)
+  Won
 
 };
 #endif // !Enums_hpp
