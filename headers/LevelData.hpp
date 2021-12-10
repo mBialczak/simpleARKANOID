@@ -79,7 +79,7 @@ class LevelData
   // the keyword marking the points per block destroyed in the parsed level file
   static const std::string _points_per_block_key;
 
-  // VERIFY if needed current game level
+  // level to which the object corresponds to
   std::size_t _level;
   // ball starting scalar speed (pixels per second) assigned to the level
   float _ball_speed;

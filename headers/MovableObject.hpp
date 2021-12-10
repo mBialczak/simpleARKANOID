@@ -19,6 +19,8 @@ class MovableObject
   virtual void Draw() const = 0;
   // gets object position
   virtual gMath::Vector2d Position() const { return _position; };
+  // sets object position
+  virtual void SetPosition(float x, float y);
   // gets current speed of the object;
   virtual float Speed() const { return _speed; }
   // REMOVE INU

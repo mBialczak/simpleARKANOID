@@ -11,10 +11,12 @@ int main(int argc, char const* argv[])
   constexpr std::size_t c_screen_width { 1024 };
   constexpr std::size_t c_screen_height { 768 };
   constexpr std::size_t c_frames_per_second { 60 };
+  constexpr unsigned c_implemented_levels { 2 };
 
   try {
 
-    Game simple_arkanoid(c_screen_height, c_screen_width, c_frames_per_second);
+    Game simple_arkanoid(c_screen_height, c_screen_width, c_frames_per_second,
+        c_implemented_levels);
 
     simple_arkanoid.Run();
 

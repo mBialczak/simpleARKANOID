@@ -118,7 +118,7 @@ void Controller::HandleGameOverEvents() const
   // get the current keyboard state
   const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
   // restart the game if the key: _start is pressed
-  if (keysArray[_start]) {
+  if (keysArray[_restart]) {
     _game.Restart();
   }
   // quit the game if the key: _quit is pressed

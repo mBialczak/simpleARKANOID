@@ -42,7 +42,7 @@ class Controller
   Uint8 _left = SDL_SCANCODE_LEFT;
   // paddle right key
   Uint8 _right = SDL_SCANCODE_RIGHT;
-  // start game or restart - only after game over
+  // start the ball movement when on the paddle
   Uint8 _start = SDL_SCANCODE_SPACE;
   // spin ball right key
   Uint8 _spin_left = SDL_SCANCODE_A;
@@ -57,5 +57,8 @@ class Controller
   // the key enabling quiting the game
   // works after game over only
   Uint8 _quit = SDL_SCANCODE_ESCAPE;
+  // the key for restarting the game
+  // works after game over only
+  Uint8 _restart = SDL_SCANCODE_RETURN;
 };
 #endif // !CONTROLLER_HPP

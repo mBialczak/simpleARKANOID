@@ -18,8 +18,9 @@ using std::string_literals::operator""s;
 
 // constructor
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
-    const std::size_t targetFrameRate)
-    : _screen_height(screenHeight)
+    const std::size_t targetFrameRate, unsigned levelsImplemented)
+    : _max_level(levelsImplemented)
+    , _screen_height(screenHeight)
     , _screen_width(screenWidth)
     , _frame_rate(targetFrameRate)
     , _controller(std::make_unique<Controller>(*this))
@@ -172,8 +173,18 @@ void Game::Run()
   }
 }
 
+// COMMENTS and refactor
 // Restarts the game
-void Game::Restart() { }
+void Game::Restart()
+{
+  // Load level one again
+  LoadNewLevel(1);
+
+  _total_points = 0;
+
+  // mark correct game state
+  _state = GameState::Routine;
+}
 
 // pauses or unpauses the game (pause on/off)
 void Game::TogglePause()
@@ -195,8 +206,21 @@ void Game::RoutineGameActions()
   // Display the game screen
   _renderer->DisplayGameScreen(
       _static_for_game_screen, _movable_for_game_screen);
-}
 
+  // REVIEW: if works
+  // Load next level if all the blocks have been destroyed
+  if (std::all_of(_blocks.begin(), _blocks.end(),
+          [](const Block& block) { return block.IsDestroyed(); })) {
+
+    if (LoadNewLevel(_level_data->Level() + 1)) {
+      DisplayLevelCompleted();
+      // halt execution for the tim// halt execution for the time of display;
+      SDL_Delay(4000);
+      // TODO:
+      // play sound
+    }
+  }
+}
 // REMOVE INU COMMENT
 // Perfoms actions in when the game is paused
 void Game::PausedGameActions()
@@ -205,7 +229,6 @@ void Game::PausedGameActions()
   // If not paused, the game update calculations will break
   // all the display after unpausing
   _timer.Pause();
-
   DisplayPauseScreen();
 }
 
@@ -222,6 +245,50 @@ void Game::GameOverActions()
   DisplayGameOverScreen();
 }
 
+// Loads new level
+// returns true if new level loaded
+// returns false if the current level was the last one implemented
+bool Game::LoadNewLevel(unsigned newLevel)
+{
+  // if the current_level was the last one implemented,
+  // false indicates that the game has reached the end
+  if (newLevel > _max_level) {
+    return false;
+  }
+
+  // load all the data for the new level
+  _level_data = std::make_unique<LevelData>(Paths::pLevels, newLevel);
+
+  // set player ramaining ball
+  _balls_remaining = (_level_data->Lives());
+
+  // clear the vector of static objects to be displayed
+  // and reserve enough space for new, reloaded one
+  _static_for_game_screen.clear();
+  _static_for_game_screen.reserve(
+      LevelData::_max_rows * LevelData::_row_size + 3);
+
+  // add walls to the list of static objects to be displayed
+  for (auto& wall : _side_walls) {
+    _static_for_game_screen.emplace_back(&wall);
+  };
+
+  // empty the container of blocks and create  new ones for the level
+  _blocks.clear();
+  CreateBlocks();
+
+  // set paddle position to default and speed to paddle level speed
+  _paddle->SetPosition(
+      _screen_width / 2.0f, _screen_height - _paddle->HalfHeight());
+  _paddle->SetSpeed(_level_data->PaddleSpeed());
+
+  // reset ball speed and place it on the paddle
+  _ball->Reset(_level_data->BallSpeed());
+
+  // level loaded succesfully
+  return true;
+}
+
 // updates the state of the game
 void Game::UpdateGame()
 {
@@ -233,7 +300,8 @@ void Game::UpdateGame()
   //   // cap delta_time while debugging if time difference is to big
   //   delta_time = 0.5f;
   // }
-  // REVIEW: consider one container of moveable objects instead seperate objects
+  // REVIEW: consider one container of moveable objects instead seperate
+  // objects
 
   // upate paddle state
   _paddle->Update(delta_time);
@@ -455,7 +523,7 @@ void Game::DisplayBallLostScreen() const
 {
   // create container of static objects to be displayed
   std::vector<const StaticObject*> texts;
-  // TODO: reserve container space for all predicted elements
+  // reserve container space for all predicted elements
   texts.reserve(_texts.size() + 5);
 
   // create "ball lost" text
@@ -504,13 +572,70 @@ void Game::DisplayBallLostScreen() const
   _renderer->DisplayStaticScreen(texts);
 }
 
+// Displays the screen after the level has been completed
+void Game::DisplayLevelCompleted() const
+{
+  // create container of static objects to be displayed
+  std::vector<const StaticObject*> texts;
+  // reserve container space for all predicted elements
+  texts.reserve(_texts.size() + 5);
+
+  // create "game over" text
+  std::string completed_str { "L E V E L   " };
+  completed_str += std::to_string(_level_data->Level());
+  const float completed_x = _screen_width / 2.0f;
+  const float completed_y = _screen_height / 6.0f;
+  TextElement completed { completed_x, completed_y, Paths::pFontRobotoBold,
+    Color::Orange, 60, _renderer->GetSDLrenderer(), completed_str };
+
+  // create "congrats" text
+  std::string congrats_str { "C O M P L E T E D ! ! !" };
+  const float congrats_x = _screen_width / 2.0f;
+  const float congrats_y = completed_y + 110.0f;
+  TextElement congrats { congrats_x, congrats_y, Paths::pFontRobotoBold,
+    Color::Green, 80, _renderer->GetSDLrenderer(), congrats_str };
+
+  // create total score counter display
+  std::string score_str { std::to_string(_balls_remaining) };
+  const float score_x = _screen_width / 2.0f;
+  const float score_y = _screen_height / 2.0f;
+  TextElement score { score_x, score_y, Paths::pFontRobotoBold, Color::Yellow,
+    120, _renderer->GetSDLrenderer(), score_str };
+
+  // create "total score" text
+  std::string score_txt_str { "T O T A L   S C O R E" };
+  const float score_txt_x = _screen_width / 2.0f;
+  const float score_txt_y = score_y + 100;
+  TextElement score_txt { score_txt_x, score_txt_y, Paths::pFontRobotoBold,
+    Color::Yellow, 36, _renderer->GetSDLrenderer(), score_txt_str };
+
+  // create info about starting a new level
+  std::string starting_str {
+    "S T A R T I N G    N  E  W    L  E  V  E  L  . . ."
+  };
+  const float starting_x = _screen_width / 2.0f;
+  const float starting_y = _screen_height * 2.5f / 3.0f;
+  TextElement starting { starting_x, starting_y, Paths::pFontRobotoBold,
+    Color::Orange, 40, _renderer->GetSDLrenderer(), starting_str };
+
+  // add text elements to the container
+  texts.emplace_back(&completed);
+  texts.emplace_back(&congrats);
+  texts.emplace_back(&score);
+  texts.emplace_back(&score_txt);
+  texts.emplace_back(&starting);
+
+  // Display all text on screen
+  _renderer->DisplayStaticScreen(texts);
+}
+
 // Displays the screen after all lives/balls have been lost
 void Game::DisplayGameOverScreen() const
 {
   // create container of static objects to be displayed
   std::vector<const StaticObject*> texts;
-  // TODO: reserve container space for all predicted elements
-  // texts.reserve(_texts.size() + 6); // REVIEW:
+  // reserve container space for all predicted elements
+  texts.reserve(_texts.size() + 6);
 
   // create "game over" text
   std::string g_over_str { "G A M E    O V E R" };
@@ -541,7 +666,9 @@ void Game::DisplayGameOverScreen() const
     Color::Green, 36, _renderer->GetSDLrenderer(), score_txt_str };
 
   // create offer of restarting the game text
-  std::string restart_str { "Press    ' S P A C E '    to    restart" };
+  std::string restart_str {
+    "Press    ' E N T E R   ( R E T U R N ) '    to    restart"
+  };
   const float restart_x = _screen_width / 2.0f;
   const float restart_y = _screen_height * 2.5f / 3.0f;
   TextElement restart { restart_x, restart_y, Paths::pFontRobotoBold,
@@ -672,7 +799,7 @@ void Game::CreatePaddle()
   limits.h = _screen_height - limits.y;
 
   // create the actuall paddle and set unique pointer
-  _paddle = std::make_unique<Paddle>(_screen_width / 2, paddle_y,
+  _paddle = std::make_unique<Paddle>(_screen_width / 2.0f, paddle_y,
       _level_data->PaddleSpeed(), limits, paddle_texture);
   // verify if paddle created successfully. If not throw exception
   if (!_paddle) {

@@ -24,9 +24,10 @@ class Controller;
 class Game
 {
   public:
+  // COMMENT
   // constructor
   Game(const std::size_t screenHeight, const std::size_t screenWidth,
-      const std::size_t targetFrameRate);
+      const std::size_t targetFrameRate, unsigned levelsImplemented);
   // destructor
   ~Game();
 
@@ -68,6 +69,10 @@ class Game
   // REMOVE INU COMMENT
   // Perfoms actions when the player looses the game
   void GameOverActions();
+  // REMOVE INU
+  // Loads new level. Returns true if new level loaded successfully,
+  // false if the current level was the last one implemented
+  bool LoadNewLevel(unsigned newLevel);
   // updates game state
   void UpdateGame();
   // REVIEW: rename or REMOVE
@@ -77,6 +82,8 @@ class Game
   void DisplayPauseScreen() const;
   // Displays the screen after ball leaving the screen
   void DisplayBallLostScreen() const;
+  // Displays the screen after the level has been completed
+  void DisplayLevelCompleted() const;
   // Displays the screen after all lives/balls have been lost
   void DisplayGameOverScreen() const;
   // load all image textures used in the game //NOTE: verify
@@ -100,6 +107,8 @@ class Game
   // creates blocks
   void CreateBlocks();
 
+  // number levels implemented by the developer
+  unsigned _max_level;
   // controls if the main loop is running
   bool _is_running = false; // NOTE: rename?
   // controlls the bahaviour of main loop

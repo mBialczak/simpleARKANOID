@@ -93,12 +93,14 @@ void Ball::SetSpeed(float speed)
   }
 }
 
-// resets the ball to the starting position on the paddle
+// resets ball min speed and speed values to the passed value and
+// sets position to the starting position on the paddle
 void Ball::Reset(float speed)
 { // REVIEW:
   PlaceOnPaddle();
   _direction = 0.0f;
   _velocity = gMath::Vector2d { 0.0 };
+  _min_speed = speed;
   _speed = speed;
 
   // set bolean indicating state where ball should start from the paddle
@@ -109,7 +111,7 @@ void Ball::Reset(float speed)
 void Ball::Start()
 {
   // calculate randomized starting direction when ball starts from the paddle
-  float starting_direction = _randomizer(35.0f, 135.0f);
+  float starting_direction = _randomizer(90.0f, 90.0f);
   // update ball state;
   UpdateDirectionAndVelocity(starting_direction);
   _in_starting_pos = false;
