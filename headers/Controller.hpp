@@ -33,7 +33,7 @@ class Controller
   // reference to the main game object being controlled
   Game& _game;
 
-  // keys used for game control with  corresponding SDL codes
+  // keys used for game control with  corresponding SDL codes:
   // paddle up key
   Uint8 _up = SDL_SCANCODE_UP;
   // paddle down key

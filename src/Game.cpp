@@ -38,57 +38,17 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // load textures used in the game
   LoadTextures();
 
-  // REVIEW:
-  // reserve space for all pointers to objects to be displayed on the game
-  // screen (all the blocks + number of walls)
   _static_for_game_screen.reserve(
       LevelData::_max_rows * LevelData::_row_size + 3);
 
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
   CreateWalls();
-
-  // REMOVE LevelData test
-  // {
-  //   std::cout << "Level Data test\n-----------------\n"
-  //             << "Level number: " << _level_data->Level() << std::endl
-  //             << "Ball speed: " << _level_data->BallSpeed() << std::endl
-  //             << "Paddle speed: " << _level_data->PaddleSpeed() << std::endl
-  //             << "Points per block: " << _level_data->PointsPerBlock()
-  //             << std::endl
-  //             << "Level lives: " << _level_data->Lives() << std::endl
-  //             << std::endl;
-
-  //   std::cout << "Sprites layout\n-------------\n";
-
-  //   auto layout = _level_data->SpriteTable();
-
-  //   for (std::size_t row = 0; row < layout.size(); row++) {
-  //     std::cout << "Row " << std::to_string(row + 1) << ":\t";
-
-  //     for (std::size_t col = 0; col < layout[row].size(); col++) {
-  //       char sprite;
-  //       switch (layout[row][col]) {
-  //         case Sprite::None:
-  //           sprite = '0';
-  //           break;
-  //         case Sprite::BlockGreen:
-  //           sprite = 'g';
-  //           break;
-  //         default:
-  //           sprite = '?';
-  //       }
-  //       std::cout << sprite << "  ";
-  //     }
-  //     std::cout << std::endl;
-  //   }
-  // }
-
   CreateBlocks();
   CreatePaddle();
   CreateBall();
-  // REVIEW:
-  // create all displayable texts which will not change in the game
+
+  // create all displayable text elements which will not change in the game
   CreateTexts();
 }
 // initialize SDL subsystems
@@ -176,7 +136,6 @@ void Game::Run()
   }
 }
 
-// COMMENTS and refactor
 // Restarts the game
 void Game::Restart()
 {
@@ -275,7 +234,7 @@ bool Game::LoadNewLevel(unsigned newLevel)
   // load all the data for the new level
   _level_data = std::make_unique<LevelData>(Paths::pLevels, newLevel);
 
-  // set player ramaining ball
+  // set player ramaining balls/lives
   _balls_remaining = (_level_data->Lives());
 
   // clear the vector of static objects to be displayed
@@ -316,30 +275,11 @@ void Game::UpdateGame()
   //   // cap delta_time while debugging if time difference is to big
   //   delta_time = 0.5f;
   // }
-  // REVIEW: consider one container of moveable objects instead seperate
-  // objects
 
   // upate paddle state
   _paddle->Update(delta_time);
   // update ball state
   _ball->Update(delta_time);
-}
-
-// REVIEW: general implementation
-// generates all game output
-void Game::GenerateOutput() const
-{
-  // if not paused perform routime game output
-  // REVIEW: remove what not needed
-  // if (!_paused) {
-  //   // display all static and movable objects
-  //   _renderer->DisplayGameScreen(
-  //       _static_for_game_screen, _movable_for_game_screen);
-  //   // TODO: update sounds somewhere
-  // }
-  // else {
-  //   DisplayPauseScreen();
-  // }
 }
 
 // / load all textures used in the game //NOTE: verify
@@ -465,7 +405,6 @@ void Game::CreateTexts()
       Color::Yellow, 22, _renderer->GetSDLrenderer(), line_7);
 }
 
-// REVIEW:and COMMENT
 // Generates container of static objects to be displayed on the pause screen
 void Game::DisplayPauseScreen() const
 {
@@ -596,7 +535,7 @@ void Game::DisplayLevelCompleted() const
   // reserve container space for all predicted elements
   texts.reserve(_texts.size() + 5);
 
-  // create "game over" text
+  // create "level" text
   std::string completed_str { "L E V E L   " };
   // need to decrease level number by one, because after loading
   // a new level by now the counter is already set to new level
@@ -780,8 +719,7 @@ const Texture& Game::GetTexture(Sprite sprite) const
 {
   // try to find a stored texture of the given spirte type
   auto search = _images.find(sprite);
-  // if texture wasn't found, throw exception
-  // VERIFY if needed such a long comment
+  // If texture wasn't found, throw exception
   // by this point the project design assumes that all requried textures
   // should be loaded created during game initialization
   if (search == _images.end()) {
@@ -795,7 +733,6 @@ const Texture& Game::GetTexture(Sprite sprite) const
 // creates the wall limiting the game area
 void Game::CreateWalls()
 {
-  // REVIEW:
   // design predicts 3 walls so reserve enough space
   _side_walls.reserve(3);
 
@@ -896,7 +833,7 @@ void Game::CreatePaddle()
 void Game::CreateBlocks()
 {
   // reserve place for blocks
-  _blocks.reserve(LevelData::MaxRows() * LevelData::RowSize());
+  _blocks.reserve(LevelData::_max_rows * LevelData::_row_size);
 
   // aquire the sprite table representing block layout
   auto& sprite_table = _level_data->SpriteTable();
@@ -933,7 +870,7 @@ void Game::CreateBlocks()
   }
 }
 
-// TODO: implement if needed
+// handles the ball leaving the allowed screen area
 void Game::HandleBallEscape()
 {
   // decrease number of balls available
@@ -950,12 +887,13 @@ void Game::HandleBallEscape()
     SDL_Delay(4000);
 
     // reset the ball passing the level starting speed
+    // to get the ball back on the paddle and cancel
+    // all speed increases applied by the player
     _ball->Reset(_level_data->BallSpeed());
   }
 }
 
 // handles a block being hit by the ball
-// REVIEW:
 void Game::HandleBlockHit(Block& block)
 {
   // TODO: play some sound
@@ -964,9 +902,4 @@ void Game::HandleBlockHit(Block& block)
   block.MakeDestroyed();
   // increase points score with point value assigned to the block
   _total_points += block.Points();
-  // REVIEW: remove AT
-  std::cout << "A block has been hit!!!\n" << std::endl;
-  std::cout << "Total points = " << _total_points
-            << "\n----------------------\n"
-            << std::endl;
 }

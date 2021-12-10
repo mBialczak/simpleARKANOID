@@ -51,7 +51,6 @@ class Game
   // handles the ball leaving the allowed screen area
   void HandleBallEscape();
   // handles a block being hit by the ball
-  // TODO: to implement
   void HandleBlockHit(Block& block);
   // returns the speed increment applied every time the
   // user orders so
@@ -78,9 +77,6 @@ class Game
   bool LoadNewLevel(unsigned newLevel);
   // updates game state
   void UpdateGame();
-  // REVIEW: rename or REMOVE
-  // generates game output
-  void GenerateOutput() const; // NOTE: const might not be good
   // Displays the pause screen when the game is paused
   void DisplayPauseScreen() const;
   // Displays the screen after ball leaving the screen
@@ -150,9 +146,6 @@ class Game
   std::vector<const MovableObject*> _movable_for_game_screen;
   // takes track of points achieved by the player
   unsigned _total_points = 0;
-  // // REMOVE if used from LevelData class current game level
-  // std::size_t _level = 1;
-
   // inlcudes all the current level data
   std::unique_ptr<LevelData> _level_data;
   // number of remaining lives (balls) before "game over"
