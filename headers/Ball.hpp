@@ -120,7 +120,7 @@ class Ball : public virtual MovableObject
   // indicates if the ball is in starting position on the paddle
   bool _in_starting_pos = true;
   // current value of spin to be applied
-  Spin _spin = Spin::sNone;
+  Spin _spin = Spin::None;
   // ball minimum speed in the current level
   float _min_speed = _speed;
   // speed change (pixels/second) aplied every time the ball hits the paddle

@@ -1,5 +1,6 @@
 #ifndef GAME_HPP
 #define GAME_HPP
+#include "AudioMixer.hpp"
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Controller.hpp"
@@ -9,7 +10,7 @@
 #include "RandNum.hpp"
 #include "Renderer.hpp"
 #include "SideWall.hpp"
-#include "TextElement.hpp" // REVIEW
+#include "TextElement.hpp"
 #include "Texture.hpp"
 #include <cstddef>
 #include <memory>
@@ -55,6 +56,10 @@ class Game
   // returns the speed increment applied every time the
   // user orders so
   float SpeedIncrement() const { return _speed_increment; };
+  // REVIEW: COMMENT
+  void SetSound(Sound sound) { _pending_sound = sound; }
+  // REVIEW:: COMMENT alternative to SetSound - pick one;
+  void PlaySound(Sound sound) const { _audio->PlaySound(sound); }
 
   private:
   // initialize SDL subsystems
@@ -87,8 +92,12 @@ class Game
   void DisplayGameOverScreen() const;
   // Displays the screen when the game is won
   void DisplayGameWonScreen() const;
+  // REVIEW: COMMENT REMOVE if Play sound works better
+  void PlayPendingSound();
   // load all image textures used in the game //NOTE: verify
-  void LoadTextures();
+  void LoadTextures(); // REVIEW: rename to images?
+  // REVIEW: and COMMENT
+  void LoadAudio();
   // gets a single image texture from the stored textures
   const Texture& GetTexture(Sprite sprite) const;
   // creates all the texts which won't change for entire game
@@ -129,6 +138,8 @@ class Game
   std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible
   Renderer* _renderer;
+  // REVIEW: and COMMENT
+  std::unique_ptr<AudioMixer> _audio;
   // container for side walls
   std::vector<SideWall> _side_walls;
   // pointer to the ball
@@ -152,5 +163,7 @@ class Game
   unsigned _balls_remaining;
   // timer regulating the updates of the game state
   IntervalTimer _timer;
+  // REMOVE INU COMMENT
+  Sound _pending_sound = Sound::None;
 };
 #endif // !GAME_HPP

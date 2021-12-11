@@ -51,6 +51,11 @@ void Ball::Update(float deltaTime)
 
     // react if the ball has left the screen
     if (HasLeftScreen()) {
+      // REMOVE INH
+      // mark the correct sound to play
+      // _game.SetSound(Sound::BallLost);
+      // _game.PlaySound(Sound::BallLost);
+
       _game.HandleBallEscape();
     }
   }
@@ -111,10 +116,13 @@ void Ball::Reset(float speed)
 void Ball::Start()
 {
   // calculate randomized starting direction when ball starts from the paddle
-  float starting_direction = _randomizer(90.0f, 90.0f);
+  float starting_direction = _randomizer(45.0f, 135.0f);
   // update ball state;
   UpdateDirectionAndVelocity(starting_direction);
   _in_starting_pos = false;
+  // REMOVE if not used
+  // _game.SetSound(Sound::BallPaddleHit);
+  _game.PlaySound(Sound::BallPaddleHit);
 }
 
 // puts the ball in the starting position on the paddle
@@ -141,6 +149,9 @@ void Ball::HandlePaddleCollisions()
     ApplySpeedDelta();
 
     // // TODO: handle sound
+    // REVIEW: REMOVE INU
+    // _game.SetSound(Sound::BallPaddleHit);
+    _game.PlaySound(Sound::BallPaddleHit);
   }
 }
 
@@ -181,8 +192,10 @@ void Ball::HandleWallCollisions()
         BounceWall(wall);
         // REVIEW: think if needed
         // if one wall hit, no need to check the others in this run
+        // REMOVE INH
+        // _game.SetSound(Sound::BallBounceWall);
+        _game.PlaySound(Sound::BallBounceWall);
         break;
-        // TODO: handle sound or something
       }
     }
 }
@@ -200,10 +213,12 @@ void Ball::HandleBlockCollisions()
     // destroyed
     if (!block.IsDestroyed() && HasHitBlock(block)) {
       // TODO: limit repetitions if two balls hit in one go
+      // // REMOVE: if not here COMMENT
+      // // play proper sound
+      // _game.SetSound(Sound::BlockHit);
 
-      // chagne ball direction
+      // change ball direction
       BounceBlock(block);
-      // REVIEW: play sound or something
       _game.HandleBlockHit(block);
     }
   }
@@ -572,11 +587,11 @@ float Ball::CalcSpin(float bounceAngle) const
 
   // depending of the requested spin return negative or positive spin increase
   switch (_spin) {
-    case Spin::sLeft:
+    case Spin::Left:
       // REMOVE AT
       std::cout << "Spin left applied!" << std::endl;
       return delta;
-    case Spin::sRight:
+    case Spin::Right:
       // REMOVE AT
       std::cout << "Spin right applied!" << std::endl;
       return -delta;

@@ -81,11 +81,11 @@ void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
   }
   // apply left spin when the key: _spin_left is pressed
   else if (keysArray[_spin_left]) {
-    ball.SetSpin(Spin::sLeft);
+    ball.SetSpin(Spin::Left);
   }
   // apply right spin when the key: _spin_right is pressed
   else if (keysArray[_spin_right]) {
-    ball.SetSpin(Spin::sRight);
+    ball.SetSpin(Spin::Right);
   }
   // increase the ball speed when the key: _speed_up is pressed
   else if (keysArray[_speed_up]) {
@@ -109,7 +109,7 @@ void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
   // actions to be executed whenever the above keys are not pressed
   else {
     paddle.Stop();
-    ball.SetSpin(Spin::sNone);
+    ball.SetSpin(Spin::None);
     ball.SetSpeedDelta(0.0f);
   }
 }

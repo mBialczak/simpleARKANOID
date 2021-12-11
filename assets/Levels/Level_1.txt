@@ -16,7 +16,7 @@
 
 ball_speed  300.0
 paddle_speed  250.0
-lives   1
+lives   2
 points_per_block  1
 
 

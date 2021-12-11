@@ -48,9 +48,12 @@ AudioMixer::AudioMixer(
 // REVIEW: and COMMENT
 void AudioMixer::PlaySound(Sound soundCode)
 {
-  auto chunk_ptr = _sound_effects[soundCode].get();
-  if (chunk_ptr) {
-    Mix_PlayChannel(-1, chunk_ptr, 0);
+  if (_sound_effects.contains(soundCode)) {
+    auto chunk_ptr = _sound_effects[soundCode].get();
+
+    if (chunk_ptr) {
+      Mix_PlayChannel(-1, chunk_ptr, 0);
+    }
   }
 };
 
@@ -99,5 +102,5 @@ AudioMixer::MixOpener::~MixOpener()
 {
   Mix_CloseAudio();
   // REMOVE AT
-  std::cout << "MixInitializer custom deleter called!" << std::endl;
+  std::cout << "MixOpener custom deleter called!" << std::endl;
 }

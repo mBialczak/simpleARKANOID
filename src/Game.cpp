@@ -25,6 +25,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     , _frame_rate(targetFrameRate)
     , _controller(std::make_unique<Controller>(*this))
     , _renderer(nullptr)
+    , _audio(nullptr)
     // load all the data for the first level
     , _level_data(std::make_unique<LevelData>(Paths::pLevels))
     , _balls_remaining(_level_data->Lives())
@@ -35,8 +36,12 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // create graphics renderer here, only after SDL is initialized
   _renderer = new Renderer(_screen_height, _screen_width);
 
+  // REVIEW: and COMMENT
+
   // load textures used in the game
   LoadTextures();
+  // REVIEW: COMMENT REMOVE INU
+  LoadAudio();
 
   _static_for_game_screen.reserve(
       LevelData::_max_rows * LevelData::_row_size + 3);
@@ -169,12 +174,19 @@ void Game::RoutineGameActions()
   _renderer->DisplayGameScreen(
       _static_for_game_screen, _movable_for_game_screen);
 
+  // REVIEW: or REMOVE, COMMENT
+  // play pending sound
+  // PlayPendingSound();
+
   // Load next level if all the blocks have been destroyed
   if (std::all_of(_blocks.begin(), _blocks.end(),
           [](const Block& block) { return block.IsDestroyed(); })) {
 
     // if loading a new level succeds
     if (LoadNewLevel(_level_data->Level() + 1)) {
+      // REMOVE INH COMMENT
+      PlaySound(Sound::LevelCompleted);
+
       DisplayLevelCompleted();
       // halt execution for the the time of display;
       SDL_Delay(4000);
@@ -185,6 +197,8 @@ void Game::RoutineGameActions()
     // so the game is won
     else {
       _state = GameState::Won;
+      // REMOVE INH COMMENT
+      PlaySound(Sound::GameWon);
     }
   }
 }
@@ -298,6 +312,20 @@ void Game::LoadTextures()
       Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
   _images[Sprite::BlockGreen] = std::make_unique<Texture>(
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
+}
+
+// REVIEW: and COMMENT
+void Game::LoadAudio()
+{
+  std::unordered_map<Sound, std::string> sound_vs_path
+      = { { Sound::BallPaddleHit, Paths::pSoundBallBouncePaddle },
+          { Sound::BallBounceWall, Paths::pSoundBallBounceWall },
+          { Sound::BlockHit, Paths::pSoundBlockDestroyed },
+          { Sound::BallLost, Paths::pSoundBallLost },
+          { Sound::LevelCompleted, Paths::pSoundLevelCompleted },
+          { Sound::GameWon, Paths::pSoundGameWon } };
+
+  _audio = std::make_unique<AudioMixer>(sound_vs_path);
 }
 
 // creates all the texts which won't change for the entire game
@@ -714,6 +742,15 @@ void Game::DisplayGameWonScreen() const
   _renderer->DisplayStaticScreen(texts);
 }
 
+// REVIEW: COMMENT
+void Game::PlayPendingSound()
+{
+  if (_pending_sound != Sound::None) {
+    _audio->PlaySound(_pending_sound);
+    _pending_sound = Sound::None;
+  }
+}
+
 // gets a single texture from the stored textures
 const Texture& Game::GetTexture(Sprite sprite) const
 {
@@ -873,6 +910,10 @@ void Game::CreateBlocks()
 // handles the ball leaving the allowed screen area
 void Game::HandleBallEscape()
 {
+  // REVIEW: COMMENT
+  // _pending_sound = Sound::BallLost;
+  PlaySound(Sound::BallLost);
+
   // decrease number of balls available
   _balls_remaining--;
   // check if the player run out of lives/balls
@@ -882,6 +923,11 @@ void Game::HandleBallEscape()
   }
   // player still has lives/balls left
   else {
+    // REMOVE INH
+    // mark the correct sound to play
+    // _pending_sound = Sound::BallLost;
+    // PlaySound(Sound::BallLost);
+
     DisplayBallLostScreen();
     // halt execution for a couple of seconds
     SDL_Delay(4000);
@@ -896,10 +942,15 @@ void Game::HandleBallEscape()
 // handles a block being hit by the ball
 void Game::HandleBlockHit(Block& block)
 {
-  // TODO: play some sound
+  // REMOVE: if not here
+  // mark proper sound to play
+  // _pending_sound = Sound::BlockHit;
+  // REMOVE INH
+  PlaySound(Sound::BlockHit);
 
   // mark block as destroyed to skip further rendering and collision checks
   block.MakeDestroyed();
+
   // increase points score with point value assigned to the block
   _total_points += block.Points();
 }

@@ -22,8 +22,6 @@ const std::string pBlockGreenImage { "../assets/images/block_green.png" };
 const std::string pLevels { "../assets/Levels/" };
 
 // ------ FONTS paths ------//
-
-// VERIFY paths to roboto fonts
 const std::string pFontRobotoBold { "../assets/fonts/Roboto-Bold.ttf" };
 const std::string pFontRobotoRegular { "../assets/fonts/Roboto-Regular.ttf" };
 const std::string pFontRobotoBoldItalic {
@@ -31,9 +29,34 @@ const std::string pFontRobotoBoldItalic {
 };
 
 // ------ Sound effects paths ------//
+
+// sound to be emitted when the ball hits the paddle
 const std::string pSoundBallBouncePaddle {
-  "../assets/fonts/mixkit-basketball-ball-hard-hit-2093.wav"
+  "../assets/sounds/mixkit-basketball-ball-hard-hit-2093.wav"
+};
+// sound to be emitted when the ball hits a wall
+const std::string pSoundBallBounceWall {
+  "../assets/sounds/mixkit-quick-hit-of-a-basketball-2087.wav"
 };
 
+// sound to be emitted when a block is destroyed
+const std::string pSoundBlockDestroyed {
+  "../assets/sounds/mixkit-video-game-mystery-alert-234.wav"
+};
+
+// sound to be emitted when a ball leaves the screen
+const std::string pSoundBallLost {
+  "../assets/sounds/mixkit-arcade-retro-game-over-213.wav"
+};
+
+// sound to be emitted when a level is completed
+const std::string pSoundLevelCompleted {
+  "../assets/sounds/mixkit-completion-of-a-level-2063.wav"
+};
+
+// sound to be emitted when a game is won
+const std::string pSoundGameWon {
+  "../assets/sounds/mixkit-game-level-completed-2059.wav"
+};
 }
 #endif // !Paths_HPP

@@ -4,18 +4,18 @@
 // enum for distinguishing block border during collision with the ball
 enum class RectBorder : short
 {
-  bTop,
-  bBottom,
-  bRight,
-  bLeft
+  Top,
+  Bottom,
+  Right,
+  Left
 };
 
 // enum for describing the spin of the ball
 enum class Spin : short
 {
-  sNone,
-  sLeft,
-  sRight
+  None,
+  Left,
+  Right
 };
 
 // enum for marking which side of the screen the wall occupies
@@ -59,12 +59,15 @@ enum class GameState : char
 
 };
 
-// REVIEW: COMMENT
-// enum representing sound effects and music effects usued in the game
+// enum representing sound effects usued in the game
 enum class Sound : short
 {
-  sBallBounceWall,
-  sBallPaddleHit,
-  sBlockHit
+  None,
+  BallBounceWall,
+  BallPaddleHit,
+  BlockHit,
+  BallLost,
+  LevelCompleted,
+  GameWon
 };
 #endif // !Enums_hpp

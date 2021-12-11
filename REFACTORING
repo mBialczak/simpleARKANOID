@@ -8,6 +8,8 @@ TODO: consider making shared_ptr in Texture
 TODO: consider refactoring LimitTimer to take FPS. Rename if possible. Replace time delay where
 needed
 
+TODO: remove not needed assets
+
 TODO:
 disable copying and moving for classes not predicted for copying or moving if owning resources
 
