@@ -23,7 +23,7 @@ class Block : public virtual StaticObject
   // checks if the block has not been destroyed
   bool IsDestroyed() const { return _destroyed; }
   // sets the block state to destroyed
-  void MakeDestroyed() { _destroyed = true; }
+  void MarkDestroyed() { _destroyed = true; }
   // returns points value assigned to the block
   unsigned Points() const { return _point_value; }
 

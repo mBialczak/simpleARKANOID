@@ -99,11 +99,6 @@ class Ball : public virtual MovableObject
   float BounceBlockGoingDownRight(float leftX) const;
   // keeps the ball direction angle in range [0,360)
   void ControlDirection();
-  // returns slightly randomized angles, especially when ball hits paddle with
-  // angle affecting game experience in a negative way
-  // REMOVE if not used; most likely superseded by Spin()
-  // float RandomizeAngles(float angle);
-
   // calculates the spin to be applied
   float CalcSpin(float bounceAngle) const;
   // increases/deacreases the ball speed by speed delta
@@ -130,7 +125,6 @@ class Ball : public virtual MovableObject
   // y coordinate of the bottom of the screen
   const float _screen_bottom_y;
   // reference to the main game object
-  // NOTE: consider const and if necessary
   Game& _game;
   // random number generator used for simulating angle changes
   gMath::RandNum _randomizer;

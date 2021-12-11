@@ -168,8 +168,31 @@ Sprite LevelData::CharToSprite(char spriteCharRepresentation) const
   switch (spriteCharRepresentation) {
     case static_cast<char>(BlockCharCode::None):
       return Sprite::None;
+
     case static_cast<char>(BlockCharCode::BlockGreen):
       return Sprite::BlockGreen;
+
+    case static_cast<char>(BlockCharCode::BlockBlue):
+      return Sprite::BlockBlue;
+
+    case static_cast<char>(BlockCharCode::BlockOrange):
+      return Sprite::BlockOrange;
+
+    case static_cast<char>(BlockCharCode::BlockPurple):
+      return Sprite::BlockPurple;
+
+    case static_cast<char>(BlockCharCode::BlockRed):
+      return Sprite::BlockRed;
+
+    case static_cast<char>(BlockCharCode::BlockSilver):
+      return Sprite::BlockSilver;
+
+    case static_cast<char>(BlockCharCode::BlockTeal):
+      return Sprite::BlockTeal;
+
+    case static_cast<char>(BlockCharCode::BlockYellow):
+      return Sprite::BlockYellow;
+
     default:
       return Sprite::None;
   }

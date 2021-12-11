@@ -16,16 +16,16 @@
 // for operator""s usage // VERIFY if used in this file
 using std::string_literals::operator""s;
 
-// constructor
+// constructor //COMMENT
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     const std::size_t targetFrameRate, unsigned levelsImplemented)
     : _max_level(levelsImplemented)
     , _screen_height(screenHeight)
     , _screen_width(screenWidth)
     , _frame_rate(targetFrameRate)
+    , _audio(nullptr)
     , _controller(std::make_unique<Controller>(*this))
     , _renderer(nullptr)
-    , _audio(nullptr)
     // load all the data for the first level
     , _level_data(std::make_unique<LevelData>(Paths::pLevels))
     , _balls_remaining(_level_data->Lives())
@@ -36,13 +36,14 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // create graphics renderer here, only after SDL is initialized
   _renderer = new Renderer(_screen_height, _screen_width);
 
-  // REVIEW: and COMMENT
-
-  // load textures used in the game
-  LoadTextures();
-  // REVIEW: COMMENT REMOVE INU
+  // load images used in the game
+  LoadImages();
+  // Initialize audio mixer system and load all the sound
+  // effects to be used in the game
   LoadAudio();
 
+  // reserve space in the cointainer storing pointers of static
+  // objects to be displayed in the game
   _static_for_game_screen.reserve(
       LevelData::_max_rows * LevelData::_row_size + 3);
 
@@ -56,9 +57,11 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // create all displayable text elements which will not change in the game
   CreateTexts();
 }
+// TODO: reimplement with RAII?
 // initialize SDL subsystems
 void Game::InitSubsystems()
 {
+  // try to initialize SDL video and audio support and report error if failed
   if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
     throw SDLexception(
         "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
@@ -104,9 +107,6 @@ void Game::Run()
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };
 
-  // REVIEW: setting on game start
-  // set main loop quit condition
-  _is_running = true;
   // main game loop
   while (_is_running) {
     // handle the game input
@@ -122,13 +122,13 @@ void Game::Run()
         PausedGameActions();
         break;
       case GameState::Over:
-        GameOverActions();
+        DisplayGameOverScreen();
         break;
       case GameState::Won:
-        GameWonActions();
+        DisplayGameWonScreen();
         break;
       default:
-        // report error if unexpected game state occurs
+        // report error if unexpected game state was received
         throw std::runtime_error(
             "Uknown game state occured in the main game loop!");
     }
@@ -156,12 +156,11 @@ void Game::Restart()
 // pauses or unpauses the game (pause on/off)
 void Game::TogglePause()
 {
-  // REVIEW: if else is enough
-  if (_state == GameState::Routine) {
-    _state = GameState::Paused;
-  }
-  else if (_state == GameState::Paused) {
+  if (_state == GameState::Paused) {
     _state = GameState::Routine;
+  }
+  else {
+    _state = GameState::Paused;
   }
 }
 
@@ -174,69 +173,40 @@ void Game::RoutineGameActions()
   _renderer->DisplayGameScreen(
       _static_for_game_screen, _movable_for_game_screen);
 
-  // REVIEW: or REMOVE, COMMENT
-  // play pending sound
-  // PlayPendingSound();
-
   // Load next level if all the blocks have been destroyed
   if (std::all_of(_blocks.begin(), _blocks.end(),
           [](const Block& block) { return block.IsDestroyed(); })) {
 
     // if loading a new level succeds
     if (LoadNewLevel(_level_data->Level() + 1)) {
-      // REMOVE INH COMMENT
       PlaySound(Sound::LevelCompleted);
 
       DisplayLevelCompleted();
       // halt execution for the the time of display;
       SDL_Delay(4000);
-      // TODO:
-      // play sound
     }
     // LoadNewLevel returns fasle only when there are no more levels,
     // so the game is won
     else {
       _state = GameState::Won;
-      // REMOVE INH COMMENT
       PlaySound(Sound::GameWon);
     }
   }
 }
-// REMOVE INU COMMENT
+
 // Perfoms actions in when the game is paused
 void Game::PausedGameActions()
 {
-  // Pause the game timer for correct update calculations
+  // Pause the game timer for correct update calculations.
   // If not paused, the game update calculations will break
   // all the display after unpausing
   _timer.Pause();
+
   DisplayPauseScreen();
 }
 
-// REVIEW: if only one action, consider removing
-// Perfoms actions when the player looses the game
-void Game::GameOverActions()
-{
-  // TODO: play some sound
-  // TODO: maybe save high score
-  // - check if player wants to start again
-  //    -> yes - reset game state
-  //    -> no - display goodbye! and close the game
-
-  DisplayGameOverScreen();
-}
-
-// Perfoms actions when the player wins the game
-void Game::GameWonActions()
-{
-  // TODO: play some sound
-  // TODO: maybe save high score
-  DisplayGameWonScreen();
-}
-
-// Loads new level
-// returns true if new level loaded
-// returns false if the current level was the last one implemented
+// Loads new level. Returns true if new level loaded successfully,
+// false if the current level was the last one implemented
 bool Game::LoadNewLevel(unsigned newLevel)
 {
   // if the current_level was the last one implemented,
@@ -283,40 +253,69 @@ void Game::UpdateGame()
 {
   // calculate delta time and udpate timer
   auto delta_time = _timer.UpdateAndGetInterval();
-
-  // REVIEW: for debugging purposes
-  // if (delta_time >= 0.5f) {
-  //   // cap delta_time while debugging if time difference is to big
-  //   delta_time = 0.5f;
-  // }
-
   // upate paddle state
   _paddle->Update(delta_time);
   // update ball state
   _ball->Update(delta_time);
 }
 
-// / load all textures used in the game //NOTE: verify
-void Game::LoadTextures()
+// load all image textures used in the game
+void Game::LoadImages()
 {
   // load texture representing the ball
   _images[Sprite::Ball] = std::make_unique<Texture>(
       Paths::pBallImage, _renderer->GetSDLrenderer());
+
   // load texture respresenting the paddle
   _images[Sprite::Paddle] = std::make_unique<Texture>(
       Paths::pPadleImage, _renderer->GetSDLrenderer());
-  // load texture representing the side_wall
+
+  // load texture representing the top_wall
   _images[Sprite::WallHorizontal] = std::make_unique<Texture>(
       Paths::pHorizontalWallImage, _renderer->GetSDLrenderer());
+
+  // load texture representing side_walls
   _images[Sprite::WallVertical] = std::make_unique<Texture>(
       Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a green block
   _images[Sprite::BlockGreen] = std::make_unique<Texture>(
       Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a silver block
+  _images[Sprite::BlockSilver] = std::make_unique<Texture>(
+      Paths::pBlockSilverImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a blue block
+  _images[Sprite::BlockBlue] = std::make_unique<Texture>(
+      Paths::pBlockBlueImage, _renderer->GetSDLrenderer());
+
+  // load texture representing an orange block
+  _images[Sprite::BlockOrange] = std::make_unique<Texture>(
+      Paths::pBlockOrangeImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a purple block
+  _images[Sprite::BlockPurple] = std::make_unique<Texture>(
+      Paths::pBlockPurpleImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a red block
+  _images[Sprite::BlockRed] = std::make_unique<Texture>(
+      Paths::pBlockRedImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a teal block
+  _images[Sprite::BlockTeal] = std::make_unique<Texture>(
+      Paths::pBlockTealImage, _renderer->GetSDLrenderer());
+
+  // load texture representing a yellow block
+  _images[Sprite::BlockYellow] = std::make_unique<Texture>(
+      Paths::pBlockYellowImage, _renderer->GetSDLrenderer());
 }
 
-// REVIEW: and COMMENT
+// Initializes audio mixer system and loads all the sound
+// effects to be used in the game
 void Game::LoadAudio()
 {
+  // create map assigning paths of audio files to enum sound codes
   std::unordered_map<Sound, std::string> sound_vs_path
       = { { Sound::BallPaddleHit, Paths::pSoundBallBouncePaddle },
           { Sound::BallBounceWall, Paths::pSoundBallBounceWall },
@@ -324,7 +323,7 @@ void Game::LoadAudio()
           { Sound::BallLost, Paths::pSoundBallLost },
           { Sound::LevelCompleted, Paths::pSoundLevelCompleted },
           { Sound::GameWon, Paths::pSoundGameWon } };
-
+  // create audio mixer sending the created container
   _audio = std::make_unique<AudioMixer>(sound_vs_path);
 }
 
@@ -742,23 +741,15 @@ void Game::DisplayGameWonScreen() const
   _renderer->DisplayStaticScreen(texts);
 }
 
-// REVIEW: COMMENT
-void Game::PlayPendingSound()
-{
-  if (_pending_sound != Sound::None) {
-    _audio->PlaySound(_pending_sound);
-    _pending_sound = Sound::None;
-  }
-}
-
 // gets a single texture from the stored textures
 const Texture& Game::GetTexture(Sprite sprite) const
 {
   // try to find a stored texture of the given spirte type
   auto search = _images.find(sprite);
-  // If texture wasn't found, throw exception
-  // by this point the project design assumes that all requried textures
-  // should be loaded created during game initialization
+
+  // If texture wasn't found, THROW exception
+  // (by this point the project design assumes that all requried textures
+  // should be loaded created during game initialization)
   if (search == _images.end()) {
     throw std::runtime_error(
         "Unable to get texture for sprite in function Game::GetTexture()");
@@ -865,11 +856,11 @@ void Game::CreatePaddle()
   // add paddle to the collection of objects to be displayed
   _movable_for_game_screen.emplace_back(_paddle.get());
 }
-// TODO: refactor and COMMENTS
+
 // creates blocks
 void Game::CreateBlocks()
 {
-  // reserve place for blocks
+  // reserve space in the container for blocks
   _blocks.reserve(LevelData::_max_rows * LevelData::_row_size);
 
   // aquire the sprite table representing block layout
@@ -910,12 +901,11 @@ void Game::CreateBlocks()
 // handles the ball leaving the allowed screen area
 void Game::HandleBallEscape()
 {
-  // REVIEW: COMMENT
-  // _pending_sound = Sound::BallLost;
   PlaySound(Sound::BallLost);
 
   // decrease number of balls available
   _balls_remaining--;
+
   // check if the player run out of lives/balls
   if (_balls_remaining <= 0) {
     // the game is over
@@ -923,12 +913,8 @@ void Game::HandleBallEscape()
   }
   // player still has lives/balls left
   else {
-    // REMOVE INH
-    // mark the correct sound to play
-    // _pending_sound = Sound::BallLost;
-    // PlaySound(Sound::BallLost);
-
     DisplayBallLostScreen();
+
     // halt execution for a couple of seconds
     SDL_Delay(4000);
 
@@ -942,14 +928,10 @@ void Game::HandleBallEscape()
 // handles a block being hit by the ball
 void Game::HandleBlockHit(Block& block)
 {
-  // REMOVE: if not here
-  // mark proper sound to play
-  // _pending_sound = Sound::BlockHit;
-  // REMOVE INH
   PlaySound(Sound::BlockHit);
 
   // mark block as destroyed to skip further rendering and collision checks
-  block.MakeDestroyed();
+  block.MarkDestroyed();
 
   // increase points score with point value assigned to the block
   _total_points += block.Points();

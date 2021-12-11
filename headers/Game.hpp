@@ -39,7 +39,7 @@ class Game
   Game& operator=(const Game&) = delete;
   Game& operator=(Game&&) = delete;
 
-  // runs the game ; implements main game loop
+  // runs the game; implements main game loop
   void Run();
   // quits the game by stopping the main loop
   void Quit() { _is_running = false; }
@@ -56,27 +56,16 @@ class Game
   // returns the speed increment applied every time the
   // user orders so
   float SpeedIncrement() const { return _speed_increment; };
-  // REVIEW: COMMENT
-  void SetSound(Sound sound) { _pending_sound = sound; }
-  // REVIEW:: COMMENT alternative to SetSound - pick one;
+  // replays the sound correspondin to the sound enum code
   void PlaySound(Sound sound) const { _audio->PlaySound(sound); }
 
   private:
   // initialize SDL subsystems
   void InitSubsystems();
-  // REMOVE INU COMMENT
   // Perfoms actions in routine game state
   void RoutineGameActions();
-  // REMOVE INU COMMENT
-  // Perfoms actions in when the game is paused
+  // Perfoms actions when the game is paused
   void PausedGameActions();
-  // REMOVE INU COMMENT
-  // Perfoms actions when the player looses the game
-  void GameOverActions();
-  // REMOVE INU COMMENT
-  // Perfoms actions when the player wins the game
-  void GameWonActions();
-  // REMOVE INU
   // Loads new level. Returns true if new level loaded successfully,
   // false if the current level was the last one implemented
   bool LoadNewLevel(unsigned newLevel);
@@ -92,11 +81,10 @@ class Game
   void DisplayGameOverScreen() const;
   // Displays the screen when the game is won
   void DisplayGameWonScreen() const;
-  // REVIEW: COMMENT REMOVE if Play sound works better
-  void PlayPendingSound();
-  // load all image textures used in the game //NOTE: verify
-  void LoadTextures(); // REVIEW: rename to images?
-  // REVIEW: and COMMENT
+  // load all image textures used in the game
+  void LoadImages();
+  // Initializes audio mixer system and loads all the sound
+  // effects to be used in the game
   void LoadAudio();
   // gets a single image texture from the stored textures
   const Texture& GetTexture(Sprite sprite) const;
@@ -120,7 +108,7 @@ class Game
   // number levels implemented by the developer
   unsigned _max_level;
   // controls if the main loop is running
-  bool _is_running = false; // NOTE: rename?
+  bool _is_running = true; // NOTE: rename?
   // controlls the bahaviour of main loop
   GameState _state = GameState::Paused;
   // window size properties
@@ -134,12 +122,12 @@ class Game
   std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
   // container with texts constructed once for the entire game duration
   std::vector<TextElement> _texts;
+  // pointer to AudioMixer responsible for sound support
+  std::unique_ptr<AudioMixer> _audio;
   // pointer to controller for handling keyboard input
   std::unique_ptr<Controller> _controller;
   // OWNED pointer to renderer // VERIFY if unique_ptr possible
   Renderer* _renderer;
-  // REVIEW: and COMMENT
-  std::unique_ptr<AudioMixer> _audio;
   // container for side walls
   std::vector<SideWall> _side_walls;
   // pointer to the ball
@@ -163,7 +151,5 @@ class Game
   unsigned _balls_remaining;
   // timer regulating the updates of the game state
   IntervalTimer _timer;
-  // REMOVE INU COMMENT
-  Sound _pending_sound = Sound::None;
 };
 #endif // !GAME_HPP

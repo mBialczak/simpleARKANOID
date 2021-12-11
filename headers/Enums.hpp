@@ -34,7 +34,14 @@ enum class Sprite : short
   Paddle,
   WallHorizontal,
   WallVertical,
-  BlockGreen
+  BlockGreen,
+  BlockSilver,
+  BlockBlue,
+  BlockOrange,
+  BlockPurple,
+  BlockRed,
+  BlockTeal,
+  BlockYellow
 };
 
 // enum representing allowed char values to be put while level-file creation
@@ -42,6 +49,13 @@ enum class BlockCharCode : char
 {
   None = '0',
   BlockGreen = 'g',
+  BlockSilver = 's',
+  BlockBlue = 'b',
+  BlockOrange = 'o',
+  BlockPurple = 'p',
+  BlockRed = 'r',
+  BlockTeal = 't',
+  BlockYellow = 'y'
 
 };
 // VERIFY
