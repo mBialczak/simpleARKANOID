@@ -5,35 +5,42 @@
 #include "SDLexception.hpp"
 #include <functional>
 #include <memory>
-#include <unordered_map> // REMOVE INU
+#include <unordered_map>
 
-// REVIEW: consider removing exceptions. Sound not crucial
-// Try removing MixInitializer completely and check if works
-
-// COMMENT
+// Provides sound effects output based on read audio files
 class AudioMixer
 {
   public:
-  // TODO: check if can be private
-  // COMMENT
-  // REMOVE INU
-  class MixInitializer;
-  class MixOpener;
-
+  // Constructor. Initializes support for replaying audio sound effects.
+  // Takes vector of sound enum codes and coresponding strings to path of sounds
+  // to be replayed. Will throw SDLexception if initialization of sound mixer
+  // support or loading of the sound  effect will fail
   AudioMixer(const std::unordered_map<Sound, std::string>& soundsAndPaths);
-  // TODO: remove copy operations?
-  // REVIEW:
+  // usage of RAII resource menagement helper classes and unique pointers allows
+  // for default destructor
   ~AudioMixer() = default;
+  // the class is not meant to be copied, so copy operations are disabled
+  AudioMixer(const AudioMixer&) = delete;
+  AudioMixer& operator=(const AudioMixer&) = delete;
 
-  // REVIEW:
+  // replays the sound effect corresponding to to enum sound code passed
   void PlaySound(Sound soundCode);
 
   private:
-  // RAII - initializes  and cleans up SDL_Mixer automatically
+  // inner classes responsible for proper initialization and release of
+  // sound support system using RAII mechanisms
+  class MixInitializer;
+  // inner classes responsible for proper accuisition and release of
+  // sound mixer resources using using RAII mechanisms
+  class MixOpener;
+
+  // pointer to MixInitializer responsible for automatic initilaization
+  // and closing of SDL_Mixer
   std::unique_ptr<MixInitializer> _mix_initializer;
-  // RAII - initializes  and cleans up sound mixer
+  // pointer to MixOpener responsilbe for automatic acquiring and releasing
+  // of SDL_Mixer resources
   std::unique_ptr<MixOpener> _mix_opener;
-  // COMMENT and Modify
+  // container used for combining enum sound codes with pointers to Mix_Chunks
   std::unordered_map<Sound,
       std::unique_ptr<Mix_Chunk, std::function<void(Mix_Chunk*)>>>
       _sound_effects;
@@ -41,7 +48,7 @@ class AudioMixer
 
 // helper inner class for AudioMixer
 // It sole task is to initialize SDL_Mixer support
-// and free menaged resources on destruction
+// and close it upon destruction
 class AudioMixer::MixInitializer
 {
   public:
