@@ -19,9 +19,10 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
-find_package(SDL2_ttf REQUIRED) #REVIEW: check if needed
+find_package(SDL2_ttf REQUIRED) 
+find_package(SDL2_mixer REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS}  headers)
+include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS} ${SDL2_TTF_INCLUDE_DIRS} ${SDL2_MIXER_INCLUDE_DIRS} headers)
 
 add_executable(simpleArkanoid 
 src/main.cpp
@@ -43,6 +44,7 @@ src/MovableObject.cpp
 src/Block.cpp
 src/LevelData.cpp
 src/TextElement.cpp
+src/AudioMixer.cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 
@@ -56,7 +58,7 @@ add_executable(tests
   tests/VectorDistanceTest.cpp
 )
 if (MSVC)
-  target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES})
+  target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES})
 else()
-  target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} pthread)
+  target_link_libraries(simpleArkanoid ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES} ${SDL2_TTF_LIBRARIES} ${SDL2_MIXER_LIBRARIES} pthread)
 endif()

@@ -54,7 +54,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
 // initialize SDL subsystems
 void Game::InitSubsystems()
 {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
     throw SDLexception(
         "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
   }

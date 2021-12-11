@@ -58,4 +58,13 @@ enum class GameState : char
   Won
 
 };
+
+// REVIEW: COMMENT
+// enum representing sound effects and music effects usued in the game
+enum class Sound : short
+{
+  sBallBounceWall,
+  sBallPaddleHit,
+  sBlockHit
+};
 #endif // !Enums_hpp
