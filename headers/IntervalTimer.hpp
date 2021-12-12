@@ -2,6 +2,8 @@
 #define IntervalTimer_HPP
 
 #include "SDL.h"
+
+// class allowing measuring interval of times
 class IntervalTimer
 {
   public:
@@ -15,12 +17,8 @@ class IntervalTimer
   // pauses the timer
   void Pause() { _paused = true; };
 
-  // copying of class object makes no sense,
-  // so copy operations are disabled
-  IntervalTimer(const IntervalTimer&) = delete;
-  IntervalTimer& operator=(const IntervalTimer&) = delete;
   // constant describing how many SDL clock ticks has each second
-  static constexpr float _ticks_per_second = 1000.0f;
+  static constexpr float ticks_per_second = 1000.0f;
 
   private:
   Uint32 _previous_time;

@@ -60,7 +60,7 @@ void Game::Run()
 {
   // calculate desired duration of a single frame
   const Uint32 desired_frame_duration { static_cast<Uint32>(
-      IntervalTimer::_ticks_per_second / _frame_rate) };
+      IntervalTimer::ticks_per_second / _frame_rate) };
 
   // create timer used for for FPS limiting
   LimitTimer frame_timer { desired_frame_duration };

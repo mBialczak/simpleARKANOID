@@ -25,5 +25,5 @@ float IntervalTimer::UpdateAndGetInterval()
   // start new "lap"
   _previous_time = _current_time;
   // convert the clock ticks and return seconds
-  return static_cast<float>(interval) / _ticks_per_second;
+  return static_cast<float>(interval) / ticks_per_second;
 }
