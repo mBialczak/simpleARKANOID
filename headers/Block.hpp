@@ -31,10 +31,8 @@ class Block : public virtual StaticObject
   // texture representing the ball
   const Texture& _texture;
   // half of the block width; spares calculation while collision detection
-  // REVIEW: remove INU
   float _half_width;
   // half of the block height; spares calculation while collision detection
-  // REVIEW: remove INU
   float _half_height;
   // indicates if the block should be displayed and affects game
   bool _destroyed = false;

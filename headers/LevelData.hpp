@@ -22,25 +22,21 @@ class LevelData
   unsigned Lives() const { return _lives; }
   // returns point value assigned to destroyed block in the current level
   unsigned PointsPerBlock() const { return _points_per_block; }
-  // returns current level to which stored data corresponds // VERIFY if needed
+  // returns current level to which stored data corresponds
   unsigned Level() const { return _level; }
-
   // returns the sprite table representing
   // the composition of blocks in the level
-  const std::vector<std::vector<Sprite>>& SpriteTable() const
-  {
-    return _sprite_table;
-  }
+  const std::vector<std::vector<Sprite>>& SpriteTable() const;
 
   // public static consts (const so no risk of undesired access):
   // maximum number of the blocks in the row on the screen
-  static const std::size_t _row_size = 20;
+  static const std::size_t row_size = 20;
   // maximum number of block rows on the screen
-  static const std::size_t _max_rows = 15;
+  static const std::size_t max_rows = 15;
   // block width in pixels
-  static constexpr float _block_width = 50.0f;
+  static constexpr float block_width = 50.0f;
   // block height in pixels
-  static constexpr float _block_height = 25.0f;
+  static constexpr float block_height = 25.0f;
 
   private:
   // reads single value described by key from the file
@@ -63,13 +59,13 @@ class LevelData
 
   // static private consts - no other class needs them:
   // the keyword marking the ball speed in the parsed level file
-  static const std::string _ball_speed_key;
+  static const std::string ball_speed_key;
   // the keyword marking the paddle speed in the parsed level file
-  static const std::string _paddle_speed_key;
+  static const std::string paddle_speed_key;
   // the keyword marking the number of lives in the parsed level file
-  static const std::string _lives_key;
+  static const std::string lives_key;
   // the keyword marking the points per block destroyed in the parsed level file
-  static const std::string _points_per_block_key;
+  static const std::string points_per_block_key;
 
   // level to which the object corresponds to
   std::size_t _level;

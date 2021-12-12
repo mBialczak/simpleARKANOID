@@ -54,7 +54,6 @@ class Paddle : public virtual MovableObject
   const Texture& _texture;
   // storing below values spares many repeated calculations while collision
   // detection and keeping paddle within allowed moving limits
-  // REVIEW: remove INU
   const float _half_height;
   const float _half_width;
 };

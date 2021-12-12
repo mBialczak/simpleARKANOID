@@ -14,7 +14,7 @@ TextElement::TextElement(float x, float y, const std::string& fontPath,
 {
 }
 
-// Displays text screen
+// Displays text onto the screen
 void TextElement::Draw() const
 {
   _texture->Render(

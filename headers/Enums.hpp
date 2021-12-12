@@ -62,7 +62,7 @@ enum class BlockCharCode : char
 // enum representing possible states of the game
 enum class GameState : char
 {
-  // "nomral" running state, where all the action happens
+  // "normal" running state, where all the action happens
   Routine,
   // game is paused or not yet started
   Paused,

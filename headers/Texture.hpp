@@ -40,12 +40,12 @@ class Texture
   // gets texture height
   int Height() const { return _height; }
 
-  // returns pointer to owned SDL_Texture
-  // user of the class should not explicitly destroy the texture
+  // returns pointer to SDL_Texture. Class Texture owns the pointer,
+  // so user of the class should not explicitly destroy the texture
   SDL_Texture* GetSDLtexture() const { return _sdl_texture.get(); }
 
   // renders texture in position x, y
-  void Render(int x, int y) const; // NOTE: const might not work
+  void Render(int x, int y) const;
 
   private:
   // OWNED unique pointer to SDL texture with custom deleter

@@ -23,7 +23,6 @@ class MovableObject
   virtual void SetPosition(float x, float y);
   // gets current speed of the object;
   virtual float Speed() const { return _speed; }
-  // REMOVE INU
   // sets the scalar speed of the object;
   virtual void SetSpeed(float speed) { _speed = speed; }
 

@@ -45,7 +45,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   // reserve space in the cointainer storing pointers of static
   // objects to be displayed in the game
   _static_for_game_screen.reserve(
-      LevelData::_max_rows * LevelData::_row_size + 3);
+      LevelData::max_rows * LevelData::row_size + 3);
 
   // Only after SDL stuff is initialized and textures are created, other
   // components can be created
@@ -225,7 +225,7 @@ bool Game::LoadNewLevel(unsigned newLevel)
   // and reserve enough space for new, reloaded one
   _static_for_game_screen.clear();
   _static_for_game_screen.reserve(
-      LevelData::_max_rows * LevelData::_row_size + 3);
+      LevelData::max_rows * LevelData::row_size + 3);
 
   // add walls to the list of static objects to be displayed
   for (auto& wall : _side_walls) {
@@ -861,7 +861,7 @@ void Game::CreatePaddle()
 void Game::CreateBlocks()
 {
   // reserve space in the container for blocks
-  _blocks.reserve(LevelData::_max_rows * LevelData::_row_size);
+  _blocks.reserve(LevelData::max_rows * LevelData::row_size);
 
   // aquire the sprite table representing block layout
   auto& sprite_table = _level_data->SpriteTable();
@@ -869,9 +869,9 @@ void Game::CreateBlocks()
   const float wall_offset { static_cast<float>(
       GetTexture(Sprite::WallVertical).Width()) };
   // horizontal position offset of each concecutive block from the other
-  const float block_width { LevelData::_block_width };
+  const float block_width { LevelData::block_width };
   // vertical position offset of each consecutive block from the other
-  const float block_height { LevelData::_block_height };
+  const float block_height { LevelData::block_height };
   // point value assigned to block on current game level
   const unsigned point_value { _level_data->PointsPerBlock() };
   // temporary helper variables to be calculated on most loop passes

@@ -17,10 +17,6 @@ TODO:
 consider creating wrappers for managed resources in case of exeption in during construction
 
 TODO:
-consider using unique_ptr with custom deleter instead of LoadedSDLsurface wrapper
-or simply freeing surface before throwing exeption
-
-TODO:
 try to change pointer arguments to reference arguments where possible
 
 TODO:
@@ -45,9 +41,6 @@ TODO:
 make conditionaly compilied debugging code
 
 TODO:
-make movable object base class and derive ball, paddle and block
-
-TODO:
 simplify game constructor
 
 TODO:
@@ -55,15 +48,6 @@ consider creating conversion operators for Renderer and others
 
 TODO:
 consider shortening get functions
-
-TODO:
-try to replace Renderer::SetBall, Renderer::SetPaddle and similar to one setting all objects to display
-
-TODO: change all parammeters to cammelCase
-
-TODO: consider making pointer to paddle a member of class game
-
-TODO: remove StaticObject if not needed
 
 TODO: consider setting \_texture in objects to a pointer and allow for validation check in the constructor
 
@@ -73,31 +57,14 @@ TODO: clean CMakeLists.txt
 
 TODO: consider moving helper math functions
 
-TODO: check where in paddle stored height and half height allow for sparing calculations.
-Apply the same to other classes if possible
-
-TODO: consider changing angles where reasonable to integers for simplifing calculations
-
-TODO: consider resignation from paddle vertical movement
-
-TODO: use inheritance in game::update, draw() and similar if posiible
-
 TODO: in Game create objects functions there are many constructors where perhaps float position arguments
 instead of in might be better
 
-TODO: find a right place to reserve place for static objects in renderer and game
-
 TODO: consider changing paddle refernce to pointer in ball and reduce constructor (pointer could be set after paddle creation)
 
-TODO: consider simplyfing condition checks in direction determining (lik 0 < x < 90>)
-
-TODO: consider making consts with assests names
-
-TODO: consider putting all enums in one file
+TODO: consider putting all consts with enums in one file
 
 TODO: check all classes for leaking resources
-
-TODO: consider making seperate file with crucial consts or putting static conts in classes were reasonable
 
 TODO: consider making static properties without
 

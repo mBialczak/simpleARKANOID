@@ -5,8 +5,6 @@
 #include "StaticObject.hpp"
 #include "Texture.hpp"
 
-// TODO: consider if should inherit from static object or move the code
-
 // class forward declarations
 class Texture;
 
@@ -18,7 +16,7 @@ class SideWall : public virtual StaticObject
   SideWall(float x, float y, ScreenSide sideOfScreen, const Texture& texture,
       float halfTickness);
   // default virtual constructor
-  ~SideWall() override = default; // NOTE: override?
+  ~SideWall() override = default;
   // renders the sideWall to the screen
   void Draw() const override;
 
@@ -28,7 +26,7 @@ class SideWall : public virtual StaticObject
   float HalfTickness() const { return _half_tickness; }
 
   private:
-  // collision side of the SideWall
+  // Side of the screen being placed
   const ScreenSide _screen_side;
   // texture representing the SideWall
   const Texture& _texture;

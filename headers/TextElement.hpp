@@ -4,8 +4,7 @@
 #include <memory>
 #include <string>
 
-// TODO: COMMENT
-// simple class containing atexture with text to display
+// simple class containing avtexture with text to display
 struct TextElement : public StaticObject
 {
   public:
@@ -17,7 +16,7 @@ struct TextElement : public StaticObject
   TextElement(float x, float y, const std::string& fontPath, SDL_Color color,
       int textSize, SDL_Renderer* gameRenderer, const std::string& text);
 
-  // Displays text screen
+  // Displays text onto the screen
   void Draw() const override;
   // Returns width of the text element
   float Width() const;

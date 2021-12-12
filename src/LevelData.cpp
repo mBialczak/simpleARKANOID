@@ -9,13 +9,13 @@ using namespace std::string_literals;
 // Static member initialization:
 
 // the keyword marking the ball speed in the level file
-const std::string LevelData::_ball_speed_key { "ball_speed" };
+const std::string LevelData::ball_speed_key { "ball_speed" };
 // the keyword marking the paddle speed in the parsed level file
-const std::string LevelData::_paddle_speed_key { "paddle_speed" };
+const std::string LevelData::paddle_speed_key { "paddle_speed" };
 // the keyword marking the number of lives in the parsed level file
-const std::string LevelData::_lives_key { "lives" };
+const std::string LevelData::lives_key { "lives" };
 // the keyword marking the points per block destroyed in the parsed level file
-const std::string LevelData::_points_per_block_key { "points_per_block" };
+const std::string LevelData::points_per_block_key { "points_per_block" };
 
 // constructor taking the path to levels to load and level number
 // throws if unable to load level data
@@ -36,6 +36,11 @@ LevelData::LevelData(const std::string& path, unsigned levelNumber)
     throw std::runtime_error(
         "Error: wrong format in level file: "s + full_path);
   }
+}
+
+const std::vector<std::vector<Sprite>>& LevelData::SpriteTable() const
+{
+  return _sprite_table;
 }
 
 // reads single value described by key from the file
@@ -77,10 +82,10 @@ T LevelData::ReadDataItem(
 // returns true if succesfull, false - otherwise
 bool LevelData::ReadNumericalData(const std::string& filePath)
 {
-  _ball_speed = ReadDataItem<float>(filePath, _ball_speed_key);
-  _paddle_speed = ReadDataItem<float>(filePath, _paddle_speed_key);
-  _lives = ReadDataItem<unsigned>(filePath, _lives_key);
-  _points_per_block = ReadDataItem<unsigned>(filePath, _points_per_block_key);
+  _ball_speed = ReadDataItem<float>(filePath, ball_speed_key);
+  _paddle_speed = ReadDataItem<float>(filePath, paddle_speed_key);
+  _lives = ReadDataItem<unsigned>(filePath, lives_key);
+  _points_per_block = ReadDataItem<unsigned>(filePath, points_per_block_key);
   // check if the read values make sense
   if (_ball_speed <= 0.0 || _paddle_speed <= 0.0 || _lives == 0 || _lives > 5
       || _points_per_block == 0) {
@@ -113,17 +118,17 @@ bool LevelData::ReadSpriteTable(const std::string& filePath)
   unsigned row_count { 0 };
 
   // reserve enough space for the rows in member sprite table
-  _sprite_table.reserve(_max_rows);
+  _sprite_table.reserve(max_rows);
 
   // read the file line by line until  maximum number of
   // rows predicted for displaying is reached
-  while (std::getline(file_stream, file_line) && row_count < _max_rows) {
+  while (std::getline(file_stream, file_line) && row_count < max_rows) {
 
     // parse single file line and create a single sprite_row
     std::vector<Sprite> sprite_row { ReadSpriteRow(file_line) };
 
     // check for correct number of sprites in the signle row
-    if (sprite_row.size() != _row_size) {
+    if (sprite_row.size() != row_size) {
       return false;
     }
     // put the created row into sprite table
@@ -132,7 +137,7 @@ bool LevelData::ReadSpriteTable(const std::string& filePath)
   }
 
   // check if the created table has correct size
-  if (_sprite_table.size() != _max_rows) {
+  if (_sprite_table.size() != max_rows) {
     return false;
   }
   // the sprite table was succesfully read
@@ -149,7 +154,7 @@ std::vector<Sprite> LevelData::ReadSpriteRow(const std::string& fileLine) const
   // a row of sprite cells to be composed into the final table of sprites
   std::vector<Sprite> sprite_row;
   // reserve enough space for entire row of sprites
-  sprite_row.reserve(_row_size);
+  sprite_row.reserve(row_size);
   // strip the line char by char
   while (line_stream >> cell) {
     // Create Sprite and put into row
