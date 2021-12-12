@@ -1,7 +1,5 @@
 #include "Vector2d.hpp"
 
-#include <exception>
-
 namespace gMath {
 
 // default constructor
@@ -17,7 +15,7 @@ Vector2d::Vector2d(float x, float Y)
 {
 }
 
-// constructs unit vector from the direction angle in radians
+// constructor creating unit vector from the direction angle in radians
 Vector2d::Vector2d(float angle)
     : _x(cos(angle))
     // y coordinate needs to inverted due to SDL coordinate system
@@ -30,17 +28,20 @@ Vector2d Vector2d::operator*(float scalar)
 {
   // make temporary copy to be returned
   Vector2d new_vector { *this };
+  // multiply each axis value by a scalar
   new_vector._x *= scalar;
   new_vector._y *= scalar;
+
   return new_vector;
 }
 
-// add inplace other vector2d
+// adds other vector2d replacing the current value
 Vector2d& Vector2d::operator+=(const Vector2d& other)
 {
   // add member coordinates
   _x += other._x;
   _y += other._y;
+
   return *this;
 }
 

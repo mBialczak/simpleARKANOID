@@ -420,7 +420,7 @@ void Game::DisplayPauseScreen() const
   // create level counter display
   std::string level_str { std::to_string(_level_data->Level()) };
   const float level_x
-      = (remaining.Position()._x - (remaining.Width() / 2.0f)) / 2.0f;
+      = (remaining.Position().X() - (remaining.Width() / 2.0f)) / 2.0f;
   const float level_y = balls_y;
   TextElement level { level_x, level_y, Paths::pFontRobotoBold, Color::Blue, 70,
     _renderer->GetSDLrenderer(), level_str };

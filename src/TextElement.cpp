@@ -18,7 +18,7 @@ TextElement::TextElement(float x, float y, const std::string& fontPath,
 void TextElement::Draw() const
 {
   _texture->Render(
-      static_cast<int>(_position._x), static_cast<int>(_position._y));
+      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }
 
 // Returns width of the text element

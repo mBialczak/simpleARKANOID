@@ -14,5 +14,5 @@ SideWall::SideWall(float x, float y, ScreenSide sideOfScreen,
 void SideWall::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position._x), static_cast<int>(_position._y));
+      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }

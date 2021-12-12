@@ -72,7 +72,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
 void Ball::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position._x), static_cast<int>(_position._y));
+      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }
 
 // sets current speed of the object if it is not lower than minimal speed
@@ -121,9 +121,9 @@ void Ball::Start()
 void Ball::PlaceOnPaddle()
 {
   // calculate the correct position
-  float start_x = _paddle.Position()._x;
+  float start_x = _paddle.Position().X();
   float start_y
-      = _paddle.Position()._y - _paddle.HalfHeight() - _texture.Height() / 2.0;
+      = _paddle.Position().Y() - _paddle.HalfHeight() - _texture.Height() / 2.0;
 
   // update position vector
   _position = gMath::Vector2d(start_x, start_y);
@@ -168,7 +168,7 @@ bool Ball::HasHitPaddle() const
 // checks if the ball has left the screen
 bool Ball::HasLeftScreen() const
 {
-  return _position._y - _radius > _screen_bottom_y;
+  return _position.Y() - _radius > _screen_bottom_y;
 }
 
 // checks if the ball has hit any of the walls. If so, updates the game state
@@ -387,8 +387,8 @@ void Ball::BounceBlock(const Block& block)
   // we use left and right coordinate of the block borders in relation to the
   // ball's position X coordinate to approximate the side of the block being
   // collided
-  float left_x = block.Position()._x - block.HalfWidth();
-  float right_x = block.Position()._x + block.HalfWidth();
+  float left_x = block.Position().X() - block.HalfWidth();
+  float right_x = block.Position().X() + block.HalfWidth();
 
   float new_direction {};
 
@@ -420,7 +420,7 @@ float Ball::BounceBlockGoingUpRight(float leftX) const
   float new_direction {};
 
   // left border bounce
-  if (_position._x <= leftX) {
+  if (_position.X() <= leftX) {
     new_direction = 180.0f - _direction;
   }
   // otherwise it is a bottom border bounce
@@ -437,7 +437,7 @@ float Ball::BounceBlockGoingUpLeft(float rightX) const
   // either right or bottom border of the block could be hit
 
   // left border bounce
-  if (_position._x >= rightX) {
+  if (_position.X() >= rightX) {
     return 180.0f - _direction;
   }
   // bottom border bounce
@@ -453,7 +453,7 @@ float Ball::BounceBlockGoingDownLeft(float rightX) const
   // either right or top border of the block could be hit
 
   // right border bounce
-  if (_position._x >= rightX) {
+  if (_position.X() >= rightX) {
     float angle = _direction - 180.0f;
     return 360.0f - angle;
   }
@@ -470,7 +470,7 @@ float Ball::BounceBlockGoingDownRight(float leftX) const
   // either left or top border of the block could be hit
 
   // left border bounce
-  if (_position._x <= leftX) {
+  if (_position.X() <= leftX) {
     float angle = 360.0f - _direction;
     return 180 + angle;
   }

@@ -29,65 +29,65 @@ void Paddle::Update(float deltaTime)
 void Paddle::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position._x), static_cast<int>(_position._y));
+      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }
 
 // stops the paddle by setting velocity vector to {0,0}
 void Paddle::Stop()
 {
-  _velocity._x = 0.0;
-  _velocity._y = 0.0;
+  _velocity.SetX(0.0f);
+  _velocity.SetY(0.0f);
 }
 
 // enables moving up by proper setting of the paddle velocity vector
 void Paddle::MoveUp()
 {
-  _velocity._x = 0;
-  _velocity._y = -_speed / 2.0;
+  _velocity.SetX(0.0f);
+  _velocity.SetY(-_speed / 2.0f);
 }
 
 // enables moving down by proper setting of the paddle velocity vector
 void Paddle::MoveDown()
 {
-  _velocity._x = 0;
-  _velocity._y = _speed;
+  _velocity.SetX(0.0f);
+  _velocity.SetY(_speed);
 }
 
 // enables moving left by proper setting of the paddle velocity vector
 void Paddle::MoveLeft()
 {
-  _velocity._x = -_speed;
-  _velocity._y = 0;
+  _velocity.SetX(-_speed);
+  _velocity.SetY(0.0f);
 }
 
 // enables moving right by proper setting of the paddle velocity vector
 void Paddle::MoveRight()
 {
-  _velocity._x = _speed;
-  _velocity._y = 0;
+  _velocity.SetX(_speed);
+  _velocity.SetY(0.0f);
 }
 
 // corrects position if paddle tries to escape allowed moving area
 void Paddle::KeepInMovingLimits()
 {
   // move right if reached the left limit
-  if (_position._x - _half_width < _move_limits.x) {
-    _position._x = _move_limits.x + _half_width + 1;
+  if (_position.X() - _half_width < _move_limits.x) {
+    _position.SetX(_move_limits.x + _half_width + 1);
     return;
   }
   // move left if reached the right limit
-  if (_position._x + _half_width > _move_limits.x + _move_limits.w) {
-    _position._x = _move_limits.x + _move_limits.w - _half_width - 1;
+  if (_position.X() + _half_width > _move_limits.x + _move_limits.w) {
+    _position.SetX(_move_limits.x + _move_limits.w - _half_width - 1);
     return;
   }
   //  move down if reached the the top limit
-  if (_position._y - _half_height < _move_limits.y) {
-    _position._y = _move_limits.y + _half_height + 1;
+  if (_position.Y() - _half_height < _move_limits.y) {
+    _position.SetY(_move_limits.y + _half_height + 1);
     return;
   }
   // move up if reached the bottom limit
-  if (_position._y + _half_height > _move_limits.y + _move_limits.h) {
-    _position._y = _move_limits.y + _move_limits.h - _half_height - 1;
+  if (_position.Y() + _half_height > _move_limits.y + _move_limits.h) {
+    _position.SetY(_move_limits.y + _move_limits.h - _half_height - 1);
     return;
   }
 }
