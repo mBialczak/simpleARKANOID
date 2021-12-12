@@ -12,6 +12,9 @@
 class Texture
 {
   public:
+  // Default Constructor
+  Texture();
+
   // Constructor creating texture from the image.
   // Takes path of the image file to load and renderer for texture creation and
   // rendering. Throws SDLexception if construction fails

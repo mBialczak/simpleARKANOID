@@ -6,6 +6,15 @@
 // for operator""s usage
 using std::string_literals::operator""s;
 
+// Default Constructor
+Texture::Texture()
+    : _sdl_texture(nullptr)
+    , _sdl_renderer(nullptr)
+    , _width(0)
+    , _height(0)
+{
+}
+
 // Constructor creating texture from the image.
 // Takes path of the image file to load and renderer for texture creation and
 // rendering. Throws SDLexception if construction fails

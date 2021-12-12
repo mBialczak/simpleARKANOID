@@ -263,52 +263,52 @@ void Game::UpdateGame()
 void Game::LoadImages()
 {
   // load texture representing the ball
-  _images[Sprite::Ball] = std::make_unique<Texture>(
-      Paths::pBallImage, _renderer->GetSDLrenderer());
+  _images[Sprite::Ball]
+      = std::move(Texture(Paths::pBallImage, _renderer->GetSDLrenderer()));
 
   // load texture respresenting the paddle
-  _images[Sprite::Paddle] = std::make_unique<Texture>(
-      Paths::pPadleImage, _renderer->GetSDLrenderer());
+  _images[Sprite::Paddle]
+      = std::move(Texture(Paths::pPadleImage, _renderer->GetSDLrenderer()));
 
   // load texture representing the top_wall
-  _images[Sprite::WallHorizontal] = std::make_unique<Texture>(
-      Paths::pHorizontalWallImage, _renderer->GetSDLrenderer());
+  _images[Sprite::WallHorizontal] = std::move(
+      Texture(Paths::pHorizontalWallImage, _renderer->GetSDLrenderer()));
 
   // load texture representing side_walls
-  _images[Sprite::WallVertical] = std::make_unique<Texture>(
-      Paths::pVerticalWallImage, _renderer->GetSDLrenderer());
+  _images[Sprite::WallVertical] = std::move(
+      Texture(Paths::pVerticalWallImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a green block
-  _images[Sprite::BlockGreen] = std::make_unique<Texture>(
-      Paths::pBlockGreenImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockGreen] = std::move(
+      Texture(Paths::pBlockGreenImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a silver block
-  _images[Sprite::BlockSilver] = std::make_unique<Texture>(
-      Paths::pBlockSilverImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockSilver] = std::move(
+      Texture(Paths::pBlockSilverImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a blue block
-  _images[Sprite::BlockBlue] = std::make_unique<Texture>(
-      Paths::pBlockBlueImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockBlue]
+      = std::move(Texture(Paths::pBlockBlueImage, _renderer->GetSDLrenderer()));
 
   // load texture representing an orange block
-  _images[Sprite::BlockOrange] = std::make_unique<Texture>(
-      Paths::pBlockOrangeImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockOrange] = std::move(
+      Texture(Paths::pBlockOrangeImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a purple block
-  _images[Sprite::BlockPurple] = std::make_unique<Texture>(
-      Paths::pBlockPurpleImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockPurple] = std::move(
+      Texture(Paths::pBlockPurpleImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a red block
-  _images[Sprite::BlockRed] = std::make_unique<Texture>(
-      Paths::pBlockRedImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockRed]
+      = std::move(Texture(Paths::pBlockRedImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a teal block
-  _images[Sprite::BlockTeal] = std::make_unique<Texture>(
-      Paths::pBlockTealImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockTeal]
+      = std::move(Texture(Paths::pBlockTealImage, _renderer->GetSDLrenderer()));
 
   // load texture representing a yellow block
-  _images[Sprite::BlockYellow] = std::make_unique<Texture>(
-      Paths::pBlockYellowImage, _renderer->GetSDLrenderer());
+  _images[Sprite::BlockYellow] = std::move(
+      Texture(Paths::pBlockYellowImage, _renderer->GetSDLrenderer()));
 }
 
 // Initializes audio mixer system and loads all the sound
@@ -755,7 +755,7 @@ const Texture& Game::GetTexture(Sprite sprite) const
         "Unable to get texture for sprite in function Game::GetTexture()");
   }
   // return found texture
-  return *(search->second);
+  return search->second;
 }
 
 // creates the wall limiting the game area

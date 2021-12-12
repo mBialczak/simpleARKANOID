@@ -119,7 +119,7 @@ class Game
   // speed increase applied when the user orders so
   const float _speed_increment = 40.0f;
   // container with all image textures used in the game
-  std::unordered_map<Sprite, std::unique_ptr<Texture>> _images;
+  std::unordered_map<Sprite, Texture> _images;
   // container with texts constructed once for the entire game duration
   std::vector<TextElement> _texts;
   // pointer to AudioMixer responsible for sound support
