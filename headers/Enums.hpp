@@ -56,9 +56,8 @@ enum class BlockCharCode : char
   BlockRed = 'r',
   BlockTeal = 't',
   BlockYellow = 'y'
-
 };
-// VERIFY
+
 // enum representing possible states of the game
 enum class GameState : char
 {
@@ -70,7 +69,6 @@ enum class GameState : char
   Over,
   // game is won (all the levels completed)
   Won
-
 };
 
 // enum representing sound effects usued in the game

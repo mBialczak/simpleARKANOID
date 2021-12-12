@@ -13,7 +13,7 @@ class MovableObject
   MovableObject(float x, float y, float speed);
   // defalult virtual destructor
   virtual ~MovableObject() = default;
-  // updates objet state
+  // updates object state
   virtual void Update(float deltaTime) = 0;
   // draws the object
   virtual void Draw() const = 0;
