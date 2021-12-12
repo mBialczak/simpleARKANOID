@@ -10,8 +10,6 @@ using namespace std::string_literals;
 // support or loading of the sound  effect will fail
 AudioMixer::AudioMixer(
     const std::unordered_map<Sound, std::string>& soundsAndPaths)
-    : _mix_initializer(std::make_unique<MixInitializer>())
-    , _mix_opener(std::make_unique<MixOpener>())
 {
   // strip every pair of enum code (assigned to sound) and corresponding string
   // with path to the sound to be replayed
@@ -54,11 +52,11 @@ void AudioMixer::PlaySound(Sound soundCode)
   }
 };
 
-// ---------- HELPER INNER CLASSES -------------
+// ---------- class MixInitializer  -------------
 
 // Default constructor. Initializes SDL_Mixer.
 // Throws SDLexception if initialization was unsuccessful
-AudioMixer::MixInitializer::MixInitializer()
+MixInitializer::MixInitializer()
 {
   // Try to initialize SDL_Mixer and report error if it was unsuccessfull
   if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG)
@@ -69,7 +67,9 @@ AudioMixer::MixInitializer::MixInitializer()
 }
 
 // Destructor. Cleans up SDL_Mixer
-AudioMixer::MixInitializer::~MixInitializer() { Mix_Quit(); }
+MixInitializer::~MixInitializer() { Mix_Quit(); }
+
+// ---------- class MixInitializer  -------------
 
 /* Constructor. Initializes SDL sound mixer support. Arguments:
   - output sampling frequency in samples per second (Hz),
@@ -77,8 +77,7 @@ AudioMixer::MixInitializer::~MixInitializer() { Mix_Quit(); }
   - number of sound channels in output
   - bytes used per output sample.
   Throws SDLexception if initialization was unsuccessful  */
-AudioMixer::MixOpener::MixOpener(
-    int frequency, Uint16 format, int channels, int chunksize)
+MixOpener::MixOpener(int frequency, Uint16 format, int channels, int chunksize)
 {
   // Initialize SDL_Mixer and report error if it was unsuccessfull
   if (Mix_OpenAudio(frequency, format, channels, chunksize) < 0) {
@@ -89,4 +88,4 @@ AudioMixer::MixOpener::MixOpener(
 }
 
 // Destructor. Closes sound mixer
-AudioMixer::MixOpener::~MixOpener() { Mix_CloseAudio(); }
+MixOpener::~MixOpener() { Mix_CloseAudio(); }
