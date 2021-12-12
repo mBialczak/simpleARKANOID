@@ -1,29 +1,9 @@
-TODO: Consider making SDL initializer for better exception safety
-TODO: Conisder making Renderer exception safe
-
 TODO: Consider replacing many standard exceptions for string perhaps
-
-TODO: consider making shared_ptr in Texture
-
-TODO: consider refactoring LimitTimer to take FPS. Rename if possible. Replace time delay where
-needed
 
 TODO: remove not needed assets
 
 TODO:
 disable copying and moving for classes not predicted for copying or moving if owning resources
-
-TODO:
-consider creating wrappers for managed resources in case of exeption in during construction
-
-TODO:
-try to change pointer arguments to reference arguments where possible
-
-TODO:
-consider replacing most of the pointers with shared::ptr and weak_ptr where applicable
-
-TODO:
-consider introducing exceptions in gMath functions if invalid result
 
 TODO:
 consider standard C++ 17
@@ -35,19 +15,10 @@ TODO:
 consider making Vector2d a class isntead of struct and make \_x and \_y private
 
 TODO:
-try to inline possible operations
-
-TODO:
 make conditionaly compilied debugging code
 
 TODO:
-simplify game constructor
-
-TODO:
 consider creating conversion operators for Renderer and others
-
-TODO:
-consider shortening get functions
 
 TODO: consider setting \_texture in objects to a pointer and allow for validation check in the constructor
 
@@ -61,8 +32,6 @@ TODO: in Game create objects functions there are many constructors where perhaps
 instead of in might be better
 
 TODO: consider changing paddle refernce to pointer in ball and reduce constructor (pointer could be set after paddle creation)
-
-TODO: consider putting all consts with enums in one file
 
 TODO: check all classes for leaking resources
 

@@ -9,6 +9,7 @@
 #include "Paddle.hpp"
 #include "RandNum.hpp"
 #include "Renderer.hpp"
+#include "SDLInitializers.hpp"
 #include "SideWall.hpp"
 #include "TextElement.hpp"
 #include "Texture.hpp"
@@ -19,18 +20,23 @@
 
 // class forward declarations
 class Controller;
+class SDLinitializer;
 
-// COMMENT
 // main game class
 class Game
 {
   public:
-  // COMMENT
-  // constructor
+  // Constructor. Takes game window height and width, desired FPS rate and
+  // numbers
+  // off game levels implemented.
+  // Subobjects will throw exceptions if initialization fails (SDLexception and
+  // exceptions derived from std::exception)
+
   Game(const std::size_t screenHeight, const std::size_t screenWidth,
       const std::size_t targetFrameRate, unsigned levelsImplemented);
-  // destructor
-  ~Game();
+
+  // RAII mechanism allow to use defalut destructor
+  ~Game() = default;
 
   // deleted copy and move operations as the project design predicts only one
   // game object in the entire program
@@ -60,8 +66,6 @@ class Game
   void PlaySound(Sound sound) const { _audio->PlaySound(sound); }
 
   private:
-  // initialize SDL subsystems
-  void InitSubsystems();
   // Perfoms actions in routine game state
   void RoutineGameActions();
   // Perfoms actions when the game is paused
@@ -105,19 +109,28 @@ class Game
   // creates blocks
   void CreateBlocks();
 
-  // number levels implemented by the developer
-  unsigned _max_level;
-  // controls if the main loop is running
-  bool _is_running = true; // NOTE: rename?
-  // controlls the bahaviour of main loop
-  GameState _state = GameState::Paused;
+  // RAII class object responsible for initializing and closing SDL subsystems
+  SDLinitializer _sdl_initializer;
+  // RAII class object responsible for initializing and closing SDL_Image
+  // support
+  ImageInitializer _image_initializer;
+  // RAII class object responsible for initializing and True Type Font support
+  TTFinitializer _ttf_initializer;
   // window size properties
   const std::size_t _screen_height;
   const std::size_t _screen_width;
+  // unique pointer to renderer
+  std::unique_ptr<Renderer> _renderer;
+  // number levels implemented by the developer
+  unsigned _max_level;
+  // controls if the main loop is running
+  bool _is_running = true;
+  // controlls the bahaviour of main loop
+  GameState _state = GameState::Paused;
   // target frame rate of the display
   const Uint32 _frame_rate;
   // speed increase applied when the user orders so
-  const float _speed_increment = 40.0f;
+  const float _speed_increment = 30.0f;
   // container with all image textures used in the game
   std::unordered_map<Sprite, Texture> _images;
   // container with texts constructed once for the entire game duration
@@ -126,8 +139,6 @@ class Game
   std::unique_ptr<AudioMixer> _audio;
   // pointer to controller for handling keyboard input
   std::unique_ptr<Controller> _controller;
-  // OWNED pointer to renderer // VERIFY if unique_ptr possible
-  Renderer* _renderer;
   // container for side walls
   std::vector<SideWall> _side_walls;
   // pointer to the ball
@@ -138,8 +149,9 @@ class Game
   gMath::RandNum _randomizer;
   // container of all the blocks in the current level
   std::vector<Block> _blocks;
-  // Group all the static and movable objects to be displayed on the game
-  // screen. (for display purposes only, objects are managed by other members)
+  // Containers grouping all the static and movable objects to be displayed on
+  // the game screen. (for display purposes only, objects are managed by other
+  // members)
   std::vector<const StaticObject*> _static_for_game_screen;
   std::vector<const MovableObject*> _movable_for_game_screen;
   // takes track of points achieved by the player
@@ -151,4 +163,5 @@ class Game
   // timer regulating the updates of the game state
   IntervalTimer _timer;
 };
+
 #endif // !GAME_HPP

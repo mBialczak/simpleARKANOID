@@ -45,6 +45,7 @@ src/Block.cpp
 src/LevelData.cpp
 src/TextElement.cpp
 src/AudioMixer.cpp
+src/SDLInitializers.cpp # REMOVE: cpp
 # src/Sprite.cpp # NOTE: remove if not used
 )
 

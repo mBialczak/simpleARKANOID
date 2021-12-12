@@ -1,43 +1,41 @@
 #include "Game.hpp"
-#include "Colors.hpp" // REMOVE INU
-#include "IntervalTimer.hpp" //REMOVE most likely as is in header
+#include "Colors.hpp"
+#include "IntervalTimer.hpp"
 #include "LimitTimer.hpp"
-#include "Paths.hpp" // REVIEW: remove INU
+#include "Paths.hpp"
 #include "SDL.h"
 #include "SDL_image.h"
-#include "SDL_ttf.h" // REVIEW: remove INU
 #include "SDLexception.hpp"
 #include <algorithm>
 #include <exception>
 #include <fstream>
-#include <iostream> // NOTE: remove AT
-#include <sstream> // VERIFY if needed
 
-// for operator""s usage // VERIFY if used in this file
-using std::string_literals::operator""s;
-
-// constructor //COMMENT
+// Constructor. Takes game window height and width, desired FPS rate and numbers
+// off game levels implemented.
+// Subobjects will throw exceptions if initialization fails (SDLexception and
+// exceptions derived from std::exception)
 Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     const std::size_t targetFrameRate, unsigned levelsImplemented)
-    : _max_level(levelsImplemented)
+    : // try to initialize SDL video and audio subsystems
+    _sdl_initializer(SDLinitializer(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
+    // try to initialize SDL_Image support for PNG files
+    , _image_initializer(ImageInitializer(IMG_INIT_PNG))
+    // try to initialize True Type Font support
+    , _ttf_initializer(TTFinitializer())
     , _screen_height(screenHeight)
     , _screen_width(screenWidth)
+    , _renderer(std::make_unique<Renderer>(screenHeight, screenWidth))
+    , _max_level(levelsImplemented)
     , _frame_rate(targetFrameRate)
     , _audio(nullptr)
     , _controller(std::make_unique<Controller>(*this))
-    , _renderer(nullptr)
     // load all the data for the first level
-    , _level_data(std::make_unique<LevelData>(Paths::pLevels, 10))
+    , _level_data(std::make_unique<LevelData>(Paths::pLevels))
     , _balls_remaining(_level_data->Lives())
 {
-  // Initialize SDL subsystems
-  InitSubsystems();
-
-  // create graphics renderer here, only after SDL is initialized
-  _renderer = new Renderer(_screen_height, _screen_width);
-
   // load images used in the game
   LoadImages();
+
   // Initialize audio mixer system and load all the sound
   // effects to be used in the game
   LoadAudio();
@@ -47,8 +45,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   _static_for_game_screen.reserve(
       LevelData::max_rows * LevelData::row_size + 3);
 
-  // Only after SDL stuff is initialized and textures are created, other
-  // components can be created
+  // Create all the game visible components
   CreateWalls();
   CreateBlocks();
   CreatePaddle();
@@ -56,45 +53,6 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
 
   // create all displayable text elements which will not change in the game
   CreateTexts();
-}
-// TODO: reimplement with RAII?
-// initialize SDL subsystems
-void Game::InitSubsystems()
-{
-  // try to initialize SDL video and audio support and report error if failed
-  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
-    throw SDLexception(
-        "Failed to initialize SDL", SDL_GetError(), __FILE__, __LINE__);
-  }
-
-  // initialize SDL_Image support
-  int to_init_flags = IMG_INIT_PNG;
-  int initialized_flags = IMG_Init(to_init_flags);
-  // check if SDL_Image support was initialized correctly
-  if ((to_init_flags & initialized_flags) != to_init_flags) {
-    throw SDLexception("Failed to initialize SDL IMAGE support", IMG_GetError(),
-        __FILE__, __LINE__);
-  }
-
-  // initialize True Type Font support and check if it was done successfully
-  if (TTF_Init() == -1) {
-    throw SDLexception(
-        "Failed to initialize TTF support", TTF_GetError(), __FILE__, __LINE__);
-  }
-}
-
-// destructor
-Game::~Game()
-{
-  // delete graphics renderer
-  delete (_renderer);
-  _renderer = nullptr;
-
-  // REVIEW:
-  // close SDL subsystems
-  TTF_Quit();
-  IMG_Quit();
-  SDL_Quit();
 }
 
 // implements main game loop

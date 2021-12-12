@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 // helper class for AudioMixer. It's sole task is to initialize SDL_Mixer
-// support and close it upon destruction
+// support and close it upon destruction using RAII
 class MixInitializer
 {
   public:
@@ -20,7 +20,7 @@ class MixInitializer
 };
 
 // helper class for AudioMixer. It;s sole task is to initialize SDL sound mixer
-// and free menaged resources on destruction
+// and free menaged resources on destruction using RAII
 class MixOpener
 {
   public:
