@@ -19,7 +19,7 @@ class MixInitializer
   ~MixInitializer();
 };
 
-// helper class for AudioMixer. It;s sole task is to initialize SDL sound mixer
+// helper class for AudioMixer. It's sole task is to initialize SDL sound mixer
 // and free menaged resources on destruction using RAII
 class MixOpener
 {

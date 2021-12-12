@@ -18,7 +18,7 @@ AudioMixer::AudioMixer(
     auto& path = sound_path_pair.second;
     // create unique_ptr to SDL Mix_Chunk with custom deleter assuring proper
     // releasing of resource on destruction
-    auto&& chunk_ptr
+    auto chunk_ptr
         = std::unique_ptr<Mix_Chunk, std::function<void(Mix_Chunk*)>>(
             Mix_LoadWAV(path.c_str()),
             [](Mix_Chunk* chunk_ptr) { Mix_FreeChunk(chunk_ptr); });
@@ -40,10 +40,13 @@ AudioMixer::AudioMixer(
 // replays the sound effect corresponding to to enum sound code passed
 void AudioMixer::PlaySound(Sound soundCode)
 {
-  // check if the member map contains the sound corresponding to code
-  if (_sound_effects.find(soundCode) != _sound_effects.end()) {
+  // try to find the entry in _sound_effects corresponding to the sound code
+  auto search_iter = _sound_effects.find((soundCode));
+
+  // check if the searched pair was found
+  if (search_iter != _sound_effects.end()) {
     // retrieve the pointer to Mix_Chunk
-    auto chunk_ptr = _sound_effects[soundCode].get();
+    auto chunk_ptr = search_iter->second.get();
     // replay the sound on the first free unreserved channel (-1)
     // single time (0)
     Mix_PlayChannel(-1, chunk_ptr, 0);
@@ -67,7 +70,7 @@ MixInitializer::MixInitializer()
 // Destructor. Cleans up SDL_Mixer
 MixInitializer::~MixInitializer() { Mix_Quit(); }
 
-// ---------- class MixInitializer  -------------
+// ---------- class MixOpener  -------------
 
 /* Constructor. Initializes SDL sound mixer support. Arguments:
   - output sampling frequency in samples per second (Hz),
