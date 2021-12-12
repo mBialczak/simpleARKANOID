@@ -18,7 +18,7 @@ const std::string LevelData::lives_key { "lives" };
 const std::string LevelData::points_per_block_key { "points_per_block" };
 
 // constructor taking the path to levels to load and level number
-// throws if unable to load level data
+// throws std::runtime_error if unable to load level data
 LevelData::LevelData(const std::string& path, unsigned levelNumber)
     : _level(levelNumber)
     , _ball_speed(0.0f)
@@ -38,12 +38,16 @@ LevelData::LevelData(const std::string& path, unsigned levelNumber)
   }
 }
 
+// returns the sprite table representing
+// the composition of blocks in the level
 const std::vector<std::vector<Sprite>>& LevelData::SpriteTable() const
 {
   return _sprite_table;
 }
 
-// reads single value described by key from the file
+// Reads and returns single value described by key from the file.
+// If the value wasn't found returns default value for the type.
+// Throws std::runtime_error if was unable to open file
 template <typename T>
 T LevelData::ReadDataItem(
     const std::string& filePath, const std::string& keyword) const
@@ -56,7 +60,7 @@ T LevelData::ReadDataItem(
   T value {};
   // open file for reading
   std::ifstream file_stream(filePath);
-  // check if opening file for reading was successful and report error if not
+  // check if opening file for reading was successful
   if (!file_stream) {
     throw std::runtime_error(
         "Unable to open file with the level data!"s + filePath);
@@ -101,6 +105,7 @@ bool LevelData::ReadNumericalData(const std::string& filePath)
 // however, each block is represented by single character, so the function
 // maps the char into Sprite while reading. returns true if sprite table is
 // created succesfully, false otherwise
+// Throws std::runtime_error if was unable to open file
 bool LevelData::ReadSpriteTable(const std::string& filePath)
 {
   // open the file

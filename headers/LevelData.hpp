@@ -39,7 +39,9 @@ class LevelData
   static constexpr float block_height = 25.0f;
 
   private:
-  // reads single value described by key from the file
+  // Reads and returns single value described by key from the file.
+  // If the value wasn't found returns default value for the type.
+  // Throws std::runtime_error if was unable to open file
   template <typename T>
   T ReadDataItem(const std::string& filePath, const std::string& keyword) const;
   // reads all level numerical data from the level file
@@ -49,7 +51,8 @@ class LevelData
   // where each object of enum type Sprite corresponds to one block. In the file
   // however, each block is represented by single character, so the function
   // maps the char into Sprite while reading.
-  // Returns true if sprite table is created succesfully, false otherwise
+  // Returns true if sprite table is created succesfully, false otherwise.
+  // Throws std::runtime_error if was unable to open file
   bool ReadSpriteTable(const std::string& filePath);
   // loads single row of sprites; helper for ReadSpriteTable()
   std::vector<Sprite> ReadSpriteRow(const std::string& fileLine) const;
@@ -73,7 +76,7 @@ class LevelData
   float _ball_speed;
   // paddle scalar moving speed assigned to the level
   float _paddle_speed;
-  // number of startingg lives assigned to the level
+  // number of starting lives assigned to the level
   unsigned _lives;
   // points value of each block destroyed in the level
   unsigned _points_per_block;
