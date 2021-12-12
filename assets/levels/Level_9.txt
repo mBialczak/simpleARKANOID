@@ -1,0 +1,26 @@
+y  p  s  o  g  r  t  0  0  0  0  0  0  r  s  t  p  b  g  y
+p  s  o  g  r  t  0  0  0  0  0  0  0  0  r  s  t  p  b  g
+s  o  g  r  t  0  0  0  0  0  0  0  0  0  0  r  s  t  p  b
+o  g  r  t  0  0  0  0  0  0  0  0  0  0  0  0  r  s  t  p
+g  r  t  0  0  0  0  0  0  0  0  0  0  0  0  0  0  r  s  t
+r  t  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  r  s
+t  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  r
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+b  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  p
+g  b  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  p  b
+y  g  b  0  0  0  0  0  0  0  0  0  0  0  0  0  0  p  b  y
+r  y  g  b  0  0  0  0  0  0  0  0  0  0  0  0  p  b  y  s
+t  r  y  g  b  0  0  0  0  0  0  0  0  0  0  p  b  y  s  r
+s  t  r  y  g  b  0  0  0  0  0  0  0  0  p  b  y  s  r  t
+o  s  t  r  y  g  b  0  0  0  0  0  0  p  b  y  s  r  t  o
+
+ball_speed  475.0
+paddle_speed  400.0
+lives   3
+points_per_block  3
+
+
+
+
+
+

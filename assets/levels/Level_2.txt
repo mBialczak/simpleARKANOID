@@ -1,23 +1,23 @@
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  g  g  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
-0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+y  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  y
+y  y  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  y  y
+o  o  o  0  0  0  0  0  0  0  0  0  0  0  0  0  0  o  o  o
+o  o  o  o  0  0  0  0  0  0  0  0  0  0  0  0  o  o  o  o
+r  r  r  r  0  0  0  0  0  0  0  0  0  0  0  0  r  r  r  r
+r  r  r  r  r  0  0  0  0  0  0  0  0  0  0  r  r  r  r  r
+p  p  p  p  p  0  0  0  0  0  0  0  0  0  0  p  p  p  p  p
+p  p  p  p  p  p  0  0  0  0  0  0  0  0  p  p  p  p  p  p
+b  b  b  b  b  b  0  0  0  0  0  0  0  0  b  b  b  b  b  b
+b  b  b  b  b  b  b  0  0  0  0  0  0  b  b  b  b  b  b  b
+t  t  t  t  t  t  t  0  0  0  0  0  0  t  t  t  t  t  t  t
+t  t  t  t  t  t  t  t  0  0  0  0  t  t  t  t  t  t  t  t
+g  g  g  g  g  g  g  g  0  0  0  0  g  g  g  g  g  g  g  g
+g  g  g  g  g  g  g  g  g  0  0  g  g  g  g  g  g  g  g  g
 0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
 
 ball_speed  300.0
-paddle_speed  250.0
-lives   1
-points_per_block  10
+paddle_speed  275
+lives   3
+points_per_block  1
 
 
 

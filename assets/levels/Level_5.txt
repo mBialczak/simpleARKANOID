@@ -1,0 +1,27 @@
+r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r
+r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r  r
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g
+g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g  g
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o
+o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b
+b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b  b
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y
+y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y  y
+0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0  0
+
+
+ball_speed  375.0
+paddle_speed  325.0
+lives   3
+points_per_block  1
+
+
+
+
+
+

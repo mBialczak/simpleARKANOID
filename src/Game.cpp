@@ -27,7 +27,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
     , _controller(std::make_unique<Controller>(*this))
     , _renderer(nullptr)
     // load all the data for the first level
-    , _level_data(std::make_unique<LevelData>(Paths::pLevels))
+    , _level_data(std::make_unique<LevelData>(Paths::pLevels, 10))
     , _balls_remaining(_level_data->Lives())
 {
   // Initialize SDL subsystems
@@ -407,7 +407,7 @@ void Game::CreateTexts()
       Color::Orange, 22, _renderer->GetSDLrenderer(), line_4);
 
   // 5th line of instructions
-  std::string line_5 { "CONTROLS  WORKING  ONLY  WHILE  "
+  std::string line_5 { "THESE  WORK  ONLY  WHEN  HELD  WHILE  "
                        "THE  BALL  HITS  THE  PADDLE :" };
   const float line_5_x = horizontal_centre;
   const float line_5_y = line_4_y + instr_spacer + 10.0f;
