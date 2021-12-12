@@ -41,14 +41,12 @@ AudioMixer::AudioMixer(
 void AudioMixer::PlaySound(Sound soundCode)
 {
   // check if the member map contains the sound corresponding to code
-  if (_sound_effects.contains(soundCode)) {
+  if (_sound_effects.find(soundCode) != _sound_effects.end()) {
     // retrieve the pointer to Mix_Chunk
     auto chunk_ptr = _sound_effects[soundCode].get();
     // replay the sound on the first free unreserved channel (-1)
     // single time (0)
-    if (chunk_ptr) {
-      Mix_PlayChannel(-1, chunk_ptr, 0);
-    }
+    Mix_PlayChannel(-1, chunk_ptr, 0);
   }
 };
 
