@@ -1,48 +1,53 @@
 #include "Renderer.hpp"
 #include "LimitTimer.hpp"
-#include "Paths.hpp" // REMOVE INU
 #include "SDLexception.hpp"
-#include <iostream> //REVIEW: remove after testing
 
-// constructor takes screen size for rendering
+// Constructor. Takes screen size for rendering.
+// Throws std::ivalid_argument if the size is non-positive
+// Throws SDLexception if creating SDL_Renderer will fail
 Renderer::Renderer(
     const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
     , _screen_width(screenWidth)
+    , _sdl_window(nullptr)
+    , _sdl_renderer(nullptr)
 {
-  // create main game window
-  _sdl_window = SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
-      SDL_WINDOWPOS_CENTERED, _screen_width, _screen_height, SDL_WINDOW_SHOWN);
+  // Check if the screensize passed was correct and report error if not
+  if (_screen_height <= 0 || _screen_width <= 0)
+    throw std::invalid_argument("Cannot create Window with size less than 0!");
 
-  // check if window created successfully
+  // create main game window  using unique pointer with custom deleter,
+  // which will automatically destroy the window as per RAII
+  _sdl_window = std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> {
+    SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED, _screen_width, _screen_height,
+        SDL_WINDOW_SHOWN),
+    [](SDL_Window* ptr) { SDL_DestroyWindow(ptr); }
+  };
+
+  // check if window created successfully, if not - report error
   if (!_sdl_window) {
     throw SDLexception(
         "Could not create window", SDL_GetError(), __FILE__, __LINE__);
   }
+  // create graphics renderer using unique pointer with custom deleter,
+  // which will automatically destroy the window as per RAII
+  _sdl_renderer
+      = std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> {
+          SDL_CreateRenderer(_sdl_window.get(), -1,
+              SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC),
+          [](SDL_Renderer* ptr) { SDL_DestroyRenderer(ptr); }
+        };
 
-  // create graphics renderer
-  _sdl_renderer = SDL_CreateRenderer(
-      _sdl_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
-
-  // check if renderer created successfully
+  // check if renderer created successfully, if not - report error
   if (!_sdl_renderer) {
     throw SDLexception(
         "Could not create renderer", SDL_GetError(), __FILE__, __LINE__);
   }
 }
 
-// destructor
-Renderer::~Renderer()
-{
-  // Deestroy graphics renderer
-  SDL_DestroyRenderer(_sdl_renderer);
-  _sdl_renderer = nullptr;
-  // Destroy main game window
-  SDL_DestroyWindow(_sdl_window);
-  _sdl_window = nullptr;
-}
-
-// displays (renders) game graphics
+// displays (renders) game graphics composed of the passed arguments:
+// two vectors of objects to display
 void Renderer::DisplayGameScreen(
     const std::vector<const StaticObject*>& staticObjects,
     const std::vector<const MovableObject*>& movableObjects) const
@@ -50,9 +55,9 @@ void Renderer::DisplayGameScreen(
   UpdateTitleBar();
 
   // Set clear screen color
-  SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
+  SDL_SetRenderDrawColor(_sdl_renderer.get(), 0x00, 0x00, 0x00, 0xFF);
   // clear screen
-  SDL_RenderClear(_sdl_renderer);
+  SDL_RenderClear(_sdl_renderer.get());
 
   // display all static game objects
   for (auto& object : staticObjects) {
@@ -65,20 +70,19 @@ void Renderer::DisplayGameScreen(
   }
 
   // update screen
-  SDL_RenderPresent(_sdl_renderer);
+  SDL_RenderPresent(_sdl_renderer.get());
 }
 
-// REMOVE INU , COMMENT if not
-// Displays a screen containing static objects
+// Displays a screen containing static objects sent as argument
 void Renderer::DisplayStaticScreen(
     const std::vector<const StaticObject*>& staticObjects) const
 {
   UpdateTitleBar();
 
   // Set clear screen color
-  SDL_SetRenderDrawColor(_sdl_renderer, 0x00, 0x00, 0x00, 0xFF);
+  SDL_SetRenderDrawColor(_sdl_renderer.get(), 0x00, 0x00, 0x00, 0xFF);
   // clear screen
-  SDL_RenderClear(_sdl_renderer);
+  SDL_RenderClear(_sdl_renderer.get());
 
   // display all text objects game objects
   for (auto& object : staticObjects) {
@@ -86,7 +90,7 @@ void Renderer::DisplayStaticScreen(
   }
 
   // update screen
-  SDL_RenderPresent(_sdl_renderer);
+  SDL_RenderPresent(_sdl_renderer.get());
 }
 
 // update title bar
@@ -106,7 +110,7 @@ void Renderer::UpdateTitleBar() const
     // create and display title to be updated every second
     std::string title { "Simple Akranoid game! Have fun!\t\t\tFPS: " };
     title += std::to_string(frames);
-    SDL_SetWindowTitle(_sdl_window, title.c_str());
+    SDL_SetWindowTitle(_sdl_window.get(), title.c_str());
 
     // reset number of frames for another run
     frames = 0;

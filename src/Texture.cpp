@@ -101,10 +101,11 @@ Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
   // Needs to be done here (not in the constructor initilializer list),
   // because first the the text_surface needs to be created.
   // Custom deleter is used due to specific SDL texture destructon function
-  _sdl_texture = std::move(
-      std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
+  _sdl_texture
+      = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
           SDL_CreateTextureFromSurface(gameRenderer, text_surface.get()),
-          [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); } });
+          [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); }
+        };
 
   // check if texture created succesfully and throw if not
   if (!_sdl_texture) {
