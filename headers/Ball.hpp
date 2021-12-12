@@ -9,31 +9,33 @@
 #include "Texture.hpp"
 #include "Vector2d.hpp"
 #include <vector>
-// #include "gMath.hpp" // NOTE: remove INU
 
 // class forward declarations
-class Texture;
 class Paddle;
 class Game;
 class SideWall;
 class Block;
 
+// class representing the ball in the game
 class Ball : public virtual MovableObject
 {
   public:
-  // constructor:
-  // speed - ball sclar speed in pixels / second
-  // texture - texture used for displaying the ball
-  // paddle - reference to paddle against ball collision will be checked
-  // game - reference to the main game object
-  // blocks - blocks to be shot at; for collision detection
+  /* Constructor. Takes:
+      speed - ball sclar speed in pixels / second
+      texture - texture used for displaying the ball
+      paddle - reference to paddle against ball collision will be checked
+      game - reference to the main game object
+      sideWalls - reference to sideWalls for collision detection
+      blocks - blocks to be shot at; for collision detection
+  Throws std::invalid_argument if the arguments sent to the constructor where
+  invalid */
   Ball(float speed, const Texture& texture, Paddle& paddle, float screenBottomY,
       Game& game, const std::vector<SideWall>& sideWalls,
       std::vector<Block>& blocks);
 
   // default virtual destructor
-  ~Ball() override = default; 
-  
+  ~Ball() override = default;
+
   // update ball state with given time difference from last update
   void Update(float deltaTime) override;
   // render the ball
@@ -42,7 +44,8 @@ class Ball : public virtual MovableObject
   void SetSpeed(float speed) override;
   // sets the speed increase/decrease applied when the ball hits the paddle
   void SetSpeedDelta(float speedChange) { _speed_delta = speedChange; }
-  // updates ball direction and velocity vector; takes new  direction angle
+  // updates ball direction and velocity vector;
+  // takes new  direction angle in degrees
   void UpdateDirectionAndVelocity(float directionAngle);
   // resets ball min speed and speed values to the passed value and
   // sets position to the starting position on the paddle
@@ -63,7 +66,9 @@ class Ball : public virtual MovableObject
   // checks for collision with the paddle. Returns true if colided, false if not
   bool HasHitPaddle() const;
   // checks if the ball has hit the paddle. If so, updates the game state
-  // accoringly
+  // accoringly:
+  // - changes ball direction after bounce - including applying spin
+  // - increases or decreases speed if the user gave a command via controller
   void HandlePaddleCollisions();
   // checks if the ball has hit any of the walls. If so, updates the game state
   // accordingly
@@ -117,7 +122,7 @@ class Ball : public virtual MovableObject
   // current value of spin to be applied
   Spin _spin = Spin::None;
   // ball minimum speed in the current level
-  float _min_speed = _speed;
+  float _min_speed;
   // speed change (pixels/second) aplied every time the ball hits the paddle
   float _speed_delta = 0.0;
   // reference to paddle for collision detection

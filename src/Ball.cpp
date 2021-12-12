@@ -1,14 +1,15 @@
 #include "Ball.hpp"
 #include "Game.hpp"
-#include <iostream> // NOTE: remove after testing
 
-// constructor: // VERIFY comments
-// speed - ball sclar speed in pixels / second
-// texture - texture used for displaying the ball
-// paddle - reference to paddle against ball collision will be checked
-// game - reference to the main game object
-// sideWalls - reference to sideWalls for collision detection
-// blocks - blocks to be shot at; for collision detection
+/* Constructor. Takes:
+    speed - ball sclar speed in pixels / second
+    texture - texture used for displaying the ball
+    paddle - reference to paddle against ball collision will be checked
+    game - reference to the main game object
+    sideWalls - reference to sideWalls for collision detection
+    blocks - blocks to be shot at; for collision detection
+Throws std::invalid_argument if the arguments sent to the constructor where
+invalid */
 Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
     float screenBottomY, Game& game, const std::vector<SideWall>& sideWalls,
     std::vector<Block>& blocks)
@@ -17,16 +18,21 @@ Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
     , _velocity(gMath::Vector2d())
     , _texture(texture)
     , _radius(texture.Width() / 2.0)
+    , _min_speed(speed)
     , _paddle(paddle)
     , _screen_bottom_y(screenBottomY)
     , _game(game)
     , _side_walls(sideWalls)
     , _blocks(blocks)
 {
-  // REVIEW: consider checking invariants in the constructor
+  // check if the arguments passed to the constructor where valid and the
+  // invariant was correctly established. If not - report error
+  if (_radius <= 0.0f || _speed < 0.0f || _min_speed < 0.0f
+      || _side_walls.empty() || _blocks.empty() || _screen_bottom_y <= 0.0f)
+    throw std::invalid_argument(
+        "Invalid argument passed to the ball constructor");
 }
 
-// TODO: make clean or break into functions
 // update ball state with given time difference from last update
 void Ball::Update(float deltaTime)
 {
@@ -55,7 +61,8 @@ void Ball::Update(float deltaTime)
   }
 }
 
-// updates ball direction and velocity vector; takes new  direction angle
+// updates ball direction and velocity vector;
+// takes new  direction angle in degrees
 void Ball::UpdateDirectionAndVelocity(float directionAngle)
 {
   // update direction angle
@@ -81,7 +88,7 @@ void Ball::SetSpeed(float speed)
   if (speed >= _min_speed) {
     // update speed
     _speed = speed;
-    // update velocity vector // VERIFY
+    // update velocity vector
     _velocity = gMath::Vector2d(gMath::ToRadians(_direction)) * speed;
   }
 }
@@ -94,7 +101,7 @@ void Ball::Reset(float speed)
 
   _direction = 0.0f;
 
-  _velocity = gMath::Vector2d { 0.0 };
+  _velocity = gMath::Vector2d { 0.0f };
 
   _min_speed = speed;
 
@@ -175,7 +182,8 @@ bool Ball::HasLeftScreen() const
 // accordingly
 void Ball::HandleWallCollisions()
 {
-  for (auto& wall : _side_walls)
+  for (auto& wall : _side_walls) {
+    // for every side wall check if the ball has hit it
     if (HasHitWall(wall)) {
       {
         // change direction
@@ -187,6 +195,7 @@ void Ball::HandleWallCollisions()
         break;
       }
     }
+  }
 }
 
 // checks if the ball has hit any of the blocks. If so, updates the game state
@@ -210,7 +219,7 @@ bool Ball::HasHitWall(const SideWall& wall) const
 {
   // check what side of screen the wall is placed
   ScreenSide side = wall.GetScreenSide();
-  // we check if the distance from the wall is greater than collision distance:
+  //  check if the distance from the wall is greater than collision distance:
   // horizontal distance for left and right side wall and the vertical distance
   // for the top wall
   switch (side) {
@@ -348,7 +357,7 @@ void Ball::BouncePaddle()
     new_direction += CalcSpin(bounce_angle);
   }
   // if the ball heads downwards and to the right
-  //(_direction >= 270.0f && _direction < 360.0f)
+  // that is (_direction >= 270.0f && _direction < 360.0f)
   else {
     new_direction = 360.0f - _direction;
     // increment the bounce angle introducing (possibly negative) spin
@@ -427,6 +436,7 @@ float Ball::BounceBlockGoingUpRight(float leftX) const
   else {
     new_direction = 360.0f - _direction;
   }
+
   return new_direction;
 }
 
