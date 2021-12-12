@@ -17,8 +17,7 @@ Vector2d::Vector2d(float x, float Y)
 {
 }
 
-// constructs unit vector (normalized vector) from the direction angle
-// NOTE: add info about angle unit
+// constructs unit vector from the direction angle in radians
 Vector2d::Vector2d(float angle)
     : _x(cos(angle))
     // y coordinate needs to inverted due to SDL coordinate system

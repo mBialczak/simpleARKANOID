@@ -138,7 +138,6 @@ class Game
   gMath::RandNum _randomizer;
   // container of all the blocks in the current level
   std::vector<Block> _blocks;
-  // REVIEW: perhaps can be put into one drawable parent class
   // Group all the static and movable objects to be displayed on the game
   // screen. (for display purposes only, objects are managed by other members)
   std::vector<const StaticObject*> _static_for_game_screen;

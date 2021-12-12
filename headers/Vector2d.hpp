@@ -15,7 +15,7 @@ struct Vector2d
   Vector2d();
   // constructor taking X and Y coordinates
   Vector2d(float X, float Y);
-  // constructs unit vector from the direction angle
+  // constructs unit vector from the direction angle in radians
   explicit Vector2d(float angle);
   // returns current vector multiplied by scalar
   Vector2d operator*(float scalar);
