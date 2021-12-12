@@ -6,7 +6,7 @@
 #include "SDL.h"
 #include <exception>
 
-// class for controling input and steering
+// class for controling input and steering from the keyboard
 class Controller
 {
   public:
@@ -19,7 +19,7 @@ class Controller
   Controller& operator=(const Controller&) = delete;
 
   // Handles all the input events
-  // Takes the paddle and ball to synchronise game controll
+  // Takes the paddle and ball to synchronise game control
   void HandleInput(bool& running, Paddle& paddle, Ball& ball) const;
 
   private:
