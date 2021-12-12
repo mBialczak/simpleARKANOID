@@ -1,7 +1,6 @@
 #ifndef StaticObject_hpp
 #define StaticObject_hpp
 #include "Vector2d.hpp"
-// #include "gMath.hpp" // NOTE: remvoe INU
 
 // abstract class for representing static (not moving objects in the game)
 class StaticObject
@@ -9,7 +8,7 @@ class StaticObject
   public:
   // default constructor
   StaticObject();
-  // constructor setting position
+  // Constructor setting position. Takes x and y coordinates of the object
   StaticObject(float x, float y);
   // virutual destructor for handling inheritence
   virtual ~StaticObject() = default;

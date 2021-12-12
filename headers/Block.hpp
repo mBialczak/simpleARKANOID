@@ -5,6 +5,7 @@
 
 // class forward declarations
 class Texture;
+
 // class representing a block which can be destroyed by the ball
 class Block : public virtual StaticObject
 {
