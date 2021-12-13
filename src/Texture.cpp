@@ -1,6 +1,5 @@
 #include "Texture.hpp"
 #include "SDLexception.hpp"
-#include <iostream> // REMOVE AT
 #include <utility>
 
 // for operator""s usage
@@ -16,8 +15,8 @@ Texture::Texture()
 }
 
 // Constructor creating texture from the image.
-// Takes path of the image file to load and renderer for texture creation and
-// rendering. Throws SDLexception if construction fails
+// Takes path of the image file to load and SDL renderer for texture creation
+// and rendering. Throws SDLexception if construction fails
 Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
     : _sdl_texture(nullptr)
     , _sdl_renderer(gameRenderer)
@@ -25,8 +24,8 @@ Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
     , _height(0)
 {
   // create pointer for temporary SDL_Surface which is needed only for texture
-  // creation and will be  automatically destroyed on leaving function or if an
-  // exception occurs. Custom deleter is used due to specific SDL destruction
+  // creation and will be  automatically destroyed on leaving construrctor or if
+  // an exception occurs. Custom deleter is used due to specific SDL destruction
   // function
   std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface*)>> img_surface(
       IMG_Load(imagePath.c_str()),
@@ -41,10 +40,11 @@ Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
   // Needs to be done here (not in the constructor initilializer list), because
   // first the the img_surface needs to be created. Custom deleter is used due
   // to specific SDL texture destructon function
-  _sdl_texture = std::move(
-      std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
+  _sdl_texture
+      = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
           SDL_CreateTextureFromSurface(gameRenderer, img_surface.get()),
-          [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); } });
+          [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); }
+        };
 
   // check if texture created succesfully and throw if not
   if (!_sdl_texture) {
@@ -59,7 +59,7 @@ Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
 // Constructor creating texture from the text to be rendered.
 // Takes path of the font file, color of text, size of text (pixels),renderer
 // (for texture creation and rendering) and the text to be displayed.
-//  Throws SDLexception if construction fails
+// Throws SDLexception if construction fails
 Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
     SDL_Renderer* gameRenderer, const std::string& text)
     : _sdl_texture(nullptr)
@@ -69,8 +69,8 @@ Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
 {
   //  create pointer for temporary TTF_Font, which is needed only for
   //  SDL_Surface creation (in the next step) and will be  automatically
-  //  destroyed on leaving function or if an exception occurs. Custom deleter is
-  //  used due to specific SDL destructionfunction
+  //  destroyed on leaving constructor or if an exception occurs. Custom deleter
+  //  is used due to specific SDL destruction function
   std::unique_ptr<TTF_Font, std::function<void(TTF_Font*)>> font {
     TTF_OpenFont(fontPath.c_str(), textSize),
     [](TTF_Font* ptr) { TTF_CloseFont(ptr); }

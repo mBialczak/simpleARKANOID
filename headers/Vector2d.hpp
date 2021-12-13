@@ -1,6 +1,5 @@
 #ifndef Vector2d_hpp
 #define Vector2d_hpp
-#include "SDL_image.h"
 #include <cmath>
 
 // namespace for grouping objects and functions required for the game
