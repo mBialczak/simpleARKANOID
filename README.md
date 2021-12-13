@@ -1,5 +1,7 @@
 # simple Arkanoid - a capstone project for C++ Nanodegree Program
 
+<img src="simpleArkanoid.gif/>
+
 As a capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213) I have chosen to create a simple remake of classic game Arkanoid.
 Therefore I have called the project simpleArkanoid.
 
@@ -24,7 +26,6 @@ Thank you for trying out my capstone project and thank you in advance for unders
 
 Have fun!
 
-REMOVE
 <img src="snake_game.gif"/>
 
 ## Dependencies for Running Locally
@@ -153,7 +154,7 @@ I suppose, the project should satisfy the following rubrics:
 
    Every class data or function member was exlipicitly specified as public, proteced or private.
 
-   WHERE IN THE CODE: virtaully everywhere
+   WHERE IN THE CODE: virtually everywhere
 
 3. CRITERION: Class constructors utilize member initialization lists.
 
@@ -166,7 +167,7 @@ I suppose, the project should satisfy the following rubrics:
    The function names clearly resemble their effects. Moreover, the source code is heavily commented.
    To the best of my knowledge, the functions do not change the program state in undocumented ways.
 
-   WHERE IN THE CODE: virtaully everywhere
+   WHERE IN THE CODE: virtually everywhere
 
 5. CRITERION: Classes encapsulate behavior.
 
@@ -185,7 +186,7 @@ I suppose, the project should satisfy the following rubrics:
    - StaticObject is inherited by: SideWall, Block and TextElement
    - MovableObject is inherited by: Ball and Paddle.
 
-   In my opinion there is plenty of space for the project enhancement and introducing for example: falling debris from the block, some moving obstacles (as MovableObjects) or some static obstacles inside the game screen (as StaticObjects).
+   In my opinion there is plenty of space for the project enhancement, for example by introducing: falling debris from the block, some moving obstacles (as MovableObjects) or some static obstacles inside the game screen (as StaticObjects).
 
 7. CRITERION: Overloaded functions allow the same function to operate on different parameters.
 
@@ -331,7 +332,7 @@ I suppose, the project should satisfy the following rubrics:
 
    In class Game:
 
-   - usage of helper RAII classes: SDLinitializer, ImageInitializer, TTFinitializer (from the file. SDLinitializers.hpp),
+   - usage of helper RAII classes: SDLinitializer, ImageInitializer, TTFinitializer (from the file SDLinitializers.hpp),
    - data member: std::unique_ptr<Renderer> \_renderer;
    - data member: std::unordered_map<Sprite, Texture> \_images,
    - data member: std::vector<TextElement> \_texts,
@@ -355,7 +356,7 @@ I suppose, the project should satisfy the following rubrics:
 
    In class Texture:
 
-   - std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture\*)>> \_sdl_texture - in the end parts of both the constructors ; unique_ptr uses custom deleter.
+   - std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture\*)>> \_sdl_texture - in the end parts of both the constructors. Unique_ptr uses custom deleter.
    - in the constructor Texture(const std::string& imagePath, SDL_Renderer\* gameRenderer):
      Before \_sdl_texture is created, additional local unique pointer with custom deleter is used:
      - std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface\*)>> img_surface,
