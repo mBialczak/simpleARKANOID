@@ -791,7 +791,7 @@ void Game::CreatePaddle()
   auto& paddle_texture { GetTexture(Sprite::Paddle) };
   float paddle_y = _screen_height - paddle_texture.Height() / 2.0f;
   // calculate and create rectangle limiting the paddle move range
-  int wall_tickness { GetTexture(Sprite::WallVertical).Width() / 2 };
+  int wall_tickness { GetTexture(Sprite::WallVertical).Width() };
   SDL_Rect limits;
   // set top-left coordinates of the limiting rectangle
   limits.x = wall_tickness;
@@ -840,7 +840,7 @@ void Game::CreateBlocks()
       // construct only those blocks, for which there is a sprite set in the
       // sprite table
       if (sprite_table[row][col] != Sprite::None) {
-        block_x = (block_width * col) + wall_offset + (block_width / 2.0f);
+        block_x = (block_width * col) + wall_offset + (block_width / 2.0f) - 1;
         block_y = (block_height * row) + wall_offset + (block_height / 2.0f);
         auto& texture { GetTexture(sprite_table[row][col]) };
         _blocks.emplace_back(block_x, block_y, texture, point_value);
