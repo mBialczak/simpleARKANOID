@@ -29,7 +29,7 @@ class Texture
       SDL_Renderer* gameRenderer, const std::string& text);
 
   // copying of class not predicted due to use of unique_ptr and no overall
-  // sense of copying , so copy operations are disabled
+  // sense of copying, so copy operations are disabled
   Texture(const Texture&) = delete;
   Texture& operator=(const Texture&) = delete;
   // because the only owned resource is managed with unique_ptr,

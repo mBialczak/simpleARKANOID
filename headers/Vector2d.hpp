@@ -6,9 +6,6 @@
 // calculations
 namespace gMath {
 
-// mathematical constants used
-constexpr float c_Pi = M_PI;
-
 // class representing a two dimmensional vector
 class Vector2d
 {
@@ -40,6 +37,10 @@ class Vector2d
   float _x;
   float _y;
 };
+
+// mathematical constants used
+
+constexpr float c_Pi = M_PI;
 
 // Helper functions
 

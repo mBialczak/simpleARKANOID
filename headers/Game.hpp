@@ -36,12 +36,10 @@ class Game
   // RAII mechanism allow to use defalut destructor
   ~Game() = default;
 
-  // deleted copy and move operations as the project design predicts only one
-  // game object in the entire program
+  // deleted copy operations as the project design predicts only one game object
+  // in the entire program and many objects are handled by unique pointers
   Game(const Game&) = delete;
-  Game(Game&&) = delete;
   Game& operator=(const Game&) = delete;
-  Game& operator=(Game&&) = delete;
 
   // runs the game; implements main game loop
   void Run();

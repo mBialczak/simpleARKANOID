@@ -6,7 +6,7 @@
 // for operator""s usage
 using namespace std::string_literals;
 
-// Static member initialization:
+// Static members initialization:
 
 // the keyword marking the ball speed in the level file
 const std::string LevelData::ball_speed_key { "ball_speed" };

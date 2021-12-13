@@ -13,11 +13,6 @@ class Controller
   // Contructor taking the game object to control
   Controller(Game& game);
 
-  // Only one game controller is predicted in the design,
-  // so copy operations are disabled
-  Controller(const Controller&) = delete;
-  Controller& operator=(const Controller&) = delete;
-
   // Handles all the input events
   // Takes the paddle and ball to synchronise game control
   void HandleInput(bool& running, Paddle& paddle, Ball& ball) const;
