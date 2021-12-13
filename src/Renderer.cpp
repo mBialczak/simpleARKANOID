@@ -4,7 +4,7 @@
 
 // Constructor. Takes screen size for rendering.
 // Throws std::ivalid_argument if the size is non-positive
-// Throws SDLexception if creating SDL_Renderer will fail
+// Throws SDLexception if initializing SDL_Renderer will fail
 Renderer::Renderer(
     const std::size_t screenHeight, const std::size_t screenWidth)
     : _screen_height(screenHeight)
@@ -16,7 +16,7 @@ Renderer::Renderer(
   if (_screen_height <= 0 || _screen_width <= 0)
     throw std::invalid_argument("Cannot create Window with size less than 0!");
 
-  // create main game window  using unique pointer with custom deleter,
+  // create main game window using unique pointer with custom deleter,
   // which will automatically destroy the window as per RAII
   _sdl_window = std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> {
     SDL_CreateWindow("Simple Arkanoid game", SDL_WINDOWPOS_CENTERED,
@@ -47,7 +47,7 @@ Renderer::Renderer(
 }
 
 // displays (renders) game graphics composed of the passed arguments:
-// two vectors of objects to display
+// a vector of static (non-movable) and a vector of movable objects
 void Renderer::DisplayGameScreen(
     const std::vector<const StaticObject*>& staticObjects,
     const std::vector<const MovableObject*>& movableObjects) const
@@ -73,7 +73,7 @@ void Renderer::DisplayGameScreen(
   SDL_RenderPresent(_sdl_renderer.get());
 }
 
-// Displays a screen containing static objects sent as argument
+// Displays a screen containing static (non-movable) objects sent as argument
 void Renderer::DisplayStaticScreen(
     const std::vector<const StaticObject*>& staticObjects) const
 {
@@ -93,7 +93,7 @@ void Renderer::DisplayStaticScreen(
   SDL_RenderPresent(_sdl_renderer.get());
 }
 
-// update title bar
+// updates game window title bar
 void Renderer::UpdateTitleBar() const
 {
   // create timer for window title udpates

@@ -1,56 +1,55 @@
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
 
-#include "Ball.hpp"
-#include "Paddle.hpp"
+#include "MovableObject.hpp"
 #include "SDL.h"
-#include "SideWall.hpp"
-#include "TextElement.hpp"
+#include "StaticObject.hpp"
 #include <functional>
 #include <memory>
 #include <vector>
 
-// class for rendering graphics
+// Class for rendering graphics to the screen.
 class Renderer
 {
   public:
   // Constructor. Takes screen size for rendering.
   // Throws std::ivalid_argument if the size is non-positive
-  // Throws SDLexception if creating SDL_Renderer will fail
+  // Throws SDLexception if initializing SDL_Renderer will fail
   Renderer(const std::size_t screenHeight, const std::size_t screenWidth);
 
-  // copying of class object doesn't make sense and copy operations may cause
-  // problems with managed resources, so copy operations are disabled
+  // copying of class object doesn't make sense and crucial resources are
+  // menaged with unique pointers, so copy operations are disabled
   Renderer(const Renderer&) = delete;
   Renderer& operator=(const Renderer&) = delete;
 
-  // All resources are managed automatically, so default destructor used
+  // All resources are managed automatically, so default destructor is used
   ~Renderer() = default;
 
   // displays (renders) game graphics composed of the passed arguments:
-  // two vectors of objects to display
+  // a vector of static (non-movable) and a vector of movable objects
   void DisplayGameScreen(const std::vector<const StaticObject*>& staticObjects,
       const std::vector<const MovableObject*>& movableObjects) const;
 
-  // Displays a screen containing static objects
+  // Displays a screen containing static (non-movable) objects sent as argument
   void DisplayStaticScreen(
       const std::vector<const StaticObject*>& staticObjects) const;
 
-  // returns pointer to SDL renderer. User of the class should not explicitly
-  // destroy the returned pointer as it is owned by Renderer class.
+  // returns a raw pointer to SDL renderer, which can be used if needed with SDL
+  // functions. User of the class should not explicitly destroy or modify the
+  // returned pointer as it is owned by Renderer class.
   SDL_Renderer* GetSDLrenderer() const { return _sdl_renderer.get(); }
 
   private:
-  // update title bar
+  // updates game window title bar
   void UpdateTitleBar() const;
 
   // game window size
   const std::size_t _screen_height;
   const std::size_t _screen_width;
 
-  // pointer to SDL window used for displaying
+  // unique pointer to SDL_Window using a custom window deleter.
   std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> _sdl_window;
-  // pointer to renderer used for rendering
+  // unique pointer to SDL_renderer using a custom renderer deleter
   std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>>
       _sdl_renderer;
 };

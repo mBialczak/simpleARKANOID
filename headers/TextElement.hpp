@@ -4,6 +4,9 @@
 #include <memory>
 #include <string>
 
+// forward declaration
+class Texture;
+
 // simple class containing avtexture with text to display
 struct TextElement : public StaticObject
 {
