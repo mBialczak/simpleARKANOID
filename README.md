@@ -36,9 +36,10 @@ REMOVE
   - Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
   - Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
 - SDL2 >= 2.0
-  - All installation instructions can be found [here](https://wiki.libsdl.org/Installation) > Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. > IMPORTANT NOTE: accept the main SDL library also SDL_Image, SDL_Mixer and SDL_ttf suport needs to be installed. Some additional help can be found
-    Some additional information on installation can be found [here](https://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/index.php).
-    And on many places on the Internet.
+  - All installation instructions can be found [here](https://wiki.libsdl.org/Installation) > Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
+    > IMPORTANT NOTE: accept the main SDL library also SDL_Image, SDL_Mixer and SDL_ttf suport needs to be installed. Some additional help can be found
+    > Some additional information on installation can be found [here](https://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/index.php).
+    > And on many places on the Internet.
 - gcc/g++ >= 9.3 (it is likely that the project should build using previous versions)
   - Linux: gcc / g++ is installed by default on most Linux distros
   - Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
@@ -53,31 +54,31 @@ REMOVE
 
 ## Overview of the code structure REVIEW:
 
-The project is structured into classes, seperated into header files (contained in "headers" folder) and source files (src folder).
+The project is structured into classes, seperated into header files (contained in "headers" folder) and source files ("src" folder).
 
 There are two shallow inheritence hierarchies:
 
-1.  The base class StaticObject is an abstract base class for non movable game objects displayed on the screen.
+1.  The StaticObject is an abstract base class for non movable game objects displayed on the screen.
     The class is inherited by the folling clasess:
 
     - the class SideWall - which is displayed on the right, left and top side of the screen and is responsible for limiting the ball movement area,
     - the class Block - which represents a block to be destroyed by the ball,
-    - the class TextElement - which is represents a static rendered text to be displayed on the screen (currently it is heavily used on the pause screen, game over screen, the screen displayed after level completion and after the game is won).
+    - the class TextElement - which represents a static rendered text to be displayed on the screen (currently it is heavily used on the pause screen, game over screen, the screen displayed after level completion and after the game is won).
 
-2.  The base clas of MovableObject, which is an abstract base class for objects which can move on the game screen.
+2.  The MovableObject base class is an abstract base class for objects which can move on the game screen.
     The class is inherited by the following classes:
     - the Ball class - which represents the ball moving on the screen,
     - the Paddle class - represents a paddle used for preventing the ball from falling down the bottom limit of the screen and for directing the ball towards the blocks to be destroyed.
 
-Appart the above mentioned inheritence hierarchies, the code is organised into following non-iheritance classes:
+Appart from the above mentioned inheritence hierarchies, the code is organised into following non-iheritance classes:
 
-1.  the class Game - which obviously represents the main game object.
+1.  the class Game - obviously represents the main game object.
     In a seperate header (SDLinitializer.hpp) and source file (SDLinitializer.cpp) there are grouped 3 helper classes for the Game class:
 
     - SDLinitializer class - for SDL main subsystems RAII menagement,
     - ImageInitializer class - for RAII menagement of SDL_image support,
     - TTFinitializer class - for RAII menagement of SDL_ttf (true type font) support.
-      Objects of above classes are used as components of the Game class, which initialized in the correct order provide convenient and exeption safe way to intialize and close SDL framework features.
+      Objects of above classes are used as components of the Game class, which initialized in the correct order provide convenient and exception safe way to intialize and close SDL framework features.
 
 2.  the class Controller - a component of the Game class, responsible for handling the keyboard input / stearing.
 
