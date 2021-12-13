@@ -18,7 +18,7 @@ Tthe game supports textures and basic sound effects. There is plenty of space fo
 
 Obviously, the game is programmed in the C++. The framework used is SDL (with additional SDL_image, SDL_ttf and SDL_mixer libraries).
 
-All the sound effects files are downloaded from the [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use. All the textures are simple hand drawings created personaly (which can easily by seen as I have no drawing skills at all...).
+All the sound effects files are downloaded from the [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use. All the textures are simple hand drawings created personally (which can easily by seen as I have no drawing skills at all...).
 
 Thank you for trying out my capstone project and thank you in advance for understanding, that it's not a fully featured top notch version of the original Arkanoid game (at this stage at least).
 
@@ -37,7 +37,7 @@ REMOVE
   - Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
 - SDL2 >= 2.0
   - All installation instructions can be found [here](https://wiki.libsdl.org/Installation) > Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
-    > IMPORTANT NOTE: accept the main SDL library also SDL_Image, SDL_Mixer and SDL_ttf suport needs to be installed. Some additional help can be found
+    > IMPORTANT NOTE: accept the main SDL library also SDL_Image, SDL_Mixer and SDL_ttf suport needs to be installed.
     > Some additional information on installation can be found [here](https://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/index.php).
     > And on many places on the Internet.
 - gcc/g++ >= 9.3 (it is likely that the project should build using previous versions)
@@ -95,13 +95,13 @@ Appart from the above mentioned inheritence hierarchies, the code is organised i
     - the MixOpener class.
       Both are helper classes for the AudioMixer class. Their sole purpose is to provide correct initialization, acquiring resources, realeasing resources and closing of SDL Mixer engine in a RAII way.
 
-7.  the class Texture - used as an enhanced wrapper for SDL_Texture, image file loading into texture and generating textures from text. It is used as a component of StaticObject and Movable object-iheriting classes (Block, SideWall, Ball, Paddle and TextElement).
+7.  the class Texture - used as an enhanced wrapper for SDL_Texture, image file loading into texture and generating textures from text. It is used as a component of StaticObject and Movable object-inheriting classes (Block, SideWall, Ball, Paddle and TextElement).
 
 8.  the class TextElement - derived publicly from StaticObject and representing a rendered true type font text to be displayed.
 
-9.  the class Vector2d - a basic component class for all StaticObject and MovableObject - inherited classes. In the project it is used to represent a position or velocity vector. Vector2d class is enclosed into gMath namespace together with RandNum class (although in seperate files) and some helper standalone functions.
+9.  the class Vector2d - a basic component class for all StaticObjects and MovableObjects - inherited classes. In the project it is used to represent a position and a velocity vector. Vector2d class is enclosed into gMath namespace together with RandNum class (although in seperate files) and some helper standalone functions.
 
-10. IntervalTimer class - a simple component class allowing measuring intervals of time, which are used for game state update calculations
+10. IntervalTimer class - a simple component class allowing measuring intervals of time, which are used for game state update calculations.
 
 11. LimitTimer class - a simple class used for incorporating frame rate limiting policy (in the implementation of the Game::Run function) and for FPS calculations inside of Renderer::UpdateTitleBar function.
 
@@ -124,12 +124,10 @@ I suppose, the project should satisfy the following rubrics:
 ### Loops, Functions, I/O
 
 1. CRITERION: The project demonstrates an understanding of C++ functions and control structures
-   NOTE: A variety of control structures are used in the project.
-   NOTE: The project code is clearly organized into functions.
 
-   The code is organised in a fairly reasonable way into classes. Apart from a couple of classes organised into shallow inheritence hierarchies, there are a few standalone component and helper classes. The classes Vector2d and RandNum are enclosed into namespace gMath. There are some enum classes as well. All the entities, which are not classes themselves, are enclosed into namespaces (namespace Colors, namespace Paths)
+   The code is organised in a fairly reasonable way into classes. Apart from a couple of classes organised into shallow inheritence hierarchies, there are a few standalone component and helper classes. The classes Vector2d and RandNum are enclosed into namespace gMath. There are some enum classes as well. All the entities, which are not classes themselves, are enclosed into namespaces (namespace 'Colors', namespace 'Paths').
 
-   WHERE IN THE CODE: classes maintain the most part of the project, clearly seperated into files. Some files have helper classes grouped together in one header-source file pairs. In standalone files are: namespace Colors (Colors.hpp), namespace Paths( Paths.hpp), enum classes grouped together (Enum.hpp).
+   WHERE IN THE CODE: classes maintain the most part of the project, clearly seperated into files. Some files have helper classes grouped together in one header-source file pairs. In standalone files I have placed: namespace 'Colors' (Colors.hpp), namespace 'Paths'( Paths.hpp), enum classes grouped together (Enum.hpp).
 
 2. CRITERION: The project reads data from a file and process the data, or the program writes data to a file.
    NOTE: The project reads data from an external file or writes data to a file as part of the necessary operation of the program.
