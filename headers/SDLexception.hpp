@@ -14,7 +14,7 @@ class SDLexception {
   std::string Description() const;
 
   private:
-  // description part provided by programer
+  // description part provided by the programmer
   const std::string _firstPart;
   // description part provided by SDL-related library
   const std::string _errorCodePart;
