@@ -5,7 +5,7 @@
 #include "StaticObject.hpp"
 #include "Texture.hpp"
 
-// class forward declarations
+// forward declaration
 class Texture;
 
 // class representing border walls in the game
@@ -20,7 +20,7 @@ class SideWall : public virtual StaticObject
   // renders the sideWall to the screen
   void Draw() const override;
 
-  // returns collision border
+  // returns the side of the screen where the wall is placed
   ScreenSide GetScreenSide() const { return _screen_side; }
   // returns half of the wall tickness
   float HalfTickness() const { return _half_tickness; }
