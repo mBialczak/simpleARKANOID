@@ -62,7 +62,7 @@ class Game
   // returns the speed increment applied every time the
   // user orders so
   float SpeedIncrement() const { return _speed_increment; };
-  // replays the sound correspondin to the sound enum code
+  // replays the sound corresponding to the sound enum code
   void PlaySound(Sound sound) const { _audio->PlaySound(sound); }
 
   private:

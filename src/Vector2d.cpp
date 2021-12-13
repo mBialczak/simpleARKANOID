@@ -1,5 +1,7 @@
 #include "Vector2d.hpp"
 
+// namespace for grouping objects and functions required for the game
+// calculations
 namespace gMath {
 
 // default constructor

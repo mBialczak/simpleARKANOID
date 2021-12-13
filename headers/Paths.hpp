@@ -4,7 +4,8 @@
 
 // namespace with deffined paths to files used in the game
 namespace Paths {
-// ------ IMAGES paths ------//
+
+// ------ IMAGES  ------//
 
 // path to the image used for displaying the ball
 const std::string pBallImage { "../assets/images/ball.png" };
@@ -47,7 +48,8 @@ const std::string pBlockYellowImage { "../assets/images/block_yellow.png" };
 // ------  main path to levels data  ------//
 const std::string pLevels { "../assets/levels/" };
 
-// ------ FONTS paths ------//
+// ------ FONTS  ------//
+
 // bold font used
 const std::string pFontRobotoBold { "../assets/fonts/Roboto-Bold.ttf" };
 
@@ -59,7 +61,7 @@ const std::string pFontRobotoBoldItalic {
   "../assets/fonts/Roboto-BoldItalic.ttf"
 };
 
-// ------ Sound effects paths ------//
+// ------ Sound effects  ------//
 
 // sound to be emitted when the ball hits the paddle
 const std::string pSoundBallBouncePaddle {

@@ -3,7 +3,8 @@
 #include "SDL_image.h"
 #include <cmath>
 
-// namespace used for mathematical calculations in the game
+// namespace for grouping objects and functions required for the game
+// calculations
 namespace gMath {
 
 // mathematical constants used
