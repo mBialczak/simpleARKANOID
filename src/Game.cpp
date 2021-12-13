@@ -4,11 +4,9 @@
 #include "LimitTimer.hpp"
 #include "Paths.hpp"
 #include "SDL.h"
-#include "SDL_image.h"
 #include "SDLexception.hpp"
 #include <algorithm>
 #include <exception>
-#include <fstream>
 
 // Constructor. Takes game window height and width, desired FPS rate and numbers
 // off game levels implemented.
@@ -55,7 +53,7 @@ Game::Game(const std::size_t screenHeight, const std::size_t screenWidth,
   CreateTexts();
 }
 
-// implements main game loop
+// runs the game; implements main game loop
 void Game::Run()
 {
   // calculate desired duration of a single frame
@@ -102,7 +100,7 @@ void Game::Run()
 // Restarts the game
 void Game::Restart()
 {
-  // Load level one again
+  // Load level one once again
   LoadNewLevel(1);
 
   _total_points = 0;
@@ -206,7 +204,7 @@ bool Game::LoadNewLevel(unsigned newLevel)
   return true;
 }
 
-// updates the state of the game
+// updates the state of the game objects
 void Game::UpdateGame()
 {
   // calculate delta time and udpate timer
@@ -849,7 +847,6 @@ void Game::CreateBlocks()
       }
     }
   }
-
   // add blocks to the collection of static objects to be displayed
   for (auto& block : _blocks) {
     _static_for_game_screen.emplace_back(&block);
@@ -877,7 +874,7 @@ void Game::HandleBallEscape()
     SDL_Delay(4000);
 
     // reset the ball passing the level starting speed
-    // to get the ball back on the paddle and cancel
+    // to get the ball back on the paddle and cancelling
     // all speed increases applied by the player
     _ball->Reset(_level_data->BallSpeed());
   }

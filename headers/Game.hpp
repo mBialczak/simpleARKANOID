@@ -27,11 +27,9 @@ class Game
 {
   public:
   // Constructor. Takes game window height and width, desired FPS rate and
-  // numbers
-  // off game levels implemented.
+  // numbers off game levels implemented.
   // Subobjects will throw exceptions if initialization fails (SDLexception and
   // exceptions derived from std::exception)
-
   Game(const std::size_t screenHeight, const std::size_t screenWidth,
       const std::size_t targetFrameRate, unsigned levelsImplemented);
 
@@ -73,7 +71,7 @@ class Game
   // Loads new level. Returns true if new level loaded successfully,
   // false if the current level was the last one implemented
   bool LoadNewLevel(unsigned newLevel);
-  // updates game state
+  // updates the state of the game objects
   void UpdateGame();
   // Displays the pause screen when the game is paused
   void DisplayPauseScreen() const;
