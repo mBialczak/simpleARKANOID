@@ -12,16 +12,19 @@ On each level the ball speed is increased. However, the player can increase the 
 When the ball hits the paddle, it's direction can be altered slightly to the left or right (again - by holding the correct key in the correct moment).
 
 Currently the game has only 10 levels implemented, but introducing new levels is fairly easy and fast, as each level data is stored in a text-file. Therefore, almost unlimited number of levels can be introduced by creating new text files. Important thing to remember is to keep the structure of the level file and naming convention.
-Furthermore, for convenience, an empty level pattern is enclosed in the level folder. To help create the level, a calculation sheet is contained in the level folder as well. It doesn't have direct correspondence to creation of a level, but helps create the visual layout of a level first, which can later be entered into the level file.
+Furthermore, for convenience, an empty level pattern is enclosed in the level folder. To help create the level, a calculation sheet is contained in the level folder as well. It doesn't have direct correspondence to creation of a level, but helps create the visual layout of a level first, which can later be entered into the level file manually.
 
-On current stage of the project, the game supports textures and basic sound effects. There is plenty of space for enhancing the game features.
+Tthe game supports textures and basic sound effects. There is plenty of space for enhancing the game features.
 
-Obviously, the game is programmed in the C++. The framework used is SDL (with additional SDL_image, SDL_ttf and SDL_mixer librearies).
+Obviously, the game is programmed in the C++. The framework used is SDL (with additional SDL_image, SDL_ttf and SDL_mixer libraries).
+
+All the sound effects files are downloaded from the [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use. All the textures are simple hand drawings created personaly (which can easily by seen as I have no drawing skills at all...).
 
 Thank you for trying out my capstone project and thank you in advance for understanding, that it's not a fully featured top notch version of the original Arkanoid game (at this stage at least).
 
 Have fun!
 
+REMOVE
 <img src="snake_game.gif"/>
 
 ## Dependencies for Running Locally
@@ -33,8 +36,9 @@ Have fun!
   - Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
   - Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
 - SDL2 >= 2.0
-  - All installation instructions can be found [here](https://wiki.libsdl.org/Installation)
-    > Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source.
+  - All installation instructions can be found [here](https://wiki.libsdl.org/Installation) > Note that for Linux, an `apt` or `apt-get` installation is preferred to building from source. > IMPORTANT NOTE: accept the main SDL library also SDL_Image, SDL_Mixer and SDL_ttf suport needs to be installed. Some additional help can be found
+    Some additional information on installation can be found [here](https://lazyfoo.net/tutorials/SDL/06_extension_libraries_and_loading_other_image_formats/index.php).
+    And on many places on the Internet.
 - gcc/g++ >= 9.3 (it is likely that the project should build using previous versions)
   - Linux: gcc / g++ is installed by default on most Linux distros
   - Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
