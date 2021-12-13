@@ -2,16 +2,15 @@
 #define LimitTimer_HPP
 #include "SDL.h"
 
-class LimitTimer {
+// Simple timer class which. It  measures if the given time in milliseconds has
+// passed from the timer creation and allows to halt program execution until it
+// will pass
+class LimitTimer
+{
   public:
-  // constructor starting timer
+  // Constructor starting timer
   // takes time to measure in milliseconds
   explicit LimitTimer(const Uint32 timeToMeasure);
-
-  // copying of class object should be unnecassary, so copy operations are
-  // disabled
-  LimitTimer(const LimitTimer&) = delete;
-  LimitTimer& operator=(const LimitTimer&) = delete;
 
   // stops execution until desired time interval since start will pass
   void waitTillExpire() const;
