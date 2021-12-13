@@ -1,6 +1,5 @@
 # simple Arkanoid - a capstone project for C++ Nanodegree Program
 ![screen-gif](./simpleArkanoid.gif)
-<img src="./simpleArkanoid.gif/>
 
 As a capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213) I have chosen to create a simple remake of classic game Arkanoid.
 Therefore I have called the project simpleArkanoid.
