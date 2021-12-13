@@ -1,4 +1,5 @@
 # simple Arkanoid - a capstone project for C++ Nanodegree Program
+
 ![screen-gif](./simpleArkanoid.gif)
 
 As a capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213) I have chosen to create a simple remake of classic game Arkanoid.
@@ -24,8 +25,6 @@ All the sound effects files are downloaded from the [https://mixkit.co/free-soun
 Thank you for trying out my capstone project and thank you in advance for understanding, that it's not a fully featured top notch version of the original Arkanoid game (at this stage at least).
 
 Have fun!
-
-<img src="snake_game.gif"/>
 
 ## Dependencies for Running Locally
 
