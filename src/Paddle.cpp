@@ -1,10 +1,12 @@
 #include "Paddle.hpp"
 
-// constructor:
+// Constructor:
 // X, Y - paddle centre coordinates
-// speed - ball sclar speed in pixels / second
-// moveLimits - rectangle within the paddle can move
-// texture - texture used for displaying the ball
+// speed - ball scalar speed in pixels / second
+// moveLimits - invisible rectangle within the paddle can move
+// texture - texture used for displaying the ball.
+// Throws std::invalid_argument if passed values don't allow to create the
+// Paddle
 Paddle::Paddle(
     float x, float y, float speed, SDL_Rect moveLimits, const Texture& texture)
     : MovableObject(x, y, speed)
@@ -14,6 +16,11 @@ Paddle::Paddle(
     , _half_height(_texture.Height() / 2.0f)
     , _half_width(_texture.Width() / 2.0f)
 {
+  // check if the passed arguments allow to construct the paddle with reasonable
+  // values. Throw exception if not, as continuation makes no sense.
+  if (x < moveLimits.x || y < moveLimits.y || speed < 0.0f)
+    throw std::invalid_argument(
+        "Invalid arguments passed to the Paddle constructor");
 }
 
 // update paddle state
@@ -80,7 +87,7 @@ void Paddle::KeepInMovingLimits()
     _position.SetX(_move_limits.x + _move_limits.w - _half_width - 1);
     return;
   }
-  //  move down if reached the the top limit
+  // move down if reached the the top limit
   if (_position.Y() - _half_height < _move_limits.y) {
     _position.SetY(_move_limits.y + _half_height + 1);
     return;

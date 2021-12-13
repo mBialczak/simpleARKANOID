@@ -4,19 +4,24 @@
 #include "MovableObject.hpp"
 #include "Texture.hpp"
 #include "Vector2d.hpp"
-// #include "gMath.hpp" // NOTE: remove INU
 
 // Texture forward declaration
 class Texture;
 
-// the movable paddle
+// Constructor:
+// X, Y - paddle centre coordinates
+// speed - ball scalar speed in pixels / second
+// moveLimits - invisible rectangle within the paddle can move
+// texture - texture used for displaying the ball.
+// Throws std::invalid_argument if passed values don't allow to create the
+// Paddle
 class Paddle : public virtual MovableObject
 {
   public:
-  // constructor:
+  // Constructor:
   // X, Y - paddle centre coordinates
-  // speed - ball sclar speed in pixels / second
-  // moveLimits - rectangle within the paddle can move
+  // speed - ball scalar speed in pixels / second
+  // moveLimits - invisible rectangle within the paddle can move
   // texture - texture used for displaying the ball
   Paddle(float x, float y, float speed, SDL_Rect moveLimits,
       const Texture& texture);
@@ -48,12 +53,12 @@ class Paddle : public virtual MovableObject
 
   // paddle velocity vector
   gMath::Vector2d _velocity;
-  // moving limits rectangle
+  // invisible moving limits rectangle
   SDL_Rect _move_limits;
   // texture used for displaying the ball
   const Texture& _texture;
   // storing below values spares many repeated calculations while collision
-  // detection and keeping paddle within allowed moving limits
+  // detection and process of keeping the paddle within allowed moving limits
   const float _half_height;
   const float _half_width;
 };

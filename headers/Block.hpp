@@ -10,10 +10,10 @@ class Texture;
 class Block : public virtual StaticObject
 {
   public:
-  // Constructor. Takes: x and y coordinates, texture for drawing and number of
-  // points the player will be awarded after the block is destroyed. Throws
-  // std::ivalid_argument if the position coordinates or point value are
-  // negative
+  // Constructor. Takes: x and y coordinates of the blocks center, texture for
+  // drawing and number of points the player will be awarded after the block is
+  // destroyed. Throws std::ivalid_argument if the position coordinates or point
+  // value are negative
   Block(float x, float y, const Texture& texture, unsigned pointValue);
   // default virtual destructor
   ~Block() override = default;
