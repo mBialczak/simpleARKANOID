@@ -5,6 +5,8 @@
 #include "SDL_ttf.h"
 #include <cstddef>
 
+// A set of helper classes for initializing SDL support
+
 // RAII class responsible for initializing and closing SDL subsystems
 // Throws SDLexception if initialization fails
 class SDLinitializer
