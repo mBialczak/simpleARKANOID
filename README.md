@@ -111,7 +111,7 @@ There are 3 standalone header files (not directly related to any class) used for
 
 - all the enum classes used in the project - the Enum.hpp file,
 - constants with color definitions - the Colors.hpp file,
-- all the constants with paths to assets used in the project.
+- all the constants with paths to assets used in the project - the Paths.hpp.
 
 ## C++ CAPSTONE PROJECT RUBRICS SATISFACTION
 
@@ -130,14 +130,12 @@ I suppose, the project should satisfy the following rubrics:
    WHERE IN THE CODE: classes maintain the most part of the project, clearly seperated into files. Some files have helper classes grouped together in one header-source file pairs. In standalone files I have placed: namespace 'Colors' (Colors.hpp), namespace 'Paths'( Paths.hpp), enum classes grouped together (Enum.hpp).
 
 2. CRITERION: The project reads data from a file and process the data, or the program writes data to a file.
-   NOTE: The project reads data from an external file or writes data to a file as part of the necessary operation of the program.
 
    The project reads level files, parses them and uses the read information for retrieving level specifics. In particular, the layout of objects of class Block for each level is composed based on the level files data.
 
    WHERE IN THE CODE: the class LevelData loads and parses level files. The Game::LoadNewLevel function retrieves the information read from the file in the class LevelData for level construction and adjusting game state.
 
 3. CRITERION: The project accepts user input and processes the input.
-   NOTE: The project accepts input from a user as part of the necessary operation of the program.
 
    All the game control is based on the input from the keyboard.
 
@@ -146,28 +144,24 @@ I suppose, the project should satisfy the following rubrics:
 ### Object Oriented Programming
 
 1. CRITERION: The project uses Object Oriented Programming techniques.
-   NOTE: The project code is organized into classes with class attributes to hold the data, and class methods to perform tasks.
 
    In my opinion the code is clearly organised into classes, with attributes to hold the data and member functions performing the most of the operations.
 
    WHERE IN THE CODE: virtually everywhere
 
 2. CRITERION: Classes use appropriate access specifiers for class members.
-   NOTE: All class data members are explicitly specified as public, protected, or private.
 
    Every class data or function member was exlipicitly specified as public, proteced or private.
 
    WHERE IN THE CODE: virtaully everywhere
 
 3. CRITERION: Class constructors utilize member initialization lists.
-   NOTE: All class members that are set to argument values are initialized through member initialization lists.
 
    As can be seen, class members that are set to argument values are initialized through initialization lists.
 
    WHERE IN THE CODE: virtually every class accepting arguments
 
 4. CRITERION: Classes abstract implementation details from their interfaces.
-   NOTE: All class member functions document their effects, either through function names, comments, or formal documentation. Member functions do not change program state in undocumented ways.
 
    The function names clearly resemble their effects. Moreover, the source code is heavily commented.
    To the best of my knowledge, the functions do not change the program state in undocumented ways.
@@ -175,14 +169,12 @@ I suppose, the project should satisfy the following rubrics:
    WHERE IN THE CODE: virtaully everywhere
 
 5. CRITERION: Classes encapsulate behavior.
-   NOTE: Appropriate data and functions are grouped into classes. Member data that is subject to an invariant is hidden from the user. State is accessed via member functions.
 
    All the appropriate data and functions are grouped into classes. State is accessed only via member functions. The access to data members being subject to an invariant is properly protected (in my humble opinion).
 
    WHERE IN THE CODE: virtaully everywhere
 
 6. CRITERION: Classes follow an appropriate inheritance hierarchy.
-   NOTE: Inheritance hierarchies are logical. Composition is used instead of inheritance when appropriate. Abstract classes are composed of pure virtual functions. Override functions are specified.
 
    Although there are only 2 inheritence hierarchies (StaticObject and MovableObject related), the use of them seems logical. Both StaticObject and MovableObject are abstract classes. The classes inheritting from them use virtual inheritence in case that the hierarchies might grow in the future. I imagine, that even if this is the case, this approach might prevent diamond inheritance related problems.
 
@@ -196,7 +188,6 @@ I suppose, the project should satisfy the following rubrics:
    In my opinion there is plenty of space for the project enhancement and introducing for example: falling debris from the block, some moving obstacles (as MovableObjects) or some static obstacles inside the game screen (as StaticObjects).
 
 7. CRITERION: Overloaded functions allow the same function to operate on different parameters.
-   NOTE: One function is overloaded with different signatures for the same function name.
 
    In class Renderer there are two versions of DisplayScreen function:
 
@@ -227,7 +218,6 @@ I suppose, the project should satisfy the following rubrics:
    - StaticObject(float x, float y).
 
 8. CRITERION: Derived class functions override virtual base class functions.
-   NOTE: One member function in an inherited class overrides a virtual base class member function.
 
    Class Ball overrides pure virtual functions: Draw() and Update(). Additionally it overrides non-pure virtual function SetPositon().
 
@@ -236,7 +226,6 @@ I suppose, the project should satisfy the following rubrics:
    Both class SideWall and TextElement override pure virtual function Draw().
 
 9. CRITERION: Templates generalize functions in the project.
-   NOTE: One function is declared with a template that allows it to accept a generic parameter.
 
    In the RandNum there are two templated functions: Random<T>() and operator<T>()().
 
@@ -245,7 +234,6 @@ I suppose, the project should satisfy the following rubrics:
 ### Memory Management
 
 1. CRITERION: The project makes use of references in function declarations.
-   NOTE: At least two variables are defined as references, or two functions use pass-by-reference in the project code.
 
    In class AudioMixer: AudioMixer(const std::unordered_map<Sound, std::string>& soundsAndPaths),
 
@@ -322,7 +310,6 @@ I suppose, the project should satisfy the following rubrics:
    - inline float HorizontalDistance(const Vector2d& A, const Vector2d& B)
 
 2. CRITERION: The project uses destructors appropriately.
-   NOTE: At least one class that uses unmanaged dynamically allocated memory, along with any class that otherwise needs to modify state upon the termination of an object, uses a destructor.
 
    In file SDLinitializers.hpp:
 
@@ -336,7 +323,6 @@ I suppose, the project should satisfy the following rubrics:
    - class MixOpener
 
 3. CRITERION: The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate.
-   NOTE: The project follows the Resource Acquisition Is Initialization pattern where appropriate, by allocating objects at compile-time, initializing objects when they are declared, and utilizing scope to ensure their automatic destruction.
 
    In class AudioMixer:
 
@@ -379,14 +365,12 @@ I suppose, the project should satisfy the following rubrics:
      - std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface\*)>> text_surface
 
 4. CRITERION: The project follows the Rule of 5.
-   NOTE: For all classes, if any one of the copy constructor, copy assignment operator, move constructor, move assignment operator, and destructor are defined, then all of these functions are defined.
 
    In general, the project is organised in a way ensuring that no custom destructors, copy or move operations are needed, due to the careful use of RAAI mechanisms, unique_ptrs, containers etc.
 
    I am not sure, if it satisfies the criterion in such case.
 
 5. CRITERION: The project uses smart pointers instead of raw pointers.
-   NOTE: The project uses at least one smart pointer: unique_ptr, shared_ptr, or weak_ptr. The project does not use raw pointers.
 
    The project doesn't use raw pointers for menaging resources. The only cases were raw pointers are used, is for passing raw pointers to interal SDL library function.
 
@@ -416,16 +400,3 @@ I suppose, the project should satisfy the following rubrics:
      - std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface\*)>> img_surface
      - std::unique_ptr<TTF_Font, std::function<void(TTF_Font\*)>> font
      - std::unique_ptr<SDL_Surface, std::function<void(SDL_Surface\*)>> text_surface
-
-## CC Attribution-ShareAlike 4.0 International
-
-Shield: [![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
-
-This work is licensed under a
-[Creative Commons Attribution-ShareAlike 4.0 International License][cc-by-sa].
-
-[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
-
-[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
-[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
-[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
