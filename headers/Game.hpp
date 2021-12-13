@@ -141,8 +141,6 @@ class Game
   std::unique_ptr<Ball> _ball;
   // pointer to the paddle
   std::unique_ptr<Paddle> _paddle;
-  // randomizer used for getting random numbers
-  gMath::RandNum _randomizer;
   // container of all the blocks in the current level
   std::vector<Block> _blocks;
   // Containers grouping all the static and movable objects to be displayed on

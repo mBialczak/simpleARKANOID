@@ -27,11 +27,11 @@ class Renderer
 
   // displays (renders) game graphics composed of the passed arguments:
   // a vector of static (non-movable) and a vector of movable objects
-  void DisplayGameScreen(const std::vector<const StaticObject*>& staticObjects,
+  void DisplayScreen(const std::vector<const StaticObject*>& staticObjects,
       const std::vector<const MovableObject*>& movableObjects) const;
 
   // Displays a screen containing static (non-movable) objects sent as argument
-  void DisplayStaticScreen(
+  void DisplayScreen(
       const std::vector<const StaticObject*>& staticObjects) const;
 
   // returns a raw pointer to SDL renderer, which can be used if needed with SDL

@@ -126,8 +126,7 @@ void Game::RoutineGameActions()
   // update state of the game objects (ball, paddle, blocks, etc.)
   UpdateGame();
   // Display the game screen
-  _renderer->DisplayGameScreen(
-      _static_for_game_screen, _movable_for_game_screen);
+  _renderer->DisplayScreen(_static_for_game_screen, _movable_for_game_screen);
 
   // Load next level if all the blocks have been destroyed
   if (std::all_of(_blocks.begin(), _blocks.end(),
@@ -453,7 +452,7 @@ void Game::DisplayPauseScreen() const
   all_texts.emplace_back(&score_txt);
 
   // Display all text on screen
-  _renderer->DisplayStaticScreen(all_texts);
+  _renderer->DisplayScreen(all_texts);
 }
 
 // Displays the screen after ball leaving the screen
@@ -507,7 +506,7 @@ void Game::DisplayBallLostScreen() const
   texts.emplace_back(&ball_2out);
 
   // Display all text on screen
-  _renderer->DisplayStaticScreen(texts);
+  _renderer->DisplayScreen(texts);
 }
 
 // Displays the screen after the level has been completed
@@ -566,7 +565,7 @@ void Game::DisplayLevelCompleted() const
   texts.emplace_back(&starting);
 
   // Display all text on screen
-  _renderer->DisplayStaticScreen(texts);
+  _renderer->DisplayScreen(texts);
 }
 
 // Displays the screen after all lives/balls have been lost
@@ -630,7 +629,7 @@ void Game::DisplayGameOverScreen() const
   texts.emplace_back(&quit);
 
   // Display all text on screen
-  _renderer->DisplayStaticScreen(texts);
+  _renderer->DisplayScreen(texts);
 }
 
 // Displays the screen when the game is won
@@ -694,7 +693,7 @@ void Game::DisplayGameWonScreen() const
   texts.emplace_back(&quit);
 
   // Display all text on screen
-  _renderer->DisplayStaticScreen(texts);
+  _renderer->DisplayScreen(texts);
 }
 
 // gets a single texture from the stored textures

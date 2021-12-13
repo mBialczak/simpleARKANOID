@@ -28,6 +28,7 @@ class Paddle : public virtual MovableObject
 
   // default virtual destructor
   ~Paddle() override = default;
+
   // update paddle state
   void Update(float deltaTime) override;
   // render the paddle

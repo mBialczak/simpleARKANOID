@@ -48,7 +48,7 @@ Renderer::Renderer(
 
 // displays (renders) game graphics composed of the passed arguments:
 // a vector of static (non-movable) and a vector of movable objects
-void Renderer::DisplayGameScreen(
+void Renderer::DisplayScreen(
     const std::vector<const StaticObject*>& staticObjects,
     const std::vector<const MovableObject*>& movableObjects) const
 {
@@ -74,7 +74,7 @@ void Renderer::DisplayGameScreen(
 }
 
 // Displays a screen containing static (non-movable) objects sent as argument
-void Renderer::DisplayStaticScreen(
+void Renderer::DisplayScreen(
     const std::vector<const StaticObject*>& staticObjects) const
 {
   UpdateTitleBar();
