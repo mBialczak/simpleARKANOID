@@ -20,6 +20,3 @@ void TextElement::Draw() const
   _texture->Render(
       static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }
-
-// Returns width of the text element
-float TextElement::Width() const { return _texture->Width(); }
