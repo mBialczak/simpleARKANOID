@@ -7,18 +7,6 @@
 #include <memory>
 #include <unordered_map>
 
-// helper class for AudioMixer. It's sole task is to initialize SDL_Mixer
-// support and close it upon destruction using RAII
-class MixInitializer
-{
-  public:
-  // Default constructor. Initializes SDL_Mixer.
-  // Throws SDLexception if initialization was unsuccessful
-  MixInitializer();
-  // Destructor. Cleans up SDL_Mixer
-  ~MixInitializer();
-};
-
 // helper class for AudioMixer. It's sole task is to initialize SDL sound mixer
 // and free menaged resources on destruction using RAII
 class MixOpener
@@ -57,10 +45,6 @@ class AudioMixer
   void PlaySound(Sound soundCode);
 
   private:
-  // Object responsible for automatic initilaization and closing of SDL_Mixer
-  MixInitializer _mix_initializer;
-  // Object responsilbe for automatic acquiring and releasing
-  // of SDL_Mixer resources
   MixOpener _mix_opener;
   // container used for combining enum sound codes with pointers to Mix_Chunks
   std::unordered_map<Sound,

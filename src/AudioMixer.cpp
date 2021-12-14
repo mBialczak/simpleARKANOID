@@ -53,23 +53,6 @@ void AudioMixer::PlaySound(Sound soundCode)
   }
 };
 
-// ---------- class MixInitializer  -------------
-
-// Default constructor. Initializes SDL_Mixer.
-// Throws SDLexception if initialization was unsuccessful
-MixInitializer::MixInitializer()
-{
-  // Try to initialize SDL_Mixer and report error if it was unsuccessfull
-  if (Mix_Init(MIX_INIT_FLAC | MIX_INIT_MOD | MIX_INIT_MP3 | MIX_INIT_OGG)
-      == 0) {
-    throw SDLexception("Mix_Init failed. SDL_Mixer error:  ", Mix_GetError(),
-        __FILE__, __LINE__);
-  }
-}
-
-// Destructor. Cleans up SDL_Mixer
-MixInitializer::~MixInitializer() { Mix_Quit(); }
-
 // ---------- class MixOpener  -------------
 
 /* Constructor. Initializes SDL sound mixer support. Arguments:

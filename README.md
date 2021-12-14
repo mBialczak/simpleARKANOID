@@ -88,11 +88,7 @@ Appart from the above mentioned inheritence hierarchies, the code is organised i
 5.  the class RandNum - a lightweight random number generating class (currently a component of the Ball class, but due to the usage of static functions can be accessed even whithout object instatiation in other places of the code); the class is enclosed into gMath namespace (as for game math).
 
 6.  the class AudioMixer - which is responsible for providing sound effects support, namely loading and replaying .wav files.
-    Together (defined with same header file and implemented in the other source file) with the AudioMixer class are the following classes:
-
-    - the MixInitializer class
-    - the MixOpener class.
-      Both are helper classes for the AudioMixer class. Their sole purpose is to provide correct initialization, acquiring resources, realeasing resources and closing of SDL Mixer engine in a RAII way.
+    Together (defined with same header file and implemented in the other source file) with the AudioMixer class is the MixOpener helper class for the AudioMixer class. It's sole purpose is to provide correct initialization, acquiring resources, realeasing resources and closing of SDL Mixer engine in a RAII way.
 
 7.  the class Texture - used as an enhanced wrapper for SDL_Texture, image file loading into texture and generating textures from text. It is used as a component of StaticObject and Movable object-inheriting classes (Block, SideWall, Ball, Paddle and TextElement).
 
@@ -316,16 +312,13 @@ I suppose, the project should satisfy the following rubrics:
    - class ImageInitializer,
    - class TTFinitializer.
 
-   In file AudioMixer.hpp:
-
-   - class MixInitializer,
-   - class MixOpener
+   In file AudioMixer.hpp: class MixOpener
 
 3. CRITERION: The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate.
 
    In class AudioMixer:
 
-   - usage of helper RAII classes MixInitializer and MixOpener,
+   - usage of helper RAII class MixOpener,
    - usage of std::unique_ptr with custom deleter stored in data member \_sound_effects (the unique_ptr's are initialized in the constructor and stored in the member unordered map).
 
    In class Game:
