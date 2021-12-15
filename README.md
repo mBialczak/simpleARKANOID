@@ -74,9 +74,9 @@ Appart from the above mentioned inheritence hierarchies, the code is organised i
 1.  the class Game - obviously represents the main game object.
     In a seperate header (SDLinitializer.hpp) and source file (SDLinitializer.cpp) there are grouped 3 helper classes for the Game class:
 
-    - SDLinitializer class - for SDL main subsystems RAII menagement,
-    - ImageInitializer class - for RAII menagement of SDL_image support,
-    - TTFinitializer class - for RAII menagement of SDL_ttf (true type font) support.
+    - SDLinitializer class - for SDL main subsystems RAII management,
+    - ImageInitializer class - for RAII management of SDL_image support,
+    - TTFinitializer class - for RAII management of SDL_ttf (true type font) support.
       Objects of above classes are used as components of the Game class, which initialized in the correct order provide convenient and exception safe way to intialize and close SDL framework features.
 
 2.  the class Controller - a component of the Game class, responsible for handling the keyboard input / stearing.
@@ -364,7 +364,7 @@ I suppose, the project should satisfy the following rubrics:
 
 5. CRITERION: The project uses smart pointers instead of raw pointers.
 
-   The project doesn't use raw pointers for menaging resources. The only cases were raw pointers are used, is for passing raw pointers to interal SDL library function.
+   The project doesn't use raw pointers for managing resources. The only cases were raw pointers are used, is for passing raw pointers to interal SDL library function.
 
    In class AudioMixer: data member: std::unordered_map<Sound, std::unique_ptr<Mix_Chunk, std::function<void(Mix_Chunk\*)>>> \_sound_effects;
 

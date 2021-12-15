@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 // helper class for AudioMixer. It's sole task is to initialize SDL sound mixer
-// and free menaged resources on destruction using RAII
+// and free managed resources on destruction using RAII
 class MixOpener
 {
   public:
@@ -34,7 +34,7 @@ class AudioMixer
   // to be replayed. Will throw SDLexception if initialization of sound mixer
   // support or loading of the sound  effect will fail
   AudioMixer(const std::unordered_map<Sound, std::string>& soundsAndPaths);
-  // usage of RAII resource menagement helper classes  allows
+  // usage of RAII resource management helper classes  allows
   // for default destructor
   ~AudioMixer() = default;
   // the class is not meant to be copied, so copy operations are disabled

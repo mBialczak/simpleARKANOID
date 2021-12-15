@@ -280,7 +280,7 @@ float Ball::NewDirectionLeftWallBounced() const
     new_direction = 270.0f + deltaAngle;
   }
   // if the direction is different than above simply keeps it unchanged in order
-  // to avoid strange cycles when the ball didn't menage to escepe far enough
+  // to avoid strange cycles when the ball didn't manage to escape far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;
@@ -305,7 +305,7 @@ float Ball::NewDirectionRightWallBounced() const
     new_direction = 180.0f + angle;
   }
   // if the direction is different than above simply keeps it unchanged in order
-  // to avoid strange cycles when the ball didn't menage to escepe far enough
+  // to avoid strange cycles when the ball didn't manage to escepe far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;
@@ -330,7 +330,7 @@ float Ball::NewDirectionTopWallBounced() const
     new_direction = 360.0f - _direction;
   }
   // if the direction is different than above simply keeps it unchanged in order
-  // to avoid strange cycles when the ball didn't menage to escepe far enough
+  // to avoid strange cycles when the ball didn't manage to escepe far enough
   // from the wall before next collision is detected
   else {
     new_direction = _direction;

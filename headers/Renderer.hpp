@@ -18,7 +18,7 @@ class Renderer
   Renderer(const std::size_t screenHeight, const std::size_t screenWidth);
 
   // copying of class object doesn't make sense and crucial resources are
-  // menaged with unique pointers, so copy operations are disabled
+  // managed with unique pointers, so copy operations are disabled
   Renderer(const Renderer&) = delete;
   Renderer& operator=(const Renderer&) = delete;
 
