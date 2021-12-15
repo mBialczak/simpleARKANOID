@@ -1,0 +1,3 @@
+As this is my capstone project for the Udacity NanoDegree C++ program, I claim to have the copyright to the project. That is relevant to the .hpp and .cpp source code files, as cmake find modules have their own copyright info included in the cmake folder. The audio files have been downloaded from [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use assets. The fonts are also not my piece of work (they have been downloaded as a free to use resource as well).
+
+Any one who intends to include any reasonable c++ source code from this project in his own work needs to receive prior consent from Maciej Białczak (humble me).
