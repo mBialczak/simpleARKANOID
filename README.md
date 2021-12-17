@@ -63,59 +63,68 @@ All the sound effects files are downloaded from the [https://mixkit.co/free-soun
 
 The Roboto font family used in the project was downloaded as free to use from [https://fontsnetwork.com/category/truetype/](https://fontsnetwork.com/category/truetype/)
 
+## Code ownership
+
+As this is my capstone project for the Udacity NanoDegree C++ program, I claim to have the copyright to code part of the project. That is relevant to the .hpp and .cpp source code files, as cmake find modules have their own copyright info included in the [Copyright.txt](./cmake/Copyright.txt). 
+
+Any one who intends to include any reasonable C++ source code from this project in his own work should receive prior consent from @mBialczak (humble me).
+
+
 ## Overview of the code structure
 
 The project is structured into classes, seperated into header files (contained in "headers" folder) and source files ("src" folder).
 
 There are two shallow inheritence hierarchies:
 
-1.  The StaticObject is an abstract base class for non movable game objects displayed on the screen.
+1.  The `StaticObject` is an **abstract base class** for non movable game objects displayed on the screen.
     The class is inherited by the folling clasess:
 
-    - the class SideWall - which is displayed on the right, left and top side of the screen and is responsible for limiting the ball movement area,
-    - the class Block - which represents a block to be destroyed by the ball,
-    - the class TextElement - which represents a static rendered text to be displayed on the screen (currently it is heavily used on the pause screen, game over screen, the screen displayed after level completion and after the game is won).
+    - the class `SideWall` - which is displayed on the right, left and top side of the screen and is responsible for limiting the ball movement area,
+    - the class `Block` - which represents a block to be destroyed by the ball,
+    - the class `TextElement` - which represents a static rendered text to be displayed on the screen (currently it is heavily used on the pause screen, game over screen, the screen displayed after level completion and after the game is won).
 
-2.  The MovableObject base class is an abstract base class for objects which can move on the game screen.
+2.  The `MovableObject` base class is an **abstract base class** for objects which can move on the game screen.
     The class is inherited by the following classes:
-    - the Ball class - which represents the ball moving on the screen,
-    - the Paddle class - represents a paddle used for preventing the ball from falling down the bottom limit of the screen and for directing the ball towards the blocks to be destroyed.
+    - the `Ball` class - which represents the ball moving on the screen,
+    - the `Paddle` class - represents a paddle used for preventing the ball from falling down the bottom limit of the screen and for directing the ball towards the blocks to be destroyed.
 
 Appart from the above mentioned inheritence hierarchies, the code is organised into following non-iheritance classes:
 
-1.  the class Game - obviously represents the main game object.
-    In a seperate header (SDLinitializer.hpp) and source file (SDLinitializer.cpp) there are grouped 3 helper classes for the Game class:
+1.  the class `Game` - obviously represents the main game object.
+    In a seperate header [SDLinitializer.hpp](./headers/SDLInitializers.hpp)  and source file [SDLinitializer.cpp](./src/SDLInitializers.cpp) there are grouped 3 helper classes for the `Game` class:
 
-    - SDLinitializer class - for SDL main subsystems RAII management,
-    - ImageInitializer class - for RAII management of SDL_image support,
-    - TTFinitializer class - for RAII management of SDL_ttf (true type font) support.
-      Objects of above classes are used as components of the Game class, which initialized in the correct order provide convenient and exception safe way to intialize and close SDL framework features.
+    - `SDLinitializer` class - for SDL main subsystems RAII management,
+    - `ImageInitializer` class - for RAII management of SDL_image support,
+    - `TTFinitializer` class - for RAII management of SDL_ttf (true type font) support.
+    
+    Objects of above classes are used as components of the `Game` class, which initialized in the correct order provide convenient and exception safe way to intialize and close SDL framework features.
 
-2.  the class Controller - a component of the Game class, responsible for handling the keyboard input / stearing.
+2.  the class `Controller` - a component of the `Game` class, responsible for handling the keyboard input / stearing.
 
-3.  the class Renderer - a component of the Game class, responsible for displaying the game objects onto the screen.
+3.  the class `Renderer` - a component of the Game class, responsible for displaying the game objects onto the screen.
 
-4.  the class LevelData - a component of the Game class, which loads and stores all data specific to the level from a level file.
+4.  the class `LevelData` - a component of the `Game` class, which loads and stores all data specific to the level from a level file.
 
-5.  the class RandNum - a lightweight random number generating class (currently a component of the Ball class, but due to the usage of static functions can be accessed even whithout object instatiation in other places of the code); the class is enclosed into gMath namespace (as for game math).
+5.  the class `RandNum` - a lightweight random number generating class (currently a component of the `Ball` class, but due to the usage of static functions can be accessed even whithout object instatiation in other places of the code); the class is enclosed into `gMath` namespace (as for game math).
 
-6.  the class AudioMixer - which is responsible for providing sound effects support, namely loading and replaying .wav files.
-    Together (defined with same header file and implemented in the other source file) with the AudioMixer class is the MixOpener helper class for the AudioMixer class. It's sole purpose is to provide correct initialization, acquiring resources, realeasing resources and closing of SDL Mixer engine in a RAII way.
+6.  the class `AudioMixer` - which is responsible for providing sound effects support, namely loading and replaying .wav files.
+    
+    Together (defined with same header file and implemented in the other source file) with the `AudioMixer` class is the `MixOpener` helper class. It's sole purpose is to provide correct initialization, acquiring resources, realeasing resources and closing of SDL Mixer engine in a RAII way.
 
-7.  the class Texture - used as an enhanced wrapper for SDL_Texture, image file loading into texture and generating textures from text. It is used as a component of StaticObject and Movable object-inheriting classes (Block, SideWall, Ball, Paddle and TextElement).
+7.  the class `Texture` - used as an enhanced wrapper for SDL_Texture, image file loading into texture and generating textures from text. It is used as a component of `StaticObject`- and `MovableObject`-inheriting classes (`Block`, `SideWall`, `Ball`, `Paddle` and `TextElement`).
 
-8.  the class TextElement - derived publicly from StaticObject and representing a rendered true type font text to be displayed.
+8.  the class `TextElement` - derived publicly from `StaticObject` and representing a rendered true type font text to be displayed.
 
-9.  the class Vector2d - a basic component class for all StaticObjects and MovableObjects - inherited classes. In the project it is used to represent a position and a velocity vector. Vector2d class is enclosed into gMath namespace together with RandNum class (although in seperate files) and some helper standalone functions.
+9.  the class `Vector2d` - a basic component class for all `StaticObject`- and `MovableObject` - inherited classes. In the project it is used to represent a position and a velocity vector. `Vector2d` class is enclosed into `gMath` namespace together with `RandNum` class (although in seperate files) and some helper standalone functions.
 
-10. IntervalTimer class - a simple component class allowing measuring intervals of time, which are used for game state update calculations.
+10. the class `IntervalTimer`- a simple component class allowing measuring intervals of time, which are used for game state update calculations.
 
-11. LimitTimer class - a simple class used for incorporating frame rate limiting policy (in the implementation of the Game::Run function) and for FPS calculations inside of Renderer::UpdateTitleBar function.
+11. the class `LimitTimer` - a simple class used for incorporating frame rate limiting policy (in the implementation of the `Game::Run` function) and for FPS calculations inside of `Renderer::UpdateTitleBar` function.
 
-12. SDLexception class - a custom made exception class used for error handling policy related to all SDL related problems.
+12. the class `SDLexception` - a custom made exception class used for error handling policy related to all SDL related problems.
 
 There are 3 standalone header files (not directly related to any class) used for convenient grouping of:
 
-- all the enum classes used in the project - the Enum.hpp file,
-- constants with color definitions - the Colors.hpp file,
-- all the constants with paths to assets used in the project - the Paths.hpp.
+- all the **enum classes** used in the project - the [Enums.hpp](./headers/Enums.hpp) file,
+- constants with **color definitions** - the [Colors.hpp](./headers/Colors.hpp) file,
+- all the **constants with paths** to assets used in the project - the [Paths.hpp](./headers/Paths.hpp)
