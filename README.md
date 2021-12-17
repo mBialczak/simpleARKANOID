@@ -4,7 +4,7 @@
 
 ## Introduction
 As a final capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213) I have chosen to create a simple remake of classic game Arkanoid.
-Therefore I have called the project simpleArkanoid. It was done completely from scratch, using SDL framework.
+Therefore I have called the project simpleArkanoid. **The coding was done completely from scratch**, using SDL framework.
 
 The game supports textures and basic sound effects. There is plenty of space for enhancing the game features.
 
