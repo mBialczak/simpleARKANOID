@@ -2,31 +2,32 @@
 
 ![screen-gif](./simpleArkanoid.gif)
 
+## Introduction
 As a final capstone project for the [Udacity C++ Nanodegree Program](https://www.udacity.com/course/c-plus-plus-nanodegree--nd213) I have chosen to create a simple remake of classic game Arkanoid.
 Therefore I have called the project simpleArkanoid. It was done completely from scratch, using SDL framework.
 
-In this single player game, the player tries to destroy all the blocks on the current level with the ball. The player needs to prevent the ball from escaping the bottom border of the game window. To this aim, the player uses the paddle, which can be moved left, right (within wall limits) and up and down (within invisible rectangle limiting the area of movement).
-
-The game is controlled via keyboard. The detail instructions are displayed on the welcome/pause screen, which can be displayed whenever player wishes, by simply pausing the game.
-
-On each level the ball speed is increased. However, the player can increase the ball speed in steps to unlimited value at will (and own responsibility) each time the ball hits the paddle by holding the correct key. The speed can also be decreased when hitting the paddle, but no more then to the minimum speed determined by the game level.
-
-When the ball hits the paddle, it's direction can be altered slightly to the left or right (again - by holding the correct key in the correct moment).
-
-Currently the game has only 10 levels implemented, but introducing new levels is fairly easy and fast, as each level data is stored in a text-file. Therefore, almost unlimited number of levels can be introduced by creating new text files. Important thing to remember is to keep the structure of the level file and naming convention.
-Furthermore, for convenience, an empty level pattern is enclosed in the level folder. To help create the level, a calculation sheet is contained in the level folder as well. It doesn't have direct correspondence to creation of a level, but helps create the visual layout of a level first, which can later be entered into the level file manually.
-
-Tthe game supports textures and basic sound effects. There is plenty of space for enhancing the game features.
+The game supports textures and basic sound effects. There is plenty of space for enhancing the game features.
 
 Obviously, the game is programmed in the C++. The framework used is SDL (with additional SDL_image, SDL_ttf and SDL_mixer libraries).
-
-All the sound effects files are downloaded from the [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use. All the textures are simple hand drawings created personally (which can easily by seen as I have no drawing skills at all...).
 
 Thank you for trying out my capstone project and thank you in advance for understanding, that it's not a fully featured top notch version of the original Arkanoid game (at this stage at least).
 
 Have fun!
 
-## Dependencies for Running Locally
+## Game description and instructions
+In this single player game, the player tries to destroy all the blocks on the current level with the ball. The player needs to prevent the ball from escaping the bottom border of the game window. 
+The game is controlled via keyboard. 
+To this aim, the player uses the paddle, which can be moved:
+- left or right (within wall limits),
+- up and down (within invisible rectangle limiting the area of movement).
+
+On each level the ball speed is increased. However, the player can increase the ball speed in steps to unlimited value at will (and own responsibility) each time the ball hits the paddle by holding the correct key. The speed can also be decreased when hitting the paddle, but no more then to the minimum speed determined by the game level.
+
+When the ball hits the paddle, it's direction can be altered slightly to the left or right (again - by holding the correct key in the correct moment).
+
+The game instructions are displayed on the welcome/pause screen as well, which can be displayed whenever player wishes, by simply pausing the game.
+
+## Dependencies for building and running locally
 
 - cmake >= 3.16 (it is likely that the project should build using previous versions)
   - All OSes: [click here for installation instructions](https://cmake.org/install/)
@@ -44,14 +45,25 @@ Have fun!
   - Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
   - Windows: recommend using [MinGW](http://www.mingw.org/)
 
-## Basic Build Instructions
+### Basic Build Instructions
 
 1. Clone this repo.
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./simpleArkanoid`.
 
-## Overview of the code structure REVIEW:
+### Levels development
+
+Currently the game has only 10 levels implemented, but introducing new levels is fairly easy and fast, as each level data is stored in a text-file. Therefore, almost unlimited number of levels can be introduced by creating new text files. Important thing to remember is to keep the structure of the level file and naming convention.
+Furthermore, for convenience, an empty level pattern is enclosed in the level folder. To help create the level, a calculation sheet is contained in the level folder as well. It doesn't have direct correspondence to creation of a level, but helps create the visual layout of a level first, which can later be entered into the level file manually.
+
+## Assets ownership
+
+All the sound effects files are downloaded from the [https://mixkit.co/free-sound-effects/](https://mixkit.co/free-sound-effects/) as free to use. All the textures are simple hand drawings created personally (which can easily by seen as I have no drawing skills at all...).
+
+The Roboto font family used in the project was downloaded as free to use from [https://fontsnetwork.com/category/truetype/](https://fontsnetwork.com/category/truetype/)
+
+## Overview of the code structure
 
 The project is structured into classes, seperated into header files (contained in "headers" folder) and source files ("src" folder).
 
