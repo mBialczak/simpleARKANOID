@@ -7,9 +7,9 @@ using std::string_literals::operator""s;
 
 // Default Constructor
 Texture::Texture()
-    : _sdl_texture(nullptr)
-    , _sdl_renderer(nullptr)
-    , _width(0)
+    : sdl_texture_(nullptr)
+    , sdl_renderer_(nullptr)
+    , width_(0)
     , _height(0)
 {
 }
@@ -18,9 +18,9 @@ Texture::Texture()
 // Takes path of the image file to load and SDL renderer for texture creation
 // and rendering. Throws SDLexception if construction fails
 Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
-    : _sdl_texture(nullptr)
-    , _sdl_renderer(gameRenderer)
-    , _width(0)
+    : sdl_texture_(nullptr)
+    , sdl_renderer_(gameRenderer)
+    , width_(0)
     , _height(0)
 {
   // create pointer for temporary SDL_Surface which is needed only for texture
@@ -40,19 +40,19 @@ Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
   // Needs to be done here (not in the constructor initilializer list), because
   // first the the img_surface needs to be created. Custom deleter is used due
   // to specific SDL texture destructon function
-  _sdl_texture
+  sdl_texture_
       = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
           SDL_CreateTextureFromSurface(gameRenderer, img_surface.get()),
           [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); }
         };
 
   // check if texture created succesfully and throw if not
-  if (!_sdl_texture) {
+  if (!sdl_texture_) {
     throw SDLexception("Failed to create texture from path: "s + imagePath,
         IMG_GetError(), __FILE__, __LINE__);
   }
   // set texture dimensions basing on loaded image size
-  _width = img_surface.get()->w;
+  width_ = img_surface.get()->w;
   _height = img_surface.get()->h;
 }
 
@@ -62,9 +62,9 @@ Texture::Texture(const std::string& imagePath, SDL_Renderer* gameRenderer)
 // Throws SDLexception if construction fails
 Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
     SDL_Renderer* gameRenderer, const std::string& text)
-    : _sdl_texture(nullptr)
-    , _sdl_renderer(gameRenderer)
-    , _width(0)
+    : sdl_texture_(nullptr)
+    , sdl_renderer_(gameRenderer)
+    , width_(0)
     , _height(0)
 {
   //  create pointer for temporary TTF_Font, which is needed only for
@@ -101,19 +101,19 @@ Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
   // Needs to be done here (not in the constructor initilializer list),
   // because first the the text_surface needs to be created.
   // Custom deleter is used due to specific SDL texture destructon function
-  _sdl_texture
+  sdl_texture_
       = std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> {
           SDL_CreateTextureFromSurface(gameRenderer, text_surface.get()),
           [](SDL_Texture* ptr) { SDL_DestroyTexture(ptr); }
         };
 
   // check if texture created succesfully and throw if not
-  if (!_sdl_texture) {
+  if (!sdl_texture_) {
     throw SDLexception("Failed to create texture from  rendered text: "s + text,
         SDL_GetError(), __FILE__, __LINE__);
   }
   // set own dimensions basing on loaded image size
-  _width = text_surface->w;
+  width_ = text_surface->w;
   _height = text_surface->h;
 }
 
@@ -121,12 +121,12 @@ Texture::Texture(const std::string& fontPath, SDL_Color color, int textSize,
 void Texture::Render(int x, int y) const
 {
   // create destination rendering rectangle and set sizes
-  SDL_Rect render_rect; // { x, y, _width, _height };
-  render_rect.w = _width;
+  SDL_Rect render_rect; // { x, y, width_, _height };
+  render_rect.w = width_;
   render_rect.h = _height;
   // center the position of the rectangle around texture center
   render_rect.x = x - render_rect.w / 2;
   render_rect.y = y - render_rect.h / 2;
   // Render to screen; NULL for entire texture
-  SDL_RenderCopy(_sdl_renderer, _sdl_texture.get(), NULL, &render_rect);
+  SDL_RenderCopy(sdl_renderer_, sdl_texture_.get(), NULL, &render_rect);
 }

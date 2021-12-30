@@ -39,26 +39,26 @@ class Texture
   Texture& operator=(Texture&& moved) = default;
 
   // gets texture width
-  int Width() const { return _width; }
+  int Width() const { return width_; }
   // gets texture height
   int Height() const { return _height; }
 
   // returns pointer to SDL_Texture. Class Texture owns the pointer,
   // so user of the class should not explicitly destroy the texture
-  SDL_Texture* GetSDLtexture() const { return _sdl_texture.get(); }
+  SDL_Texture* GetSDLtexture() const { return sdl_texture_.get(); }
 
   // renders texture in position x, y
   void Render(int x, int y) const;
 
   private:
   // unique pointer to SDL texture with custom deleter
-  std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> _sdl_texture;
+  std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> sdl_texture_;
 
   // NOT OWNED pointer to SDL renderer for texture creation and future rendering
-  SDL_Renderer* _sdl_renderer;
+  SDL_Renderer* sdl_renderer_;
 
   // image dimmensions
-  int _width;
+  int width_;
   int _height;
 };
 
