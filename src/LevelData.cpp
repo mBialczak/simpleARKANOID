@@ -20,11 +20,11 @@ const std::string LevelData::points_per_block_key { "points_per_block" };
 // constructor taking the path to levels to load and level number
 // throws std::runtime_error if unable to load level data
 LevelData::LevelData(const std::string& path, unsigned levelNumber)
-    : _level(levelNumber)
-    , _ball_speed(0.0f)
-    , _paddle_speed(0.0f)
-    , _lives(0)
-    , _points_per_block(0)
+    : level_(levelNumber)
+    , ball_speed_(0.0f)
+    , paddle_speed_(0.0f)
+    , lives_(0)
+    , points_per_block_(0)
 {
   // create full path to the level file
   std::string full_path
@@ -42,7 +42,7 @@ LevelData::LevelData(const std::string& path, unsigned levelNumber)
 // the composition of blocks in the level
 const std::vector<std::vector<Sprite>>& LevelData::SpriteTable() const
 {
-  return _sprite_table;
+  return sprite_table_;
 }
 
 // Reads and returns single value described by key from the file.
@@ -86,13 +86,13 @@ T LevelData::ReadDataItem(
 // returns true if succesfull, false - otherwise
 bool LevelData::ReadNumericalData(const std::string& filePath)
 {
-  _ball_speed = ReadDataItem<float>(filePath, ball_speed_key);
-  _paddle_speed = ReadDataItem<float>(filePath, paddle_speed_key);
-  _lives = ReadDataItem<unsigned>(filePath, lives_key);
-  _points_per_block = ReadDataItem<unsigned>(filePath, points_per_block_key);
+  ball_speed_ = ReadDataItem<float>(filePath, ball_speed_key);
+  paddle_speed_ = ReadDataItem<float>(filePath, paddle_speed_key);
+  lives_ = ReadDataItem<unsigned>(filePath, lives_key);
+  points_per_block_ = ReadDataItem<unsigned>(filePath, points_per_block_key);
   // check if the read values make sense
-  if (_ball_speed <= 0.0 || _paddle_speed <= 0.0 || _lives == 0 || _lives > 5
-      || _points_per_block == 0) {
+  if (ball_speed_ <= 0.0 || paddle_speed_ <= 0.0 || lives_ == 0 || lives_ > 5
+      || points_per_block_ == 0) {
     // returned values make no sense to use them
     return false;
   }
@@ -123,7 +123,7 @@ bool LevelData::ReadSpriteTable(const std::string& filePath)
   unsigned row_count { 0 };
 
   // reserve enough space for the rows in member sprite table
-  _sprite_table.reserve(max_rows);
+  sprite_table_.reserve(max_rows);
 
   // read the file line by line until  maximum number of
   // rows predicted for displaying is reached
@@ -137,12 +137,12 @@ bool LevelData::ReadSpriteTable(const std::string& filePath)
       return false;
     }
     // put the created row into sprite table
-    _sprite_table.emplace_back(std::move(sprite_row));
+    sprite_table_.emplace_back(std::move(sprite_row));
     row_count++;
   }
 
   // check if the created table has correct size
-  if (_sprite_table.size() != max_rows) {
+  if (sprite_table_.size() != max_rows) {
     return false;
   }
   // the sprite table was succesfully read

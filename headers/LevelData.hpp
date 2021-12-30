@@ -15,15 +15,15 @@ class LevelData
   // throws std::runtime_error if unable to load level data
   LevelData(const std::string& path, unsigned levelNumber = 1);
   // returns minimum scalar speed of the ball (pixels/second) for the level
-  float BallSpeed() const { return _ball_speed; }
+  float BallSpeed() const { return ball_speed_; }
   // returns paddle scalar speed for the level;
-  float PaddleSpeed() const { return _paddle_speed; }
+  float PaddleSpeed() const { return paddle_speed_; }
   // returns lives available in the start of the current level
-  unsigned Lives() const { return _lives; }
+  unsigned Lives() const { return lives_; }
   // returns point value assigned to destroyed block in the current level
-  unsigned PointsPerBlock() const { return _points_per_block; }
+  unsigned PointsPerBlock() const { return points_per_block_; }
   // returns current level to which stored data corresponds
-  unsigned Level() const { return _level; }
+  unsigned Level() const { return level_; }
   // returns the sprite table representing
   // the composition of blocks in the level
   const std::vector<std::vector<Sprite>>& SpriteTable() const;
@@ -71,16 +71,16 @@ class LevelData
   static const std::string points_per_block_key;
 
   // level to which the object corresponds to
-  std::size_t _level;
+  std::size_t level_;
   // ball starting scalar speed (pixels per second) assigned to the level
-  float _ball_speed;
+  float ball_speed_;
   // paddle scalar moving speed assigned to the level
-  float _paddle_speed;
+  float paddle_speed_;
   // number of starting lives assigned to the level
-  unsigned _lives;
+  unsigned lives_;
   // points value of each block destroyed in the level
-  unsigned _points_per_block;
+  unsigned points_per_block_;
   // table of block sprites describing block composition in the level
-  std::vector<std::vector<Sprite>> _sprite_table;
+  std::vector<std::vector<Sprite>> sprite_table_;
 };
 #endif // !Level_HPP
