@@ -6,22 +6,22 @@ namespace gMath {
 
 // default constructor
 Vector2d::Vector2d()
-    : _x(0.0f)
-    , _y(0.0f)
+    : x_(0.0f)
+    , y_(0.0f)
 {
 }
 // constructor taking X and Y coordinates
 Vector2d::Vector2d(float x, float Y)
-    : _x(x)
-    , _y(Y)
+    : x_(x)
+    , y_(Y)
 {
 }
 
 // constructor creating unit vector from the direction angle in radians
 Vector2d::Vector2d(float angle)
-    : _x(cos(angle))
+    : x_(cos(angle))
     // y coordinate needs to inverted due to SDL coordinate system
-    , _y(-sin(angle))
+    , y_(-sin(angle))
 {
 }
 
@@ -31,8 +31,8 @@ Vector2d Vector2d::operator*(float scalar)
   // make temporary copy to be returned
   Vector2d new_vector { *this };
   // multiply each axis value by a scalar
-  new_vector._x *= scalar;
-  new_vector._y *= scalar;
+  new_vector.x_ *= scalar;
+  new_vector.y_ *= scalar;
 
   return new_vector;
 }
@@ -41,8 +41,8 @@ Vector2d Vector2d::operator*(float scalar)
 Vector2d& Vector2d::operator+=(const Vector2d& other)
 {
   // add member coordinates
-  _x += other._x;
-  _y += other._y;
+  x_ += other.x_;
+  y_ += other.y_;
 
   return *this;
 }

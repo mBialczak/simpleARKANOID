@@ -18,14 +18,14 @@ class Vector2d
   explicit Vector2d(float angle);
 
   // Returns the x component of the vector
-  float X() const { return _x; }
+  float X() const { return x_; }
   // Returns the y component of the vector
-  float Y() const { return _y; }
+  float Y() const { return y_; }
 
   // Sets the x component of the vector
-  void SetX(float x) { _x = x; }
+  void SetX(float x) { x_ = x; }
   // Sets the y component of the vector
-  void SetY(float y) { _y = y; }
+  void SetY(float y) { y_ = y; }
 
   // returns current vector multiplied by scalar
   Vector2d operator*(float scalar);
@@ -34,8 +34,8 @@ class Vector2d
 
   private:
   // vector axis components
-  float _x;
-  float _y;
+  float x_;
+  float y_;
 };
 
 // mathematical constants used
