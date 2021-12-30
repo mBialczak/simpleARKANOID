@@ -26,34 +26,34 @@ class Controller
   void HandleGameOverEvents() const;
 
   // reference to the main game object being controlled
-  Game& _game;
+  Game& game_;
 
   // keys used for game control with  corresponding SDL codes:
   // paddle up key
-  Uint8 _up = SDL_SCANCODE_UP;
+  Uint8 up_ = SDL_SCANCODE_UP;
   // paddle down key
-  Uint8 _down = SDL_SCANCODE_DOWN;
+  Uint8 down_ = SDL_SCANCODE_DOWN;
   // paddle left key
-  Uint8 _left = SDL_SCANCODE_LEFT;
+  Uint8 left_ = SDL_SCANCODE_LEFT;
   // paddle right key
-  Uint8 _right = SDL_SCANCODE_RIGHT;
+  Uint8 right_ = SDL_SCANCODE_RIGHT;
   // start the ball movement when on the paddle
-  Uint8 _start = SDL_SCANCODE_SPACE;
+  Uint8 start_ = SDL_SCANCODE_SPACE;
   // spin ball right key
-  Uint8 _spin_left = SDL_SCANCODE_A;
+  Uint8 spin_left_ = SDL_SCANCODE_A;
   // spin ball left key
-  Uint8 _spin_right = SDL_SCANCODE_F;
+  Uint8 spin_right_ = SDL_SCANCODE_F;
   // speed up key
-  Uint8 _speed_up = SDL_SCANCODE_E;
+  Uint8 speed_up_ = SDL_SCANCODE_E;
   // slow down key
-  Uint8 _slow_down = SDL_SCANCODE_D;
+  Uint8 slow_down_ = SDL_SCANCODE_D;
   // pause / unpause key
-  Uint8 _pause_key = SDL_SCANCODE_ESCAPE;
+  Uint8 pause_key_ = SDL_SCANCODE_ESCAPE;
   // the key enabling quiting the game
   // works after game over only
-  Uint8 _quit = SDL_SCANCODE_ESCAPE;
+  Uint8 quit_ = SDL_SCANCODE_ESCAPE;
   // the key for restarting the game
   // works after game over or won only
-  Uint8 _restart = SDL_SCANCODE_RETURN;
+  Uint8 restart_ = SDL_SCANCODE_RETURN;
 };
 #endif // !CONTROLLER_HPP

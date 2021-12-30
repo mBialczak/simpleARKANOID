@@ -3,7 +3,7 @@
 
 // Contructor taking the game object to control
 Controller::Controller(Game& game)
-    : _game(game)
+    : game_(game)
 {
 }
 
@@ -20,7 +20,7 @@ void Controller::HandleInput(bool& running, Paddle& paddle, Ball& ball) const
       running = false;
     }
     // dispatch the rest event handling to helpers depending on the game state
-    switch (_game.State()) {
+    switch (game_.State()) {
       case GameState::Routine:
         HandleRoutineEvents(paddle, ball);
         break;
@@ -46,8 +46,8 @@ void Controller::HandlePausedEvents() const
   // get the current keyboard state
   const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
   // handle pause key presses
-  if (keysArray[_pause_key]) {
-    _game.TogglePause();
+  if (keysArray[pause_key_]) {
+    game_.TogglePause();
   }
 }
 
@@ -56,8 +56,8 @@ void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
 {
   // get the current keyboard state
   const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
-  // move the paddle up when the key: _up is pressed
-  if (keysArray[_up]) {
+  // move the paddle up when the key: up_ is pressed
+  if (keysArray[up_]) {
     // move paddle up only if it has not outrun the ball
     // (with some reasonable margin)
     // helps avoid visual apearance of ball overlaping the paddle
@@ -67,44 +67,44 @@ void Controller::HandleRoutineEvents(Paddle& paddle, Ball& ball) const
       paddle.MoveUp();
     }
   }
-  // move the paddle down when the key: _down is pressed
-  else if (keysArray[_down]) {
+  // move the paddle down when the key: down_ is pressed
+  else if (keysArray[down_]) {
     paddle.MoveDown();
   }
-  // move the paddle down when the key: _left is pressed
-  else if (keysArray[_left]) {
+  // move the paddle down when the key: left_ is pressed
+  else if (keysArray[left_]) {
     paddle.MoveLeft();
   }
-  // move the paddle right when the key: _right is pressed
-  else if (keysArray[_right]) {
+  // move the paddle right when the key: right_ is pressed
+  else if (keysArray[right_]) {
     paddle.MoveRight();
   }
-  // apply left spin when the key: _spin_left is pressed
-  else if (keysArray[_spin_left]) {
+  // apply left spin when the key: spin_left_ is pressed
+  else if (keysArray[spin_left_]) {
     ball.SetSpin(Spin::Left);
   }
-  // apply right spin when the key: _spin_right is pressed
-  else if (keysArray[_spin_right]) {
+  // apply right spin when the key: spin_right_ is pressed
+  else if (keysArray[spin_right_]) {
     ball.SetSpin(Spin::Right);
   }
-  // increase the ball speed when the key: _speed_up is pressed
-  else if (keysArray[_speed_up]) {
-    ball.SetSpeedDelta(_game.SpeedIncrement());
+  // increase the ball speed when the key: speed_up_ is pressed
+  else if (keysArray[speed_up_]) {
+    ball.SetSpeedDelta(game_.SpeedIncrement());
   }
-  // decrease the ball speed when the key: _slow_down is pressed
-  else if (keysArray[_slow_down]) {
+  // decrease the ball speed when the key: slow_down_ is pressed
+  else if (keysArray[slow_down_]) {
     ball.SetSpeedDelta(-25.0f);
   }
-  // start the ball from the paddle when the key: _start is pressed
-  else if (keysArray[_start]) {
+  // start the ball from the paddle when the key: start_ is pressed
+  else if (keysArray[start_]) {
     // start the ball only if it is in the starting position
-    if (!ball.IsMoving() && _game.State() == GameState::Routine) {
+    if (!ball.IsMoving() && game_.State() == GameState::Routine) {
       ball.Start();
     }
   }
   // pause the game when the pause key is pressed
-  else if (keysArray[_pause_key]) {
-    _game.TogglePause();
+  else if (keysArray[pause_key_]) {
+    game_.TogglePause();
   }
   // actions to be executed whenever the above keys are not pressed
   else {
@@ -119,12 +119,12 @@ void Controller::HandleGameOverEvents() const
 {
   // get the current keyboard state
   const Uint8* keysArray { SDL_GetKeyboardState(NULL) };
-  // restart the game if the key: _start is pressed
-  if (keysArray[_restart]) {
-    _game.Restart();
+  // restart the game if the key: start_ is pressed
+  if (keysArray[restart_]) {
+    game_.Restart();
   }
-  // quit the game if the key: _quit is pressed
-  else if (keysArray[_quit]) {
-    _game.Quit();
+  // quit the game if the key: quit_ is pressed
+  else if (keysArray[quit_]) {
+    game_.Quit();
   }
 }
