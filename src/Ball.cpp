@@ -14,21 +14,21 @@ Ball::Ball(float speed, const Texture& texture, Paddle& paddle,
     float screenBottomY, Game& game, const std::vector<SideWall>& sideWalls,
     std::vector<Block>& blocks)
     : MovableObject(0.0f, 0.0f, speed)
-    , _direction(0.0f)
-    , _velocity(gMath::Vector2d())
-    , _texture(texture)
-    , _radius(texture.Width() / 2.0)
-    , _min_speed(speed)
-    , _paddle(paddle)
-    , _screen_bottom_y(screenBottomY)
-    , _game(game)
-    , _side_walls(sideWalls)
+    , direction_(0.0f)
+    , velocity_(gMath::Vector2d())
+    , texture_(texture)
+    , radius_(texture.Width() / 2.0)
+    , min_speed_(speed)
+    , paddle_(paddle)
+    , screen_bottom_y_(screenBottomY)
+    , game_(game)
+    , side_walls_(sideWalls)
     , _blocks(blocks)
 {
   // check if the arguments passed to the constructor where valid and the
   // invariant was correctly established. If not - report error
-  if (_radius <= 0.0f || _speed < 0.0f || _min_speed < 0.0f
-      || _side_walls.empty() || _blocks.empty() || _screen_bottom_y <= 0.0f)
+  if (radius_ <= 0.0f || _speed < 0.0f || min_speed_ < 0.0f
+      || side_walls_.empty() || _blocks.empty() || screen_bottom_y_ <= 0.0f)
     throw std::invalid_argument(
         "Invalid argument passed to the ball constructor");
 }
@@ -38,7 +38,7 @@ void Ball::Update(float deltaTime)
 {
   // until player starts the ball movement,
   //  it should be placed on the
-  if (_in_starting_pos) {
+  if (in_starting_pos_) {
     PlaceOnPaddle();
   }
   // otherwise perfom routine update cycle
@@ -52,11 +52,11 @@ void Ball::Update(float deltaTime)
     HandleBlockCollisions();
 
     // update ball positoon
-    _position += _velocity * deltaTime;
+    _position += velocity_ * deltaTime;
 
     // react if the ball has left the screen
     if (HasLeftScreen()) {
-      _game.HandleBallEscape();
+      game_.HandleBallEscape();
     }
   }
 }
@@ -66,30 +66,30 @@ void Ball::Update(float deltaTime)
 void Ball::UpdateDirectionAndVelocity(float directionAngle)
 {
   // update direction angle
-  _direction = directionAngle;
+  direction_ = directionAngle;
 
   // recalculate the ball direction to fit within 0 - 360 limits
   ControlDirection();
 
   // update velocity vector
-  _velocity = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
+  velocity_ = gMath::Vector2d(gMath::ToRadians(directionAngle)) * _speed;
 }
 
 // render the ball
 void Ball::Draw() const
 {
-  _texture.Render(
+  texture_.Render(
       static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
 }
 
 // sets current speed of the object if it is not lower than minimal speed
 void Ball::SetSpeed(float speed)
 {
-  if (speed >= _min_speed) {
+  if (speed >= min_speed_) {
     // update speed
     _speed = speed;
     // update velocity vector
-    _velocity = gMath::Vector2d(gMath::ToRadians(_direction)) * speed;
+    velocity_ = gMath::Vector2d(gMath::ToRadians(direction_)) * speed;
   }
 }
 
@@ -99,38 +99,38 @@ void Ball::Reset(float speed)
 {
   PlaceOnPaddle();
 
-  _direction = 0.0f;
+  direction_ = 0.0f;
 
-  _velocity = gMath::Vector2d { 0.0f };
+  velocity_ = gMath::Vector2d { 0.0f };
 
-  _min_speed = speed;
+  min_speed_ = speed;
 
   _speed = speed;
 
   // set bolean indicating state where ball should start from the paddle
-  _in_starting_pos = true;
+  in_starting_pos_ = true;
 }
 
 // starts the ball movement
 void Ball::Start()
 {
   // calculate randomized starting direction when ball starts from the paddle
-  float starting_direction = _randomizer(45.0f, 135.0f);
+  float starting_direction = randomizer_(45.0f, 135.0f);
   // update ball state;
   UpdateDirectionAndVelocity(starting_direction);
   // mark that the ball doesn't have to start from the paddle
-  _in_starting_pos = false;
+  in_starting_pos_ = false;
   // play the correct sound
-  _game.PlaySound(Sound::BallPaddleHit);
+  game_.PlaySound(Sound::BallPaddleHit);
 }
 
 // puts the ball in the starting position on the paddle
 void Ball::PlaceOnPaddle()
 {
   // calculate the correct position
-  float start_x = _paddle.Position().X();
+  float start_x = paddle_.Position().X();
   float start_y
-      = _paddle.Position().Y() - _paddle.HalfHeight() - _texture.Height() / 2.0;
+      = paddle_.Position().Y() - paddle_.HalfHeight() - texture_.Height() / 2.0;
 
   // update position vector
   _position = gMath::Vector2d(start_x, start_y);
@@ -148,7 +148,7 @@ void Ball::HandlePaddleCollisions()
     // Apply speed change requested via keyboard
     ApplySpeedDelta();
     // play the proper sound
-    _game.PlaySound(Sound::BallPaddleHit);
+    game_.PlaySound(Sound::BallPaddleHit);
   }
 }
 
@@ -157,17 +157,17 @@ bool Ball::HasHitPaddle() const
 {
   // we assume that ball can hit the paddle only when heading downwards, so
   // first we check the ball directions to spare spourious calculations
-  if (_direction <= 180.0f && _direction >= 0.0f) {
+  if (direction_ <= 180.0f && direction_ >= 0.0f) {
     return false;
   }
   // vertical condition of collision
   bool vertical_conditon
-      = gMath::VerticalDistance(_position, _paddle.Position())
-      < _radius + _paddle.HalfHeight();
+      = gMath::VerticalDistance(_position, paddle_.Position())
+      < radius_ + paddle_.HalfHeight();
 
   bool horizontal_condition
-      = gMath::HorizontalDistance(_position, _paddle.Position())
-      < _radius + _paddle.HalfWidth();
+      = gMath::HorizontalDistance(_position, paddle_.Position())
+      < radius_ + paddle_.HalfWidth();
 
   return vertical_conditon && horizontal_condition;
 }
@@ -175,21 +175,21 @@ bool Ball::HasHitPaddle() const
 // checks if the ball has left the screen
 bool Ball::HasLeftScreen() const
 {
-  return _position.Y() - _radius > _screen_bottom_y;
+  return _position.Y() - radius_ > screen_bottom_y_;
 }
 
 // checks if the ball has hit any of the walls. If so, updates the game state
 // accordingly
 void Ball::HandleWallCollisions()
 {
-  for (auto& wall : _side_walls) {
+  for (auto& wall : side_walls_) {
     // for every side wall check if the ball has hit it
     if (HasHitWall(wall)) {
       {
         // change direction
         BounceWall(wall);
         // play the proper sound
-        _game.PlaySound(Sound::BallBounceWall);
+        game_.PlaySound(Sound::BallBounceWall);
         // only one wall can be hit at a certain moment, so no need to change
         // any more
         break;
@@ -209,7 +209,7 @@ void Ball::HandleBlockCollisions()
       // change the ball direction
       BounceBlock(block);
       // call proper game function
-      _game.HandleBlockHit(block);
+      game_.HandleBlockHit(block);
     }
   }
 }
@@ -227,10 +227,10 @@ bool Ball::HasHitWall(const SideWall& wall) const
       [[fallthrough]];
     case ScreenSide::Right:
       return gMath::HorizontalDistance(_position, wall.Position())
-          <= _radius + wall.HalfTickness();
+          <= radius_ + wall.HalfTickness();
     case ScreenSide::Top:
       return gMath::VerticalDistance(_position, wall.Position())
-          <= _radius + wall.HalfTickness();
+          <= radius_ + wall.HalfTickness();
     default:
       throw std::invalid_argument(
           "Invalid screen side passed to Ball::HasHitWall()");
@@ -271,19 +271,19 @@ float Ball::NewDirectionLeftWallBounced() const
   float new_direction {};
 
   // the ball is heading left and upwards
-  if (_direction > 90.0f && _direction <= 180.0f) {
-    new_direction = 180.0f - _direction;
+  if (direction_ > 90.0f && direction_ <= 180.0f) {
+    new_direction = 180.0f - direction_;
   }
   // the ball is heading left and downwards
-  else if (_direction > 180.0f && _direction < 270.0f) {
-    float deltaAngle = 270.0f - _direction;
+  else if (direction_ > 180.0f && direction_ < 270.0f) {
+    float deltaAngle = 270.0f - direction_;
     new_direction = 270.0f + deltaAngle;
   }
   // if the direction is different than above simply keeps it unchanged in order
   // to avoid strange cycles when the ball didn't manage to escape far enough
   // from the wall before next collision is detected
   else {
-    new_direction = _direction;
+    new_direction = direction_;
   }
 
   return new_direction;
@@ -296,19 +296,19 @@ float Ball::NewDirectionRightWallBounced() const
   float new_direction {};
 
   // the ball is heading right and upwards
-  if (_direction >= 0.0f && _direction < 90.0f) {
-    new_direction = 180.0f - _direction;
+  if (direction_ >= 0.0f && direction_ < 90.0f) {
+    new_direction = 180.0f - direction_;
   }
   // the ball is heading right and downwards
-  else if (_direction > 270.0 && _direction > 0.0f) {
-    float angle = 360.0f - _direction;
+  else if (direction_ > 270.0 && direction_ > 0.0f) {
+    float angle = 360.0f - direction_;
     new_direction = 180.0f + angle;
   }
   // if the direction is different than above simply keeps it unchanged in order
   // to avoid strange cycles when the ball didn't manage to escepe far enough
   // from the wall before next collision is detected
   else {
-    new_direction = _direction;
+    new_direction = direction_;
   }
 
   return new_direction;
@@ -321,19 +321,19 @@ float Ball::NewDirectionTopWallBounced() const
   float new_direction {};
 
   // the ball is heading towards top and to the left
-  if (_direction < 180.0f && _direction >= 90.0f) {
-    float angle = 180.0f - _direction;
+  if (direction_ < 180.0f && direction_ >= 90.0f) {
+    float angle = 180.0f - direction_;
     new_direction = 180.0f + angle;
   }
   // the ball is heading towards top and to the right
-  else if (_direction < 90.0f && _direction > 0.0f) {
-    new_direction = 360.0f - _direction;
+  else if (direction_ < 90.0f && direction_ > 0.0f) {
+    new_direction = 360.0f - direction_;
   }
   // if the direction is different than above simply keeps it unchanged in order
   // to avoid strange cycles when the ball didn't manage to escepe far enough
   // from the wall before next collision is detected
   else {
-    new_direction = _direction;
+    new_direction = direction_;
   }
 
   return new_direction;
@@ -350,16 +350,16 @@ void Ball::BouncePaddle()
   // accordingly
 
   // if the ball heads downwards and towards the left
-  if (_direction > 180.0f && _direction < 270.0f) {
-    float bounce_angle = _direction - 180.0f;
+  if (direction_ > 180.0f && direction_ < 270.0f) {
+    float bounce_angle = direction_ - 180.0f;
     new_direction = 180.0f - bounce_angle;
     // increment the bounce angle introducing (possibly negative) spin
     new_direction += CalcSpin(bounce_angle);
   }
   // if the ball heads downwards and to the right
-  // that is (_direction >= 270.0f && _direction < 360.0f)
+  // that is (direction_ >= 270.0f && direction_ < 360.0f)
   else {
-    new_direction = 360.0f - _direction;
+    new_direction = 360.0f - direction_;
     // increment the bounce angle introducing (possibly negative) spin
     // (bounce_angle == new_direction for the ball heading down and right)
     new_direction += CalcSpin(new_direction);
@@ -385,9 +385,9 @@ bool Ball::HasHitBlock(const Block& block) const
   // distance from ball to block centre are smaller that the sum of ball
   // radius and half block hight or width accordingly
   return (gMath::HorizontalDistance(_position, block.Position())
-             < _radius + block.HalfWidth())
+             < radius_ + block.HalfWidth())
       && gMath::VerticalDistance(_position, block.Position())
-      < _radius + block.HalfHeight();
+      < radius_ + block.HalfHeight();
 }
 
 // determines which block border was hit during collision
@@ -402,15 +402,15 @@ void Ball::BounceBlock(const Block& block)
   float new_direction {};
 
   // for the ball heading upwards and to the right
-  if (_direction >= 0.0f && _direction <= 90.0f) {
+  if (direction_ >= 0.0f && direction_ <= 90.0f) {
     new_direction = BounceBlockGoingUpRight(left_x);
   }
   // for the ball  heading upwards and to the left
-  else if (_direction > 90.0f && _direction <= 180.0f) {
+  else if (direction_ > 90.0f && direction_ <= 180.0f) {
     new_direction = BounceBlockGoingUpLeft(right_x);
   }
   // for the ball heading downwards and to the left
-  else if (_direction > 180.0f && _direction <= 270.0f) {
+  else if (direction_ > 180.0f && direction_ <= 270.0f) {
     new_direction = BounceBlockGoingDownLeft(right_x);
   }
   // for the ball heading downwards and to the right,
@@ -430,11 +430,11 @@ float Ball::BounceBlockGoingUpRight(float leftX) const
 
   // left border bounce
   if (_position.X() <= leftX) {
-    new_direction = 180.0f - _direction;
+    new_direction = 180.0f - direction_;
   }
   // otherwise it is a bottom border bounce
   else {
-    new_direction = 360.0f - _direction;
+    new_direction = 360.0f - direction_;
   }
 
   return new_direction;
@@ -448,11 +448,11 @@ float Ball::BounceBlockGoingUpLeft(float rightX) const
 
   // left border bounce
   if (_position.X() >= rightX) {
-    return 180.0f - _direction;
+    return 180.0f - direction_;
   }
   // bottom border bounce
   else {
-    return 360.0f - _direction;
+    return 360.0f - direction_;
   }
 }
 
@@ -464,12 +464,12 @@ float Ball::BounceBlockGoingDownLeft(float rightX) const
 
   // right border bounce
   if (_position.X() >= rightX) {
-    float angle = _direction - 180.0f;
+    float angle = direction_ - 180.0f;
     return 360.0f - angle;
   }
   // top border bounce
   else {
-    return 360.0f - _direction;
+    return 360.0f - direction_;
   }
 }
 
@@ -481,12 +481,12 @@ float Ball::BounceBlockGoingDownRight(float leftX) const
 
   // left border bounce
   if (_position.X() <= leftX) {
-    float angle = 360.0f - _direction;
+    float angle = 360.0f - direction_;
     return 180 + angle;
   }
   // top border bounce
   else {
-    return 360 - _direction;
+    return 360 - direction_;
   }
 }
 
@@ -494,12 +494,12 @@ float Ball::BounceBlockGoingDownRight(float leftX) const
 void Ball::ControlDirection()
 {
   // for angles exceeding the full 360.0 radius
-  if (_direction >= 360.0f) {
-    _direction -= 360.0f;
+  if (direction_ >= 360.0f) {
+    direction_ -= 360.0f;
   }
   // for possible (but unlikely) negative angles
-  if (_direction < 0.0f) {
-    _direction = 360.0f - fabs(_direction);
+  if (direction_ < 0.0f) {
+    direction_ = 360.0f - fabs(direction_);
   }
 }
 
@@ -519,21 +519,21 @@ float Ball::CalcSpin(float bounceAngle) const
   // angles in range (25,45] degrees
   if (bounceAngle > 25.0f) {
     // spin in range of 20-60 % of original bounce angle
-    delta = _randomizer(0.2f, 0.6f) * bounceAngle;
+    delta = randomizer_(0.2f, 0.6f) * bounceAngle;
   }
   // angles in range (10,25] degrees
   else if (bounceAngle > 10.0f) {
     // spin in range of 40-80 % of original bounce angle
-    delta = _randomizer(0.4f, 0.8f) * bounceAngle;
+    delta = randomizer_(0.4f, 0.8f) * bounceAngle;
   }
   // angles in range [0,10] degrees
   else {
     // spin range [5.0,10] degrees
-    delta = _randomizer(5.0f, 10.0f);
+    delta = randomizer_(5.0f, 10.0f);
   }
 
   // depending of the requested spin return negative or positive spin increase
-  switch (_spin) {
+  switch (spin_) {
     case Spin::Left:
       return delta;
     case Spin::Right:
@@ -546,7 +546,7 @@ float Ball::CalcSpin(float bounceAngle) const
 // increases/deacreases the ball speed by speed delta
 void Ball::ApplySpeedDelta()
 {
-  if (_speed_delta != 0.0f) {
-    SetSpeed(_speed + _speed_delta);
+  if (speed_delta_ != 0.0f) {
+    SetSpeed(_speed + speed_delta_);
   }
 }

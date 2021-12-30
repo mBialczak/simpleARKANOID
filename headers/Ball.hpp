@@ -43,7 +43,7 @@ class Ball : public virtual MovableObject
   // sets current speed of the object if it is not lower than minimal speed
   void SetSpeed(float speed) override;
   // sets the speed increase/decrease applied when the ball hits the paddle
-  void SetSpeedDelta(float speedChange) { _speed_delta = speedChange; }
+  void SetSpeedDelta(float speedChange) { speed_delta_ = speedChange; }
   // updates ball direction and velocity vector;
   // takes new  direction angle in degrees
   void UpdateDirectionAndVelocity(float directionAngle);
@@ -55,12 +55,12 @@ class Ball : public virtual MovableObject
   // puts the ball in the starting position on the paddle
   void PlaceOnPaddle();
   // sets ball spin
-  void SetSpin(Spin spinDirection) { _spin = spinDirection; }
+  void SetSpin(Spin spinDirection) { spin_ = spinDirection; }
 
   // returns ball radius
-  float Radius() const { return _radius; }
+  float Radius() const { return radius_; }
   // checks if the ball is in the starting position
-  bool IsMoving() const { return !_in_starting_pos; }
+  bool IsMoving() const { return !in_starting_pos_; }
 
   private:
   // checks for collision with the paddle. Returns true if colided, false if not
@@ -110,31 +110,31 @@ class Ball : public virtual MovableObject
   void ApplySpeedDelta();
 
   // ball direction in degrees (0.0 - 360.0)
-  float _direction;
+  float direction_;
   // ball vector of velocity
-  gMath::Vector2d _velocity;
+  gMath::Vector2d velocity_;
   // texture used for displaying the ball
-  const Texture& _texture;
+  const Texture& texture_;
   // ball radius
-  const float _radius;
+  const float radius_;
   // indicates if the ball is in starting position on the paddle
-  bool _in_starting_pos = true;
+  bool in_starting_pos_ = true;
   // current value of spin to be applied
-  Spin _spin = Spin::None;
+  Spin spin_ = Spin::None;
   // ball minimum speed in the current level
-  float _min_speed;
+  float min_speed_;
   // speed change (pixels/second) aplied every time the ball hits the paddle
-  float _speed_delta = 0.0;
+  float speed_delta_ = 0.0;
   // reference to paddle for collision detection
-  Paddle& _paddle;
+  Paddle& paddle_;
   // y coordinate of the bottom of the screen
-  const float _screen_bottom_y;
+  const float screen_bottom_y_;
   // reference to the main game object
-  Game& _game;
+  Game& game_;
   // random number generator used for simulating angle changes
-  gMath::RandNum _randomizer;
+  gMath::RandNum randomizer_;
   // sideWalls for collision detection
-  const std::vector<SideWall>& _side_walls;
+  const std::vector<SideWall>& side_walls_;
   // blocks for collision detection
   std::vector<Block>& _blocks;
 };
