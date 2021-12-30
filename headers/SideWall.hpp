@@ -21,17 +21,17 @@ class SideWall : public virtual StaticObject
   void Draw() const override;
 
   // returns the side of the screen where the wall is placed
-  ScreenSide GetScreenSide() const { return _screen_side; }
+  ScreenSide GetScreenSide() const { return screen_side_; }
   // returns half of the wall tickness
-  float HalfTickness() const { return _half_tickness; }
+  float HalfTickness() const { return half_tickness_; }
 
   private:
   // Side of the screen being placed
-  const ScreenSide _screen_side;
+  const ScreenSide screen_side_;
   // texture representing the SideWall
-  const Texture& _texture;
+  const Texture& texture_;
   // half of the wall tickness;
   // storing spares some calculations during collision detection
-  float _half_tickness;
+  float half_tickness_;
 };
 #endif // !SideWall_HPP
