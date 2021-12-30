@@ -15,10 +15,10 @@ class StaticObject
   // draws the object
   virtual void Draw() const = 0;
   // gets object position
-  virtual gMath::Vector2d Position() const { return _position; };
+  virtual gMath::Vector2d Position() const { return position_; };
 
   protected:
   // vector representing object's position
-  gMath::Vector2d _position;
+  gMath::Vector2d position_;
 };
 #endif // !StaticObject.hpp

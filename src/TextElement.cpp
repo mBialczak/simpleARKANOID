@@ -18,5 +18,5 @@ TextElement::TextElement(float x, float y, const std::string& fontPath,
 void TextElement::Draw() const
 {
   _texture->Render(
-      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
+      static_cast<int>(position_.X()), static_cast<int>(position_.Y()));
 }
