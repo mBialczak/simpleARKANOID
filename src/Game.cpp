@@ -219,51 +219,51 @@ void Game::LoadImages()
 {
   // load texture representing the ball
   images_[Sprite::Ball]
-      = std::move(Texture(Paths::pBallImage, renderer_->GetSDLrenderer()));
+      = Texture(Paths::pBallImage, renderer_->GetSDLrenderer());
 
   // load texture respresenting the paddle
   images_[Sprite::Paddle]
-      = std::move(Texture(Paths::pPadleImage, renderer_->GetSDLrenderer()));
+      = Texture(Paths::pPadleImage, renderer_->GetSDLrenderer());
 
   // load texture representing the top_wall
-  images_[Sprite::WallHorizontal] = std::move(
-      Texture(Paths::pHorizontalWallImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::WallHorizontal]
+      = Texture(Paths::pHorizontalWallImage, renderer_->GetSDLrenderer());
 
   // load texture representing side_walls
-  images_[Sprite::WallVertical] = std::move(
-      Texture(Paths::pVerticalWallImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::WallVertical]
+      = Texture(Paths::pVerticalWallImage, renderer_->GetSDLrenderer());
 
   // load texture representing a green block
-  images_[Sprite::BlockGreen] = std::move(
-      Texture(Paths::pBlockGreenImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::BlockGreen]
+      = Texture(Paths::pBlockGreenImage, renderer_->GetSDLrenderer());
 
   // load texture representing a silver block
-  images_[Sprite::BlockSilver] = std::move(
-      Texture(Paths::pBlockSilverImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::BlockSilver]
+      = Texture(Paths::pBlockSilverImage, renderer_->GetSDLrenderer());
 
   // load texture representing a blue block
   images_[Sprite::BlockBlue]
-      = std::move(Texture(Paths::pBlockBlueImage, renderer_->GetSDLrenderer()));
+      = Texture(Paths::pBlockBlueImage, renderer_->GetSDLrenderer());
 
   // load texture representing an orange block
-  images_[Sprite::BlockOrange] = std::move(
-      Texture(Paths::pBlockOrangeImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::BlockOrange]
+      = Texture(Paths::pBlockOrangeImage, renderer_->GetSDLrenderer());
 
   // load texture representing a purple block
-  images_[Sprite::BlockPurple] = std::move(
-      Texture(Paths::pBlockPurpleImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::BlockPurple]
+      = Texture(Paths::pBlockPurpleImage, renderer_->GetSDLrenderer());
 
   // load texture representing a red block
   images_[Sprite::BlockRed]
-      = std::move(Texture(Paths::pBlockRedImage, renderer_->GetSDLrenderer()));
+      = Texture(Paths::pBlockRedImage, renderer_->GetSDLrenderer());
 
   // load texture representing a teal block
   images_[Sprite::BlockTeal]
-      = std::move(Texture(Paths::pBlockTealImage, renderer_->GetSDLrenderer()));
+      = Texture(Paths::pBlockTealImage, renderer_->GetSDLrenderer());
 
   // load texture representing a yellow block
-  images_[Sprite::BlockYellow] = std::move(
-      Texture(Paths::pBlockYellowImage, renderer_->GetSDLrenderer()));
+  images_[Sprite::BlockYellow]
+      = Texture(Paths::pBlockYellowImage, renderer_->GetSDLrenderer());
 }
 
 // Initializes audio mixer system and loads all the sound
