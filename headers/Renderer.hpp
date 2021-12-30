@@ -37,20 +37,20 @@ class Renderer
   // returns a raw pointer to SDL renderer, which can be used if needed with SDL
   // functions. User of the class should not explicitly destroy or modify the
   // returned pointer as it is owned by Renderer class.
-  SDL_Renderer* GetSDLrenderer() const { return _sdl_renderer.get(); }
+  SDL_Renderer* GetSDLrenderer() const { return sdl_renderer_.get(); }
 
   private:
   // updates game window title bar
   void UpdateTitleBar() const;
 
   // game window size
-  const std::size_t _screen_height;
-  const std::size_t _screen_width;
+  const std::size_t screen_height_;
+  const std::size_t screen_width_;
 
   // unique pointer to SDL_Window using a custom window deleter.
-  std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> _sdl_window;
+  std::unique_ptr<SDL_Window, std::function<void(SDL_Window*)>> sdl_window_;
   // unique pointer to SDL_renderer using a custom renderer deleter
   std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>>
-      _sdl_renderer;
+      sdl_renderer_;
 };
 #endif // !RENDERER_HPP
