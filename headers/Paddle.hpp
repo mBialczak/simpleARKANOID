@@ -34,9 +34,9 @@ class Paddle : public virtual MovableObject
   // render the paddle
   void Draw() const override;
   // returns half of the paddle height
-  float HalfHeight() const { return _half_height; }
+  float HalfHeight() const { return half_height_; }
   // returns half of the paddle width
-  float HalfWidth() const { return _half_width; }
+  float HalfWidth() const { return half_width_; }
   // stops the paddle by setting velocity vector to {0,0}
   void Stop();
   // enables moving up by proper setting of the paddle velocity vector
@@ -53,14 +53,14 @@ class Paddle : public virtual MovableObject
   void KeepInMovingLimits();
 
   // paddle velocity vector
-  gMath::Vector2d _velocity;
+  gMath::Vector2d velocity_;
   // invisible moving limits rectangle
-  SDL_Rect _move_limits;
+  SDL_Rect move_limits_;
   // texture used for displaying the ball
-  const Texture& _texture;
+  const Texture& texture_;
   // storing below values spares many repeated calculations while collision
   // detection and process of keeping the paddle within allowed moving limits
-  const float _half_height;
-  const float _half_width;
+  const float half_height_;
+  const float half_width_;
 };
 #endif // !Paddle_hpp
