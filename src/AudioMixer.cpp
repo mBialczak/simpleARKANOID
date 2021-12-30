@@ -33,18 +33,18 @@ AudioMixer::AudioMixer(
 
     // store the pointer to created sound into map,
     // which combines sound enum codes with a ready to use sounds
-    _sound_effects[sound] = std::move(chunk_ptr);
+    sound_effects_[sound] = std::move(chunk_ptr);
   }
 }
 
 // replays the sound effect corresponding to to enum sound code passed
 void AudioMixer::PlaySound(Sound soundCode)
 {
-  // try to find the entry in _sound_effects corresponding to the sound code
-  auto search_iter = _sound_effects.find((soundCode));
+  // try to find the entry in sound_effects_ corresponding to the sound code
+  auto search_iter = sound_effects_.find((soundCode));
 
   // check if the searched pair was found
-  if (search_iter != _sound_effects.end()) {
+  if (search_iter != sound_effects_.end()) {
     // retrieve the pointer to Mix_Chunk
     auto chunk_ptr = search_iter->second.get();
     // replay the sound on the first free unreserved channel (-1)

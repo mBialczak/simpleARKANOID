@@ -45,11 +45,11 @@ class AudioMixer
   void PlaySound(Sound soundCode);
 
   private:
-  MixOpener _mix_opener;
+  MixOpener mix_opener_;
   // container used for combining enum sound codes with pointers to Mix_Chunks
   std::unordered_map<Sound,
       std::unique_ptr<Mix_Chunk, std::function<void(Mix_Chunk*)>>>
-      _sound_effects;
+      sound_effects_;
 };
 
 #endif // !AudioMixer_hpp
