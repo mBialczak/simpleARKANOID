@@ -9,7 +9,7 @@ class MovableObject
   // default constructor;
   MovableObject();
   // constructor taking position coordinates
-  // sets _position vector and sclar speed
+  // sets position_ vector and sclar speed
   MovableObject(float x, float y, float speed);
   // defalult virtual destructor
   virtual ~MovableObject() = default;
@@ -18,7 +18,7 @@ class MovableObject
   // draws the object
   virtual void Draw() const = 0;
   // gets object position
-  virtual gMath::Vector2d Position() const { return _position; };
+  virtual gMath::Vector2d Position() const { return position_; };
   // sets object position
   virtual void SetPosition(float x, float y);
   // gets current speed of the object;
@@ -28,7 +28,7 @@ class MovableObject
 
   protected:
   // object position
-  gMath::Vector2d _position;
+  gMath::Vector2d position_;
   // objects scalar speed
   float _speed;
 };

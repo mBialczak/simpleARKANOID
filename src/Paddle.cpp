@@ -27,7 +27,7 @@ Paddle::Paddle(
 void Paddle::Update(float deltaTime)
 {
   // update position
-  _position += _velocity * deltaTime;
+  position_ += _velocity * deltaTime;
   // correct if position went out of the allowed moving range
   KeepInMovingLimits();
 };
@@ -36,7 +36,7 @@ void Paddle::Update(float deltaTime)
 void Paddle::Draw() const
 {
   _texture.Render(
-      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
+      static_cast<int>(position_.X()), static_cast<int>(position_.Y()));
 }
 
 // stops the paddle by setting velocity vector to {0,0}
@@ -78,23 +78,23 @@ void Paddle::MoveRight()
 void Paddle::KeepInMovingLimits()
 {
   // move right if reached the left limit
-  if (_position.X() - _half_width < _move_limits.x) {
-    _position.SetX(_move_limits.x + _half_width + 1);
+  if (position_.X() - _half_width < _move_limits.x) {
+    position_.SetX(_move_limits.x + _half_width + 1);
     return;
   }
   // move left if reached the right limit
-  if (_position.X() + _half_width > _move_limits.x + _move_limits.w) {
-    _position.SetX(_move_limits.x + _move_limits.w - _half_width - 1);
+  if (position_.X() + _half_width > _move_limits.x + _move_limits.w) {
+    position_.SetX(_move_limits.x + _move_limits.w - _half_width - 1);
     return;
   }
   // move down if reached the the top limit
-  if (_position.Y() - _half_height < _move_limits.y) {
-    _position.SetY(_move_limits.y + _half_height + 1);
+  if (position_.Y() - _half_height < _move_limits.y) {
+    position_.SetY(_move_limits.y + _half_height + 1);
     return;
   }
   // move up if reached the bottom limit
-  if (_position.Y() + _half_height > _move_limits.y + _move_limits.h) {
-    _position.SetY(_move_limits.y + _move_limits.h - _half_height - 1);
+  if (position_.Y() + _half_height > _move_limits.y + _move_limits.h) {
+    position_.SetY(_move_limits.y + _move_limits.h - _half_height - 1);
     return;
   }
 }

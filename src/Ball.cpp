@@ -52,7 +52,7 @@ void Ball::Update(float deltaTime)
     HandleBlockCollisions();
 
     // update ball positoon
-    _position += velocity_ * deltaTime;
+    position_ += velocity_ * deltaTime;
 
     // react if the ball has left the screen
     if (HasLeftScreen()) {
@@ -79,7 +79,7 @@ void Ball::UpdateDirectionAndVelocity(float directionAngle)
 void Ball::Draw() const
 {
   texture_.Render(
-      static_cast<int>(_position.X()), static_cast<int>(_position.Y()));
+      static_cast<int>(position_.X()), static_cast<int>(position_.Y()));
 }
 
 // sets current speed of the object if it is not lower than minimal speed
@@ -133,7 +133,7 @@ void Ball::PlaceOnPaddle()
       = paddle_.Position().Y() - paddle_.HalfHeight() - texture_.Height() / 2.0;
 
   // update position vector
-  _position = gMath::Vector2d(start_x, start_y);
+  position_ = gMath::Vector2d(start_x, start_y);
 }
 
 // checks if the ball has hit the paddle. If so, updates the game state
@@ -162,11 +162,11 @@ bool Ball::HasHitPaddle() const
   }
   // vertical condition of collision
   bool vertical_conditon
-      = gMath::VerticalDistance(_position, paddle_.Position())
+      = gMath::VerticalDistance(position_, paddle_.Position())
       < radius_ + paddle_.HalfHeight();
 
   bool horizontal_condition
-      = gMath::HorizontalDistance(_position, paddle_.Position())
+      = gMath::HorizontalDistance(position_, paddle_.Position())
       < radius_ + paddle_.HalfWidth();
 
   return vertical_conditon && horizontal_condition;
@@ -175,7 +175,7 @@ bool Ball::HasHitPaddle() const
 // checks if the ball has left the screen
 bool Ball::HasLeftScreen() const
 {
-  return _position.Y() - radius_ > screen_bottom_y_;
+  return position_.Y() - radius_ > screen_bottom_y_;
 }
 
 // checks if the ball has hit any of the walls. If so, updates the game state
@@ -226,10 +226,10 @@ bool Ball::HasHitWall(const SideWall& wall) const
     case ScreenSide::Left:
       [[fallthrough]];
     case ScreenSide::Right:
-      return gMath::HorizontalDistance(_position, wall.Position())
+      return gMath::HorizontalDistance(position_, wall.Position())
           <= radius_ + wall.HalfTickness();
     case ScreenSide::Top:
-      return gMath::VerticalDistance(_position, wall.Position())
+      return gMath::VerticalDistance(position_, wall.Position())
           <= radius_ + wall.HalfTickness();
     default:
       throw std::invalid_argument(
@@ -384,9 +384,9 @@ bool Ball::HasHitBlock(const Block& block) const
   // we assume that collision occurs when both the vertical and horizontal
   // distance from ball to block centre are smaller that the sum of ball
   // radius and half block hight or width accordingly
-  return (gMath::HorizontalDistance(_position, block.Position())
+  return (gMath::HorizontalDistance(position_, block.Position())
              < radius_ + block.HalfWidth())
-      && gMath::VerticalDistance(_position, block.Position())
+      && gMath::VerticalDistance(position_, block.Position())
       < radius_ + block.HalfHeight();
 }
 
@@ -429,7 +429,7 @@ float Ball::BounceBlockGoingUpRight(float leftX) const
   float new_direction {};
 
   // left border bounce
-  if (_position.X() <= leftX) {
+  if (position_.X() <= leftX) {
     new_direction = 180.0f - direction_;
   }
   // otherwise it is a bottom border bounce
@@ -447,7 +447,7 @@ float Ball::BounceBlockGoingUpLeft(float rightX) const
   // either right or bottom border of the block could be hit
 
   // left border bounce
-  if (_position.X() >= rightX) {
+  if (position_.X() >= rightX) {
     return 180.0f - direction_;
   }
   // bottom border bounce
@@ -463,7 +463,7 @@ float Ball::BounceBlockGoingDownLeft(float rightX) const
   // either right or top border of the block could be hit
 
   // right border bounce
-  if (_position.X() >= rightX) {
+  if (position_.X() >= rightX) {
     float angle = direction_ - 180.0f;
     return 360.0f - angle;
   }
@@ -480,7 +480,7 @@ float Ball::BounceBlockGoingDownRight(float leftX) const
   // either left or top border of the block could be hit
 
   // left border bounce
-  if (_position.X() <= leftX) {
+  if (position_.X() <= leftX) {
     float angle = 360.0f - direction_;
     return 180 + angle;
   }
