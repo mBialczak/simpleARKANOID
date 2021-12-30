@@ -15,15 +15,15 @@ class IntervalTimer
   float UpdateAndGetInterval();
 
   // pauses the timer
-  void Pause() { _paused = true; };
+  void Pause() { paused_ = true; };
 
   // constant describing how many SDL clock ticks has each second
   static constexpr float ticks_per_second = 1000.0f;
 
   private:
-  Uint32 _previous_time;
-  Uint32 _current_time;
+  Uint32 previous_time_;
+  Uint32 current_time_;
   // indicates if the timer is paused
-  bool _paused;
+  bool paused_;
 };
 #endif // !IntervalTimer_HPP

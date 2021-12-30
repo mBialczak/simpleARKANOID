@@ -2,8 +2,8 @@
 
 // constructor
 IntervalTimer::IntervalTimer()
-    : _previous_time(SDL_GetTicks())
-    , _current_time(_previous_time)
+    : previous_time_(SDL_GetTicks())
+    , current_time_(previous_time_)
 {
 }
 
@@ -13,17 +13,17 @@ float IntervalTimer::UpdateAndGetInterval()
 {
   // if the timer was paused - unpause
   // and reset the timer
-  if (_paused) {
-    _paused = false;
-    _current_time = _previous_time = SDL_GetTicks();
+  if (paused_) {
+    paused_ = false;
+    current_time_ = previous_time_ = SDL_GetTicks();
   }
 
   // get current clock ticks
-  _current_time = SDL_GetTicks();
+  current_time_ = SDL_GetTicks();
   // count the ticks difference from previous measurement
-  Uint32 interval = _current_time - _previous_time;
+  Uint32 interval = current_time_ - previous_time_;
   // start new "lap"
-  _previous_time = _current_time;
+  previous_time_ = current_time_;
   // convert the clock ticks and return seconds
   return static_cast<float>(interval) / ticks_per_second;
 }
