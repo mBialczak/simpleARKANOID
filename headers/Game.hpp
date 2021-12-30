@@ -44,22 +44,22 @@ class Game
   // runs the game; implements main game loop
   void Run();
   // quits the game by stopping the main loop
-  void Quit() { _is_running = false; }
+  void Quit() { is_running_ = false; }
   // Restarts the game
   void Restart();
   // pauses or unpauses the game (pause on/off)
   void TogglePause();
   // returns game state, that is the current bahaviour mode
-  GameState State() const { return _state; }
+  GameState State() const { return state_; }
   // handles the ball leaving the allowed screen area
   void HandleBallEscape();
   // handles a block being hit by the ball
   void HandleBlockHit(Block& block);
   // returns the speed increment applied every time the
   // user orders so
-  float SpeedIncrement() const { return _speed_increment; };
+  float SpeedIncrement() const { return speed_increment_; };
   // replays the sound corresponding to the sound enum code
-  void PlaySound(Sound sound) const { _audio->PlaySound(sound); }
+  void PlaySound(Sound sound) const { audio_->PlaySound(sound); }
 
   private:
   // Perfoms actions in routine game state
@@ -106,56 +106,56 @@ class Game
   void CreateBlocks();
 
   // RAII class object responsible for initializing and closing SDL subsystems
-  SDLinitializer _sdl_initializer;
+  SDLinitializer sdl_initializer_;
   // RAII class object responsible for initializing and closing SDL_Image
   // support
-  ImageInitializer _image_initializer;
+  ImageInitializer image_initializer_;
   // RAII class object responsible for initializing and True Type Font support
-  TTFinitializer _ttf_initializer;
+  TTFinitializer ttf_initializer_;
   // window size properties
-  const std::size_t _screen_height;
-  const std::size_t _screen_width;
+  const std::size_t screen_height_;
+  const std::size_t screen_width_;
   // unique pointer to renderer
-  std::unique_ptr<Renderer> _renderer;
+  std::unique_ptr<Renderer> renderer_;
   // number levels implemented by the developer
-  unsigned _max_level;
+  unsigned max_level_;
   // controls if the main loop is running
-  bool _is_running = true;
+  bool is_running_ = true;
   // controlls the bahaviour of main loop
-  GameState _state = GameState::Paused;
+  GameState state_ = GameState::Paused;
   // target frame rate of the display
-  const Uint32 _frame_rate;
+  const Uint32 frame_rate_;
   // speed increase applied when the user orders so
-  const float _speed_increment = 30.0f;
+  const float speed_increment_ = 30.0f;
   // container with all image textures used in the game
-  std::unordered_map<Sprite, Texture> _images;
+  std::unordered_map<Sprite, Texture> images_;
   // container with texts constructed once for the entire game duration
-  std::vector<TextElement> _texts;
+  std::vector<TextElement> texts_;
   // pointer to AudioMixer responsible for sound support
-  std::unique_ptr<AudioMixer> _audio;
+  std::unique_ptr<AudioMixer> audio_;
   // pointer to controller for handling keyboard input
-  std::unique_ptr<Controller> _controller;
+  std::unique_ptr<Controller> controller_;
   // container for side walls
-  std::vector<SideWall> _side_walls;
+  std::vector<SideWall> side_walls_;
   // pointer to the ball
-  std::unique_ptr<Ball> _ball;
+  std::unique_ptr<Ball> ball_;
   // pointer to the paddle
-  std::unique_ptr<Paddle> _paddle;
+  std::unique_ptr<Paddle> paddle_;
   // container of all the blocks in the current level
-  std::vector<Block> _blocks;
+  std::vector<Block> blocks_;
   // Containers grouping all the static and movable objects to be displayed on
   // the game screen. (for display purposes only, objects are managed by other
   // members)
-  std::vector<const StaticObject*> _static_for_game_screen;
-  std::vector<const MovableObject*> _movable_for_game_screen;
+  std::vector<const StaticObject*> static_for_game_screen_;
+  std::vector<const MovableObject*> movable_for_game_screen_;
   // takes track of points achieved by the player
-  unsigned _total_points = 0;
+  unsigned total_points_ = 0;
   // inlcudes all the current level data
-  std::unique_ptr<LevelData> _level_data;
+  std::unique_ptr<LevelData> level_data_;
   // number of remaining lives (balls) before "game over"
-  unsigned _balls_remaining;
+  unsigned balls_remaining_;
   // timer regulating the updates of the game state
-  IntervalTimer _timer;
+  IntervalTimer timer_;
 };
 
 #endif // !GAME_HPP
