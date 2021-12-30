@@ -23,11 +23,11 @@ class LimitTimer
 
   private:
   // start point time in SDL ticks
-  Uint32 _start_time_point;
+  Uint32 start_time_point_;
   // time to measure in SDL ticks
-  Uint32 _time_to_measure;
+  Uint32 time_to_measure_;
   // end point time in SDL ticks
-  Uint32 _expiry_time_point;
+  Uint32 expiry_time_point_;
 };
 
 #endif // !LimitTimer_HPP
